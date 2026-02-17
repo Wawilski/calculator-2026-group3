@@ -112,4 +112,15 @@ public class CalculatorSteps {
 		assertEquals(val, c.eval(op));
 	}
 
+	@Then("the operation displays an error")
+	public void the_operation_displays_an_error() {
+		try {
+			visitor.Evaluator e = new visitor.Evaluator();
+			op.accept(e);
+			org.junit.jupiter.api.Assertions.fail("Une erreur de division par zéro était attendue.");
+		}catch (ArithmeticException e) {
+			org.junit.jupiter.api.Assertions.assertNotNull(e);
+			System.out.println("Succes : l'erreur a bien été capturée : " + e.getMessage());
+		}
+	}
 }
