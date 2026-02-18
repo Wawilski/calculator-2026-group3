@@ -28,7 +28,7 @@ class TestMyNumber {
 		try {
 			assertNotEquals(new Times(new ArrayList<>()), number);
 		}
-		catch (IllegalConstruction _) {fail();}
+		catch (IllegalConstruction e) {fail();}
 	}
 
 	@Test

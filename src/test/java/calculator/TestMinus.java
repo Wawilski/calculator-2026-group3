@@ -19,7 +19,7 @@ class TestMinus {
 	void setUp() {
 		  params = Arrays.asList(new MyNumber(value1),new MyNumber(value2));
 		  try { op = new Minus(params); }
-		  catch(IllegalConstruction _) { fail(); }
+		  catch(IllegalConstruction e) { fail(); }
 	}
 
 	@Test
@@ -34,7 +34,7 @@ class TestMinus {
 		// A Times expression should not be the same as a Minus expression
 		try {
 			assertNotSame(op, new Times(new ArrayList<>()));
-		} catch (IllegalConstruction _) {
+		} catch (IllegalConstruction e) {
 			fail();
 		}
 	}
@@ -47,7 +47,7 @@ class TestMinus {
 			Minus e = new Minus(p, Notation.INFIX);
 			assertEquals(op, e);
 		}
-		catch(IllegalConstruction _) { fail(); }
+		catch(IllegalConstruction e) { fail(); }
 	}
 
 	@SuppressWarnings("ConstantConditions")
@@ -64,7 +64,7 @@ class TestMinus {
 			Minus e = new Minus(p, Notation.INFIX);
 			assertEquals(e.hashCode(), op.hashCode());
 		}
-		catch(IllegalConstruction _) { fail(); }
+		catch(IllegalConstruction e) { fail(); }
 	}
 
 	@Test

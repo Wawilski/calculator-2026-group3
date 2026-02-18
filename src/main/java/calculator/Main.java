@@ -58,7 +58,7 @@ public class Main {
 		c.eval(e);
 	}
 
-	catch(IllegalConstruction _) {
+	catch(IllegalConstruction ex) {
 		logger.info("cannot create operations without parameters");
 		}
  	}

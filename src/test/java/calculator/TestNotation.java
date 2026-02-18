@@ -46,7 +46,7 @@ class TestNotation {
 				case "/"	->	op = new Divides(params);
 				default		->	fail();
 			}
-		} catch (IllegalConstruction _) {
+		} catch (IllegalConstruction e) {
 			fail();
 		}
 		testNotations(symbol, value1, value2, op);
