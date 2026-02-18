@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
+
 /**
  * A very simple calculator in Java
  * University of Mons - UMONS
@@ -13,9 +14,6 @@ import java.util.logging.Logger;
  * @author tommens
  */
 public class Main {
-
-	static Logger logger = Logger.getLogger(Main.class.getName());
-
 
 	/**
 	 * This is the main method of the application.
@@ -27,6 +25,7 @@ public class Main {
 
   	Expression e;
   	Calculator c = new Calculator();
+	Logger logger = Logger.getLogger(Main.class.getName());
 
 	try{
 
@@ -39,7 +38,7 @@ public class Main {
 	    e = new Plus(params,Notation.PREFIX);
 		c.printExpressionDetails(e);
 		c.eval(e);
-
+	
 		List<Expression> params2 = new ArrayList<>();
 		Collections.addAll(params2, new MyNumber(5), new MyNumber(3));
 		e = new Minus(params2, Notation.INFIX);
@@ -59,8 +58,8 @@ public class Main {
 		c.eval(e);
 	}
 
-	catch(IllegalConstruction exception) {
-		logger.info("\"cannot create operations without parameters\""); //utiliser Logger à la place d'un print classique
+	catch(IllegalConstruction _) {
+		logger.info("cannot create operations without parameters");
 		}
  	}
 

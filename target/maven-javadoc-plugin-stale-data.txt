@@ -1,0 +1,51 @@
+-J-Duser.language=
+-J-Duser.country=
+@options
+@packages
+-encoding
+'UTF-8'
+-protected
+-source
+'21'
+-sourcepath
+'C:/Users/pc/OneDrive - UMONS/Bureau/master/Software Evolution/calculator-cucumber-2026/src/main/java;C:/Users/pc/OneDrive - UMONS/Bureau/master/Software Evolution/calculator-cucumber-2026/target/generated-sources/annotations'
+-author
+-bottom
+'Copyright &#169; 2026. All rights reserved.'
+-charset
+'UTF-8'
+-d
+'C:/Users/pc/OneDrive - UMONS/Bureau/master/Software Evolution/calculator-cucumber-2026/target/reports/apidocs'
+-docencoding
+'UTF-8'
+-doctitle
+'Calculator with JUnit5 and Cucumber tests 0.5.0 API'
+-use
+-version
+-windowtitle
+'Calculator with JUnit5 and Cucumber tests 0.5.0 API'
+calculator
+visitor
+C:\Users\pc\OneDrive - UMONS\Bureau\master\Software Evolution\calculator-cucumber-2026\src\main\java = 1770813682337
+C:\Users\pc\OneDrive - UMONS\Bureau\master\Software Evolution\calculator-cucumber-2026\target\generated-sources\annotations = 1771367549020
+C:\Users\pc\OneDrive - UMONS\Bureau\master\Software Evolution\calculator-cucumber-2026\target\reports\apidocs\allclasses-index.html = 1771367599767
+C:\Users\pc\OneDrive - UMONS\Bureau\master\Software Evolution\calculator-cucumber-2026\target\reports\apidocs\allpackages-index.html = 1771367599789
+C:\Users\pc\OneDrive - UMONS\Bureau\master\Software Evolution\calculator-cucumber-2026\target\reports\apidocs\copy.svg = 1771367600093
+C:\Users\pc\OneDrive - UMONS\Bureau\master\Software Evolution\calculator-cucumber-2026\target\reports\apidocs\element-list = 1771367598203
+C:\Users\pc\OneDrive - UMONS\Bureau\master\Software Evolution\calculator-cucumber-2026\target\reports\apidocs\help-doc.html = 1771367600039
+C:\Users\pc\OneDrive - UMONS\Bureau\master\Software Evolution\calculator-cucumber-2026\target\reports\apidocs\index-all.html = 1771367599985
+C:\Users\pc\OneDrive - UMONS\Bureau\master\Software Evolution\calculator-cucumber-2026\target\reports\apidocs\index.html = 1771367599500
+C:\Users\pc\OneDrive - UMONS\Bureau\master\Software Evolution\calculator-cucumber-2026\target\reports\apidocs\link.svg = 1771367600102
+C:\Users\pc\OneDrive - UMONS\Bureau\master\Software Evolution\calculator-cucumber-2026\target\reports\apidocs\member-search-index.js = 1771367599835
+C:\Users\pc\OneDrive - UMONS\Bureau\master\Software Evolution\calculator-cucumber-2026\target\reports\apidocs\module-search-index.js = 1771367599801
+C:\Users\pc\OneDrive - UMONS\Bureau\master\Software Evolution\calculator-cucumber-2026\target\reports\apidocs\overview-summary.html = 1771367600016
+C:\Users\pc\OneDrive - UMONS\Bureau\master\Software Evolution\calculator-cucumber-2026\target\reports\apidocs\overview-tree.html = 1771367599480
+C:\Users\pc\OneDrive - UMONS\Bureau\master\Software Evolution\calculator-cucumber-2026\target\reports\apidocs\package-search-index.js = 1771367599809
+C:\Users\pc\OneDrive - UMONS\Bureau\master\Software Evolution\calculator-cucumber-2026\target\reports\apidocs\script.js = 1771367600084
+C:\Users\pc\OneDrive - UMONS\Bureau\master\Software Evolution\calculator-cucumber-2026\target\reports\apidocs\search-page.js = 1771367600137
+C:\Users\pc\OneDrive - UMONS\Bureau\master\Software Evolution\calculator-cucumber-2026\target\reports\apidocs\search.html = 1771367599998
+C:\Users\pc\OneDrive - UMONS\Bureau\master\Software Evolution\calculator-cucumber-2026\target\reports\apidocs\search.js = 1771367600127
+C:\Users\pc\OneDrive - UMONS\Bureau\master\Software Evolution\calculator-cucumber-2026\target\reports\apidocs\serialized-form.html = 1771367598443
+C:\Users\pc\OneDrive - UMONS\Bureau\master\Software Evolution\calculator-cucumber-2026\target\reports\apidocs\stylesheet.css = 1771367600072
+C:\Users\pc\OneDrive - UMONS\Bureau\master\Software Evolution\calculator-cucumber-2026\target\reports\apidocs\tag-search-index.js = 1771367599844
+C:\Users\pc\OneDrive - UMONS\Bureau\master\Software Evolution\calculator-cucumber-2026\target\reports\apidocs\type-search-index.js = 1771367599819

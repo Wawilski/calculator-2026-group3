@@ -1,0 +1,14 @@
+calculator\IllegalConstruction.class
+calculator\Plus.class
+calculator\Minus.class
+calculator\MyNumber.class
+calculator\Divides.class
+visitor\Visitor.class
+calculator\Operation$1.class
+calculator\Notation.class
+calculator\Calculator.class
+calculator\Expression.class
+visitor\Evaluator.class
+calculator\Operation.class
+calculator\Times.class
+calculator\Main.class
