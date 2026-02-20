@@ -1,0 +1,15 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Karpinski"
+  given-names: "William"
+- family-names: "Hakik"
+  given-names: "Oussama"
+- family-names: "Hélin"
+  given-names: "Denis"
+title: "calculator-2026-group3"
+version: 1.0.0
+doi: 10.5281/zenodo.1234
+date-released: 2026-02-20
+url: "https://github.com/Wawilski/calculator-2026-group3"
+

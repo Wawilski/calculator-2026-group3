@@ -1,0 +1,16 @@
+
+# This file defines the code owners for the repository.
+
+# These are the default owners for the whole content of the repository.
+
+# The default owners are automatically added as reviewers when you
+# open a pull request, unless different owners are specified in the file.
+
+* @Wawilski @oussamahakik @Shilneed
+
+# Github Actions workflows
+
+.github/workflows/  @Wawilski @oussamahakik @Shilneed
+
+# All .md files
+*.md @Wawilski
