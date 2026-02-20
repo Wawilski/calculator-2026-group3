@@ -1,4 +1,4 @@
-# Contributing to Calculator-2026-Group4
+# Contributing to Calculator-2026-Group3
 
 ## Getting Started
 
