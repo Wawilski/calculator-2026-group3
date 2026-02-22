@@ -1,0 +1,39 @@
+name: Java CI with Maven
+
+# Trigger the workflow on pushes and pull requests targeting the main branch
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    name: Build and Run All Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      # Check out the repository code to the runner
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      # Set up JDK 25 and enable Maven dependency caching to speed up future runs
+      - name: Set up JDK 25
+        uses: actions/setup-java@v4
+        with:
+          java-version: '25'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      # Compile the project and run all tests (JUnit and Cucumber)
+      # The pipeline will fail here if any test fails
+      - name: Build and run tests
+        run: mvn clean test
+
+      # Upload test reports as artifacts for debugging, even if the build fails
+      - name: Upload test reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-reports
+          path: target/surefire-reports/
