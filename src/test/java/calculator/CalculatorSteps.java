@@ -17,7 +17,7 @@ public class CalculatorSteps {
 	private Calculator c;
 
 	@Before
-    public void resetMemoryBeforeEachScenario() {
+	public void resetMemoryBeforeEachScenario() {
 		params = null;
 		op = null;
 	}
@@ -54,7 +54,7 @@ public class CalculatorSteps {
 		// Since we only use one line of input, we use get(0) to take the first line of the list,
 		// which is a list of strings, that we will manually convert to integers:
 		numbers.get(0).forEach(n -> params.add(new MyNumber(Integer.parseInt(n))));
-	    params.forEach(n -> System.out.println("value ="+ n));
+		params.forEach(n -> System.out.println("value ="+ n));
 		op = null;
 	}
 
@@ -66,9 +66,9 @@ public class CalculatorSteps {
 	public void givenTheSum(int n1, int n2) {
 		try {
 			params = new ArrayList<>();
-		    params.add(new MyNumber(n1));
-		    params.add(new MyNumber(n2));
-		    op = new Plus(params);}
+			params.add(new MyNumber(n1));
+			params.add(new MyNumber(n2));
+			op = new Plus(params);}
 		catch(IllegalConstruction _) { fail(); }
 	}
 
@@ -109,5 +109,20 @@ public class CalculatorSteps {
 	public void thenTheOperationEvaluatesTo(int val) {
 		assertEquals(val, c.eval(op));
 	}
+
+
+	@Then("a division by zero error is raised")
+	public void operation_displays_an_error() {
+		try{
+			visitor.Evaluator a = new visitor.Evaluator();
+			op.accept(a);
+			fail("A division by zero error was expected");
+		}catch (ArithmeticException e){
+			assertNotNull(e, "L'exception ne devrait pas être nulle");
+
+			assertEquals("Division by zero is not allowed", e.getMessage());
+		}
+	}
+
 
 }

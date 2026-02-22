@@ -4,6 +4,7 @@ package calculator;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -75,5 +76,22 @@ class TestDivides {
 		params = null;
 		assertThrows(IllegalConstruction.class, () -> op = new Divides(params));
 	}
+
+	@Test
+	void TestDivisionByZero() {
+		int value3 = 0;
+		params = Arrays.asList(new MyNumber(value1), new MyNumber(value3));
+		try {
+			op = new Divides(params);
+			visitor.Evaluator e = new visitor.Evaluator();
+			ArithmeticException exception = assertThrows(ArithmeticException.class, () -> op.accept(e));
+			assertEquals("Division by zero is not allowed", exception.getMessage());
+            System.out.println("test ok");
+        }
+		catch (IllegalConstruction e) {
+			fail();
+		}
+	}
+
 
 }
