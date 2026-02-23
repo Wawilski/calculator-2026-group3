@@ -4,9 +4,7 @@ name: Java CI with Maven
 # and on any pull request targeting main.
 on:
   push:
-    branches:
-      - "main"
-      - "fix/division-by-zero"
+    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
