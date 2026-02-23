@@ -31,7 +31,7 @@ jobs:
       # Execute tests using the Maven Wrapper.
       # 'sh' ensures it runs even if execution bits are missing.
       - name: Build and run tests
-        run: sh ./mvnw clean test
+        run: mvn clean test
 
       # Save reports for debugging (available in the "Actions" tab)
       - name: Upload test reports
