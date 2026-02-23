@@ -48,7 +48,8 @@ jobs:
         run: |
           mkdir -p release-assets
           cp -r target/site/apidocs release-assets/javadoc
-          cp -r target/site/jacoco release-reports/coverage
+          cp -r target/site/jacoco release-assets/coverage
+          cp -r target/surefire-reports release-assets/test-results
           zip -r project-reports.zip release-assets
 
       - name: Create Release and Upload Assets
