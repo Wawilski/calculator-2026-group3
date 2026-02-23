@@ -1,9 +1,12 @@
 name: Java CI with Maven
 
-# Trigger the workflow on pushes and pull requests targeting the main branch
+# Trigger the workflow on pushes to main (including the, new "fix/division-by-zero" branch to see the workflow in action)
+# and on any pull request targeting main.
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - "main"
+      - "fix/division-by-zero"
   pull_request:
     branches: [ "main" ]
 
@@ -17,7 +20,7 @@ jobs:
       - name: Checkout source code
         uses: actions/checkout@v4
 
-      # Set up JDK 25 and enable Maven dependency caching to speed up future runs
+      # Set up JDK 25 and enable Maven dependency caching
       - name: Set up JDK 25
         uses: actions/setup-java@v4
         with:
@@ -25,12 +28,12 @@ jobs:
           distribution: 'temurin'
           cache: 'maven'
 
-      # Compile the project and run all tests (JUnit and Cucumber)
-      # The pipeline will fail here if any test fails
+      # Execute tests using the Maven Wrapper.
+      # 'sh' ensures it runs even if execution bits are missing.
       - name: Build and run tests
-        run: mvn clean test
+        run: sh ./mvnw clean test
 
-      # Upload test reports as artifacts for debugging, even if the build fails
+      # Save reports for debugging (available in the "Actions" tab)
       - name: Upload test reports
         uses: actions/upload-artifact@v4
         if: always()
