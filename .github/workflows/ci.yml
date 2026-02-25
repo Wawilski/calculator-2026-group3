@@ -2,7 +2,7 @@ name: Java CI - Full Pipeline
 
 on:
   push:
-    branches: [ "master", "feat/ci-reporting-release" ]
+    branches: [ "master" ]
     tags: [ 'v*' ]
   pull_request:
     branches: [ "master" ]
