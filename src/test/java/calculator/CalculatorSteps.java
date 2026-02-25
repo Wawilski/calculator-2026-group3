@@ -118,7 +118,7 @@ public class CalculatorSteps {
 			op.accept(a);
 			fail("A division by zero error was expected");
 		}catch (ArithmeticException e){
-			assertNotNull(e, "L'exception ne devrait pas être nulle");
+			assertNotNull(e, "An ArithmeticException was expected");
 
 			assertEquals("Division by zero is not allowed", e.getMessage());
 		}
