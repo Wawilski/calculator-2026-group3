@@ -1,0 +1,72 @@
+name: Java CI - Full Pipeline
+
+on:
+  push:
+    branches: [ "master" ]
+    tags: [ 'v*' ]
+  pull_request:
+    branches: [ "master" ]
+
+permissions:
+  contents: write
+  checks: write
+
+jobs:
+  complete-pipeline:
+    name: Build, Test, Quality and Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 25
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '25'
+          cache: 'maven'
+
+      - name: Build, Test and Generate JavaDoc
+        run: mvn -B package javadoc:javadoc --file pom.xml
+
+      - name: Publish Test Report
+        if: always()
+        uses: scacap/action-surefire-report@v1
+        with:
+          check_name: "JUnit & Cucumber Test Report"
+
+      - name: Generate JaCoCo Badge
+        id: jacoco
+        uses: cicirello/jacoco-badge-generator@v2
+        with:
+          generate-coverage-badge: true
+          generate-summary: true
+
+      - name: Bundle Reports for Release
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          mkdir -p release-assets
+          cp -r target/site/apidocs release-assets/javadoc
+          cp -r target/site/jacoco release-assets/coverage
+          cp -r target/surefire-reports release-assets/test-results
+          zip -r project-reports.zip release-assets
+
+      - name: Create Release and Upload Assets
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            target/*.jar
+            project-reports.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: full-reports-pack
+          path: |
+            target/site/jacoco/
+            target/site/apidocs/
