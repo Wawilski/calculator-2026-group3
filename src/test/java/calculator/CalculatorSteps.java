@@ -110,4 +110,16 @@ public class CalculatorSteps {
 		assertEquals(val, c.eval(op));
 	}
 
+	@Then("a division by zero error is raised")
+	public void operation_displays_an_error(){
+		try{
+			visitor.Evaluator a = new visitor.Evaluator();
+			op.accept(a);
+			fail("A division by zero error was expected");
+		}catch (ArithmeticException e){
+			assertNotNull(e,"An ArithmeticException was expected");
+			assertEquals("Division by zero is not allowed.", e.getMessage());
+		}
+	}
+
 }
