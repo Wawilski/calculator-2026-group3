@@ -159,7 +159,8 @@ public abstract class Operation implements Expression
    * @return	The String that is the result of the conversion.
    */
   public final String toString(Notation n) {
-	   Stream<String> s = args.stream().map(Object::toString);
+	  //we use e.toString(n) to force the use of the same notation for all sub-expressions, even if they have a different default notation specified in their own variable.
+	   Stream<String> s = args.stream().map(e -> e.toString(n));
 	   return switch (n) {
 		   case INFIX -> "( " +
 				   s.reduce((s1, s2) -> s1 + " " + symbol + " " + s2).get() +

@@ -108,4 +108,17 @@ public class MyNumber implements Expression
 		return value;
   }
 
+
+    /**
+     * Provides a string representation of the number.
+     * Since a number is invariant to notation, it ignores the parameter.
+     *
+     * @param n The notation (ignored)
+     * @return The string representation of the value
+     */
+    @Override
+    public String toString(Notation n) {
+        return toString();
+    }
+
 }

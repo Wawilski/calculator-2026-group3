@@ -41,4 +41,31 @@ class TestOperation {
 		assertEquals(Integer.valueOf(6), o.countNbs());
 	}
 
+	@Test
+	void testDeepCompositeCountDepth() throws IllegalConstruction {
+		Operation deep = buildDepthThreeExpression();
+		assertEquals(3, deep.countDepth());
+	}
+
+	@Test
+	void testDeepCompositeCountOps() throws IllegalConstruction {
+		Operation deep = buildDepthThreeExpression();
+		assertEquals(5, deep.countOps());
+	}
+
+	@Test
+	void testDeepCompositeCountNbs() throws IllegalConstruction {
+		Operation deep = buildDepthThreeExpression();
+		assertEquals(6, deep.countNbs());
+	}
+
+	private Operation buildDepthThreeExpression() throws IllegalConstruction {
+		Operation left = new Times(Arrays.asList(
+				new Plus(Arrays.asList(new MyNumber(1), new MyNumber(2))),
+				new Minus(Arrays.asList(new MyNumber(3), new MyNumber(4)))
+		));
+		Operation right = new Plus(Arrays.asList(new MyNumber(5), new MyNumber(6)));
+		return new Divides(Arrays.asList(left, right));
+	}
+
 }

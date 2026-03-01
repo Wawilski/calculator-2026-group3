@@ -38,4 +38,11 @@ public interface Expression {
     * @return The number of values contained in an arithmetic expression
     */
    int countNbs();
+
+   /**
+    * New method to ensure consistent across the entire expression tree.
+    * @param n the notation style to use (Prefix, Infix or Postfix).
+    * @return A string representation of the expression
+    */
+   String toString(Notation n);
 }

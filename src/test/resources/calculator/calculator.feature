@@ -42,6 +42,33 @@ Feature: Integer Arithmetic Expressions
     And its PREFIX notation is + (8, 6)
     And its POSTFIX notation is (8, 6) +
 
+  Scenario: Printing a composite expression with a single notation
+    Given a composite expression with mixed default notations
+    Then its INFIX notation is ( ( 3 + 4 + 5 ) / ( 5 - 4 ) / 7 )
+    And its PREFIX notation is / (+ (3, 4, 5), - (5, 4), 7)
+    And its POSTFIX notation is ((3, 4, 5) +, (5, 4) -, 7) /
+    And its depth is 2
+    And it contains 3 operations
+    And it contains 6 numbers
+    And the operation evaluates to 1
+
+  Scenario: Inspecting a depth three composite expression
+    Given a depth three composite expression
+    Then its depth is 3
+    And it contains 5 operations
+    And it contains 6 numbers
+    And the operation evaluates to 0
+
+  Scenario Outline: Printing a composite expression with a target notation
+    Given a composite expression where each child has a different default notation
+    Then its <notation> notation is <rendering>
+
+    Examples:
+      | notation | rendering                                |
+      | INFIX    | ( ( 1 + 2 ) / ( 8 - 3 ) / ( 2 * 3 ) )    |
+      | PREFIX   | / (+ (1, 2), - (8, 3), * (2, 3))         |
+      | POSTFIX  | ((1, 2) +, (8, 3) -, (2, 3) *) /         |
+
   # This is an example of a scenario in which we provide a list of numbers as input.
   # (In fact, this is not entirely true, since what is given as input is a table of
   # strings. In this case, the table is of dimension 1 * 3 (1 line and three columns).
