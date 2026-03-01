@@ -8,6 +8,7 @@ import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class CalculatorSteps {
@@ -72,6 +73,45 @@ public class CalculatorSteps {
 		catch(IllegalConstruction _) { fail(); }
 	}
 
+	@Given("a composite expression with mixed default notations")
+	public void givenACompositeExpressionWithMixedDefaultNotations() {
+		try {
+			Operation plus = new Plus(Arrays.asList(new MyNumber(3), new MyNumber(4), new MyNumber(5)));
+			Operation minus = new Minus(Arrays.asList(new MyNumber(5), new MyNumber(4)));
+			plus.notation = Notation.INFIX;
+			minus.notation = Notation.POSTFIX;
+			op = new Divides(Arrays.asList(plus, minus, new MyNumber(7)));
+		}
+		catch(IllegalConstruction _) { fail(); }
+	}
+
+	@Given("a depth three composite expression")
+	public void givenADepthThreeCompositeExpression() {
+		try {
+			Operation left = new Times(Arrays.asList(
+					new Plus(Arrays.asList(new MyNumber(1), new MyNumber(2))),
+					new Minus(Arrays.asList(new MyNumber(3), new MyNumber(4)))
+			));
+			Operation right = new Plus(Arrays.asList(new MyNumber(5), new MyNumber(6)));
+			op = new Divides(Arrays.asList(left, right));
+		}
+		catch(IllegalConstruction _) { fail(); }
+	}
+
+	@Given("a composite expression where each child has a different default notation")
+	public void givenACompositeExpressionWhereEachChildHasADifferentDefaultNotation() {
+		try {
+			Operation plus = new Plus(Arrays.asList(new MyNumber(1), new MyNumber(2)));
+			Operation minus = new Minus(Arrays.asList(new MyNumber(8), new MyNumber(3)));
+			Operation times = new Times(Arrays.asList(new MyNumber(2), new MyNumber(3)));
+			plus.notation = Notation.PREFIX;
+			minus.notation = Notation.INFIX;
+			times.notation = Notation.POSTFIX;
+			op = new Divides(Arrays.asList(plus, minus, times));
+		}
+		catch(IllegalConstruction _) { fail(); }
+	}
+
 	@Then("^its (.*) notation is (.*)$")
 	public void thenItsNotationIs(String notation, String s) {
 		if (notation.equals("PREFIX")||notation.equals("POSTFIX")||notation.equals("INFIX")) {
@@ -108,6 +148,21 @@ public class CalculatorSteps {
 	@Then("the operation evaluates to {int}")
 	public void thenTheOperationEvaluatesTo(int val) {
 		assertEquals(val, c.eval(op));
+	}
+
+	@Then("its depth is {int}")
+	public void thenItsDepthIs(int expectedDepth) {
+		assertEquals(expectedDepth, op.countDepth());
+	}
+
+	@Then("it contains {int} operations")
+	public void thenItContainsOperations(int expectedOps) {
+		assertEquals(expectedOps, op.countOps());
+	}
+
+	@Then("it contains {int} numbers")
+	public void thenItContainsNumbers(int expectedNumbers) {
+		assertEquals(expectedNumbers, op.countNbs());
 	}
 
 }
