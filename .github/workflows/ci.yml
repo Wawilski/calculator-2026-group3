@@ -2,10 +2,10 @@ name: Java CI - Full Pipeline
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "master", "feat/parser" ]
     tags: [ 'v*' ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "master", "feat/parser" ]
 
 permissions:
   contents: write
