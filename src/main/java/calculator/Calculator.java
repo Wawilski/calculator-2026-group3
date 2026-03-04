@@ -1,6 +1,9 @@
 package calculator;
 
 import visitor.Evaluator;
+import visitor.CountingVisitor;
+import visitor.PrettyPrintVisitor;
+import visitor.StringifyVisitor;
 
 /**
  * This class represents the core logic of a Calculator.
@@ -45,10 +48,35 @@ public class Calculator {
      */
     public void printExpressionDetails(Expression e) {
         print(e);
-        System.out.print("It contains " + e.countDepth() + " levels of nested expressions, ");
-        System.out.print(e.countOps() + " operations");
-        System.out.println(" and " + e.countNbs() + " numbers.");
+        CountingVisitor visitor = new CountingVisitor();
+        e.accept(visitor);
+        System.out.print("It contains " + visitor.getDepth() + " levels of nested expressions, ");
+        System.out.print(visitor.getOpsCount() + " operations");
+        System.out.println(" and " + visitor.getNumbersCount() + " numbers.");
         System.out.println();
+    }
+
+    /**
+     * Formats an arithmetic expression with a specific notation.
+     * @param e the arithmetic Expression to be formatted
+     * @param n the notation to use
+     * @return formatted expression
+     */
+    public String format(Expression e, Notation n) {
+        StringifyVisitor visitor = new StringifyVisitor(n);
+        e.accept(visitor);
+        return visitor.getResult();
+    }
+
+    /**
+     * Formats an arithmetic expression in readable infix notation with minimal parentheses.
+     * @param e the arithmetic Expression to be formatted
+     * @return formatted expression
+     */
+    public String prettyFormat(Expression e) {
+        PrettyPrintVisitor visitor = new PrettyPrintVisitor();
+        e.accept(visitor);
+        return visitor.getResult();
     }
 
     /**

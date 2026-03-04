@@ -7,6 +7,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 class TestEvaluator {
@@ -43,6 +44,20 @@ class TestEvaluator {
         } catch (IllegalConstruction _) {
             fail();
         }
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"*", "+", "/", "-"})
+    void testEvaluateEmptyOperations(String symbol) throws IllegalConstruction {
+        Operation op = switch (symbol) {
+            case "+" -> new Plus(new ArrayList<>());
+            case "-" -> new Minus(new ArrayList<>());
+            case "*" -> new Times(new ArrayList<>());
+            case "/" -> new Divides(new ArrayList<>());
+            default -> throw new IllegalStateException("Unexpected symbol: " + symbol);
+        };
+        int expected = (symbol.equals("*") || symbol.equals("/")) ? 1 : 0;
+        assertEquals(expected, calc.eval(op));
     }
 
 }

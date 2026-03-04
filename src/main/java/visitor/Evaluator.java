@@ -39,9 +39,13 @@ public class Evaluator extends Visitor {
     public void visit(Operation o) {
         ArrayList<Integer> evaluatedArgs = new ArrayList<>();
         //first loop to recursively evaluate each subexpression
-        for(Expression a:o.args) {
+        for(Expression a:o.getArgs()) {
             a.accept(this);
             evaluatedArgs.add(computedValue);
+        }
+        if (evaluatedArgs.isEmpty()) {
+            computedValue = o.getNeutral();
+            return;
         }
         //second loop to accumulate all the evaluated subresults
         int temp = evaluatedArgs.get(0);
