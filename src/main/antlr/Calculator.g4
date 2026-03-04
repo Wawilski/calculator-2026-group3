@@ -1,18 +1,50 @@
-grammar Calculator;
+grammar calculator;
 
+equation : ( postfix | infix | prefix) EOF ;
 
 // Infix Calculator
 
 infix : add_infix;
 
 add_infix : mul_infix (sign mul_infix)*;
-mul_infix : pow_infix (mul pow_infix)*;
+
+mul_infix : pow_infix (mul pow_infix)*
+          | (LPAREN infix RPAREN)* atom (LPAREN infix RPAREN)*
+;
 pow_infix : factor (pow factor)*;
 
-factor : fct LPAREN infix RPAREN 
+factor : fct LPAREN infix (COMMAT infix)* RPAREN 
        | LPAREN infix RPAREN (LPAREN infix RPAREN)*
-       | LOG LPAREN infix COMMAT infix RPAREN 
-       | (sign)? atom ;
+       | (sign)? atom (num_const)*;
+
+// Prefix Calculator
+
+prefix : space_prefix | paren_prefix;
+
+space_prefix: (operator | fct)? LPAREN (space_prefix)+ RPAREN
+            | fct space_prefix
+            | operator space_prefix space_prefix
+            | (sign)? atom ;
+
+paren_prefix: (operator|fct)? LPAREN paren_prefix (COMMAT paren_prefix)* RPAREN
+            | fct paren_prefix
+            | (sign)? atom ;
+
+
+// Postfix Calculator
+
+postfix : space_postfix | paren_postfix;
+
+space_postfix: LPAREN (space_postfix)+ RPAREN (operator | fct )? 
+            | space_postfix fct
+            | space_postfix space_postfix operator 
+            | (sign)? atom ;
+
+paren_postfix: LPAREN paren_postfix (COMMAT paren_postfix)* RPAREN (operator | fct)?
+             | paren_postfix fct
+             | (sign)? atom ;
+
+
 
 // types of number
 
@@ -21,7 +53,11 @@ atom : number | complex ;
 // Real numbers 
 // Ex: 2, 5.1023 , 10E-8 , 9E12 , pi
 
-number: INT ((DOT INT) | (E (sign)? INT))? | num_const ;
+number: real | scientific | num_const ;
+
+scientific : INT E (sign)? INT ;
+
+real : INT (DOT INT)? ;
 
 // Complex numbers
 // Ex : 2i, i 
@@ -40,15 +76,19 @@ mul : TIMES | DIV ;
 
 pow : POW;
 
+operator : sign | mul | pow;
+
+
+
 // numerical constants
 
 num_const: PI | EULER | PHI;
 
-I: "i"; 
-E : "E";
-PI :"pi";
-EULER: "e";
-PHI: "phi";
+I: 'i'; 
+E : 'E';
+PI :'pi';
+EULER: 'e';
+PHI: 'phi';
 
 // functions
 
@@ -57,33 +97,37 @@ fct : COS
     | SIN
     | ACOS
     | ATAN
-    | ASIN
+    | ASIN           
     | LN
     | SQRT
+    | LOG
     ;
-
-COS : "cos";
-SIN : "sin";
-TAN : "tan";
-ACOS : "acos" ;
-ASIN : "asin" ;
-ATAN : "atan" ;
-LN : "ln" ;
-LOG : "log" ;
-SQRT : "sqrt" ;
-
-
-
-PLUS : "+";
-MINUS : "-";
-TIMES : "*";
-DIV : "/";
-POW : "**";
+           
+COS : 'cos';
+SIN : 'sin';
+TAN : 'tan';
+ACOS : 'acos' ;
+ASIN : 'asin' ;
+ATAN : 'atan' ;
+LN : 'ln' ;
+LOG : 'log' ;
+SQRT : 'sqrt' ;
 
 
-fragment INT : ("0" .."9")+;
-fragment LPAREN : "(" ;
-fragment RPAREN : ")" ;
-fragment DOT : ".";
-fragment COMMAT: ",";
 
+PLUS : '+';
+MINUS : '-';
+TIMES : '*';
+DIV : '/';
+POW : '**';
+
+
+INT : ('0' ..'9')+;
+LPAREN : '(' ;
+RPAREN : ')' ;
+DOT : '.';
+COMMAT: ',';
+
+WS
+    : [ \r\n\t]+ -> skip
+    ;
