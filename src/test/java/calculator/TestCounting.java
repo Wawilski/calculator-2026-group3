@@ -9,7 +9,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.ArrayList;
 
+import visitor.CountingVisitor;
 
 class TestCounting {
 
@@ -26,12 +28,14 @@ class TestCounting {
     @Test
     void testNumberCounting() {
         e = new MyNumber(value1);
+        CountingVisitor visitor = new CountingVisitor();
+        e.accept(visitor);
         //test whether a number has zero depth (i.e. no nested expressions)
-        assertEquals( 0, e.countDepth());
+        assertEquals(0, visitor.getDepth());
         //test whether a number contains zero operations
-        assertEquals(0, e.countOps());
+        assertEquals(0, visitor.getOpsCount());
         //test whether a number contains 1 number
-        assertEquals(1, e.countNbs());
+        assertEquals(1, visitor.getNumbersCount());
     }
 
     @ParameterizedTest
@@ -51,12 +55,31 @@ class TestCounting {
         } catch (IllegalConstruction _) {
             fail();
         }
+        CountingVisitor visitor = new CountingVisitor();
+        e.accept(visitor);
         //test whether a binary operation has depth 1
-        assertEquals(1, e.countDepth(),"counting depth of an Operation");
+        assertEquals(1, visitor.getDepth(),"counting depth of an Operation");
         //test whether a binary operation contains 1 operation
-        assertEquals(1, e.countOps());
+        assertEquals(1, visitor.getOpsCount());
         //test whether a binary operation contains 2 numbers
-        assertEquals(2, e.countNbs());
+        assertEquals(2, visitor.getNumbersCount());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"*", "+", "/", "-"})
+    void testEmptyOperationCounting(String symbol) throws IllegalConstruction {
+        Expression expr = switch (symbol) {
+            case "+" -> new Plus(new ArrayList<>());
+            case "-" -> new Minus(new ArrayList<>());
+            case "*" -> new Times(new ArrayList<>());
+            case "/" -> new Divides(new ArrayList<>());
+            default -> throw new IllegalStateException("Unexpected symbol: " + symbol);
+        };
+        CountingVisitor visitor = new CountingVisitor();
+        expr.accept(visitor);
+        assertEquals(1, visitor.getDepth());
+        assertEquals(1, visitor.getOpsCount());
+        assertEquals(0, visitor.getNumbersCount());
     }
 
 }

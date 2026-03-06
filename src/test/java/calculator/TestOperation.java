@@ -7,6 +7,8 @@ import org.junit.jupiter.api.*;
 import java.util.Arrays;
 import java.util.List;
 
+import visitor.CountingVisitor;
+
 class TestOperation {
 
 	private Operation o;
@@ -28,17 +30,28 @@ class TestOperation {
 
 	@Test
 	void testCountDepth() {
-		assertEquals(2, o.countDepth());
+		CountingVisitor visitor = new CountingVisitor();
+		o.accept(visitor);
+		assertEquals(2, visitor.getDepth());
 	}
 
 	@Test
 	void testCountOps() {
-		assertEquals(3, o.countOps());
+		CountingVisitor visitor = new CountingVisitor();
+		o.accept(visitor);
+		assertEquals(3, visitor.getOpsCount());
 	}
 
 	@Test
 	void testCountNbs() {
-		assertEquals(Integer.valueOf(6), o.countNbs());
+		CountingVisitor visitor = new CountingVisitor();
+		o.accept(visitor);
+		assertEquals(Integer.valueOf(6), visitor.getNumbersCount());
+	}
+
+	@Test
+	void testArgsAreImmutableFromOutside() {
+		assertThrows(UnsupportedOperationException.class, () -> o.getArgs().add(new MyNumber(10)));
 	}
 
 }
