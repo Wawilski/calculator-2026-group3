@@ -1,6 +1,6 @@
 grammar calculator;
 
-equation : ( postfix | infix | prefix) EOF ;
+equation : ( postfix | infix | prefix)  ;
 
 // Infix Calculator
 
@@ -24,11 +24,13 @@ prefix : space_prefix | paren_prefix;
 space_prefix: (operator | fct)? LPAREN (space_prefix)+ RPAREN
             | fct space_prefix
             | operator space_prefix space_prefix
-            | (sign)? atom ;
+            | LPAREN sign atom RPAREN
+            | atom;
 
 paren_prefix: (operator|fct)? LPAREN paren_prefix (COMMAT paren_prefix)* RPAREN
             | fct paren_prefix
-            | (sign)? atom ;
+            | LPAREN sign atom RPAREN
+            | atom;
 
 
 // Postfix Calculator
@@ -38,11 +40,13 @@ postfix : space_postfix | paren_postfix;
 space_postfix: LPAREN (space_postfix)+ RPAREN (operator | fct )? 
             | space_postfix fct
             | space_postfix space_postfix operator 
-            | (sign)? atom ;
+            | LPAREN (sign)? atom RPAREN
+            | atom;
 
 paren_postfix: LPAREN paren_postfix (COMMAT paren_postfix)* RPAREN (operator | fct)?
              | paren_postfix fct
-             | (sign)? atom ;
+            | LPAREN (sign)? atom RPAREN
+            | atom;
 
 
 
