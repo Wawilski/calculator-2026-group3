@@ -10,6 +10,8 @@ import io.cucumber.java.en.When;
 import java.util.ArrayList;
 import java.util.List;
 
+import visitor.CountingVisitor;
+
 public class CalculatorSteps {
 
 	private ArrayList<Expression> params;
@@ -72,13 +74,34 @@ public class CalculatorSteps {
 		catch(IllegalConstruction _) { fail(); }
 	}
 
-	@Then("^its (.*) notation is (.*)$")
-	public void thenItsNotationIs(String notation, String s) {
-		if (notation.equals("PREFIX")||notation.equals("POSTFIX")||notation.equals("INFIX")) {
-			op.notation = Notation.valueOf(notation);
-			assertEquals(s, op.toString());
+	@Given("^the nested expression \\((\\d+) \\+ (\\d+)\\) \\* \\((\\d+) - (\\d+)\\)$")
+	public void givenTheNestedExpression(int a, int b, int c1, int d) {
+		try {
+			Expression left = new Plus(List.of(new MyNumber(a), new MyNumber(b)));
+			Expression right = new Minus(List.of(new MyNumber(c1), new MyNumber(d)));
+			op = new Times(List.of(left, right));
+		} catch (IllegalConstruction _) {
+			fail();
 		}
-		else fail(notation + " is not a correct notation! ");
+	}
+
+	@Then("^its (PREFIX|POSTFIX|INFIX) notation is (.*)$")
+	public void thenItsNotationIs(String notation, String s) {
+		assertEquals(s, c.format(op, Notation.valueOf(notation)));
+	}
+
+	@Then("^it has depth (\\d+), (\\d+) operations and (\\d+) numbers$")
+	public void thenItHasDepthOperationsAndNumbers(int depth, int operations, int numbers) {
+		CountingVisitor visitor = new CountingVisitor();
+		op.accept(visitor);
+		assertEquals(depth, visitor.getDepth());
+		assertEquals(operations, visitor.getOpsCount());
+		assertEquals(numbers, visitor.getNumbersCount());
+	}
+
+	@Then("its pretty notation is {string}")
+	public void thenItsPrettyNotationIs(String expected) {
+		assertEquals(expected, c.prettyFormat(op));
 	}
 
 	@When("^I provide a (.*) number (\\d+)$")

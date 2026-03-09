@@ -42,6 +42,15 @@ Feature: Integer Arithmetic Expressions
     And its PREFIX notation is + (8, 6)
     And its POSTFIX notation is (8, 6) +
 
+  Scenario: Counting components of the sum of two integer numbers
+    Given the sum of two numbers 8 and 6
+    Then it has depth 1, 1 operations and 2 numbers
+
+  Scenario: Pretty printing a nested expression
+    Given the nested expression (3 + 4) * (5 - 2)
+    Then its pretty notation is "(3 + 4) * (5 - 2)"
+    And it has depth 2, 3 operations and 4 numbers
+
   # This is an example of a scenario in which we provide a list of numbers as input.
   # (In fact, this is not entirely true, since what is given as input is a table of
   # strings. In this case, the table is of dimension 1 * 3 (1 line and three columns).
