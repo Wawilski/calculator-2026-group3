@@ -75,4 +75,22 @@ class TestDivides {
 		assertThrows(IllegalConstruction.class, () -> op = new Divides(params));
 	}
 
+	@Test
+	void TestDivisionByZero(){
+		int value3 = 0 ;
+		params = Arrays.asList(new MyNumber(value1), new MyNumber(value3));
+
+		try {
+
+			op = new Divides(params);
+			visitor.Evaluator e = new visitor.Evaluator();
+			ArithmeticException exception = assertThrows(ArithmeticException.class, () -> op.accept(e));
+			assertEquals("Division by zero is not allowed.", exception.getMessage());
+
+		} catch(IllegalConstruction e) {
+			fail();
+		}
+
+	}
+
 }

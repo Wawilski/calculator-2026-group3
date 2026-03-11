@@ -12,6 +12,12 @@ Feature: Integer Arithmetic Expressions
   # provided that each of the steps (Given, When, And and Then) are
   # implemented in a Java mapping file (CalculatorSteps.Java)
 
+  Scenario: Dividing by zero
+    Given an integer operation '/'
+    When I provide a first number 8
+    And I provide a second number 0
+    Then a division by zero error is raised
+
   Scenario: Adding two integer numbers
     Given an integer operation '+'
     When I provide a first number 4
