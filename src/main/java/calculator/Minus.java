@@ -1,37 +1,85 @@
 package calculator;
 
+import java.math.BigDecimal;
 import java.util.List;
 
-/** This class represents the arithmetic operation "-".
+import calculator.numbers.IntegerNumber;
+import calculator.numbers.RealNumber;
+
+/**
+ * This class represents the arithmetic operation "-".
  * The class extends an abstract superclass Operation.
  * Other subclasses of Operation represent other arithmetic operations.
+ * 
  * @see Operation
  * @see Plus
  * @see Times
  * @see Divides
  */
-public final class Minus extends Operation
- {
+public final class Minus extends Operation {
 
   /**
    * Class constructor specifying a number of Expressions to subtract.
    *
    * @param elist The list of Expressions to subtract
-   * @throws IllegalConstruction    If an empty list of expressions if passed as parameter
+   * @throws IllegalConstruction If an empty list of expressions if passed as
+   *                             parameter
    */
-  public /*constructor*/ Minus(List<Expression> elist) throws IllegalConstruction {
-  	super(elist);
-  	symbol = "-";
-  	neutral = 0;
+  public /* constructor */ Minus(List<Expression> elist) throws IllegalConstruction {
+    super(elist);
+    symbol = "-";
+    neutral = 0;
   }
 
-    /**
-     * The actual computation of the (binary) arithmetic subtraction of two integers
-     * @param l The first integer
-     * @param r The second integer that should be subtracted from the first
-     * @return The integer that is the result of the subtraction
-     */
+  /**
+   * The actual computation of the (binary) arithmetic subtraction of two integers
+   * 
+   * @param l The first integer
+   * @param r The second integer that should be subtracted from the first
+   * @return The integer that is the result of the subtraction
+   */
   public int op(int l, int r) {
-  	return (l-r);
+    return (l - r);
+  }
+
+  public IntegerNumber op(IntegerNumber l, IntegerNumber r) {
+    return new IntegerNumber(l.getValue() - r.getValue());
+  }
+
+  public RealNumber op(RealNumber l, RealNumber r) {
+
+    RealNumber result;
+    if (l.isSpecial() || r.isSpecial()) {
+      result = specialOp(l, r);
+    } else {
+
+      BigDecimal lValue = l.getValue();
+      BigDecimal rValue = r.getValue();
+
+      int precision = Math.min(lValue.scale(), rValue.scale());
+      BigDecimal value = lValue.subtract(rValue);
+      value.setScale(precision);
+      result = new RealNumber(value);
+    }
+    return result;
+  }
+
+  @Override
+  public RealNumber specialOp(RealNumber l, RealNumber r) {
+    RealNumber result;
+
+    if (l.getSpecialValue() == RealNumber.SpecialNumbers.NaN
+        || r.getSpecialValue() == RealNumber.SpecialNumbers.NaN
+        || (l.isSpecial() && r.isSpecial() && r.sign() != l.sign())) {
+      result = new RealNumber(RealNumber.SpecialNumbers.NaN, true);
+    } else if (l.isSpecial()) {
+      result = new RealNumber(l.getSpecialValue(), true);
+    } else if (r.getSpecialValue() == RealNumber.SpecialNumbers.PositiveInfinity) {
+      result = new RealNumber(RealNumber.SpecialNumbers.NegativeInfinity, true);
+    } else {
+      result = new RealNumber(RealNumber.SpecialNumbers.PositiveInfinity, true);
+    }
+    return result;
+
   }
 }
