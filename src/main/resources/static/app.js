@@ -4,6 +4,7 @@ createApp({
   data() {
     return {
       expression: "",
+      isScienceMenuOpen: false,
       hintMessage: "No calculation is done in this GUI."
     };
   },
@@ -14,9 +15,17 @@ createApp({
     window.removeEventListener("keydown", this.handleKeydown);
   },
   methods: {
+    toggleScienceMenu() {
+      this.isScienceMenuOpen = !this.isScienceMenuOpen;
+    },
+
     appendToken(token) {
       this.expression += token;
       this.hintMessage = "Expression captured only (frontend demo).";
+    },
+
+    appendScientificToken(token) {
+      this.appendToken(token);
     },
 
     handleKeydown(event) {
@@ -34,7 +43,7 @@ createApp({
 
       if (event.key === "Enter") {
         event.preventDefault();
-        
+       
         return;
       }
 

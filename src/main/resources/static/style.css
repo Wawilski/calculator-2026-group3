@@ -32,6 +32,7 @@ body {
 }
 
 .calculator-card {
+  position: relative;
   width: min(680px, 100%);
   background: var(--card);
   border: 1px solid var(--line);
@@ -39,6 +40,66 @@ body {
   box-shadow: 0 20px 40px rgba(30, 31, 36, 0.08);
   padding: 1.25rem;
   animation: rise 0.55s ease-out;
+}
+
+.with-drawer {
+  overflow: visible;
+}
+
+.science-toggle {
+  position: absolute;
+  left: -3.2rem;
+  top: 1.25rem;
+  width: 2.7rem;
+  height: 2.7rem;
+  border-radius: 12px;
+  background: #34425f;
+  color: #f5f7fb;
+  z-index: 3;
+}
+
+.science-drawer {
+  position: absolute;
+  top: 3.45rem;
+  right: 100%;
+  width: 232px;
+  padding: 0.9rem;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: #f9fbff;
+  box-shadow: 0 14px 30px rgba(30, 31, 36, 0.12);
+  transform: translateX(26px);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.24s ease, opacity 0.2s ease;
+}
+
+.with-drawer.open .science-drawer {
+  transform: translateX(-0.75rem);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.science-title {
+  margin: 0 0 0.65rem;
+  font-size: 0.82rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.science-actions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.45rem;
+}
+
+.science {
+  background: #4d5d7d;
+  color: #f6f8fc;
+  padding: 0.55rem 0.35rem;
+  font-size: 0.86rem;
+  border-radius: 10px;
 }
 
 .card-header h1 {
@@ -157,5 +218,32 @@ button:active {
 @media (max-width: 620px) {
   .calculator-card {
     padding: 1rem;
+  }
+
+  .science-toggle {
+    position: static;
+    width: 100%;
+    height: auto;
+    margin-bottom: 0.75rem;
+    padding: 0.65rem 0.8rem;
+  }
+
+  .science-drawer {
+    position: static;
+    width: 100%;
+    margin-bottom: 0.8rem;
+    transform: none;
+    max-height: 0;
+    padding: 0 0.9rem;
+    overflow: hidden;
+    opacity: 1;
+    pointer-events: none;
+    transition: max-height 0.25s ease, padding 0.25s ease;
+  }
+
+  .with-drawer.open .science-drawer {
+    max-height: 360px;
+    padding: 0.9rem;
+    pointer-events: auto;
   }
 }
