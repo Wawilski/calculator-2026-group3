@@ -14,7 +14,35 @@
   </head>
   <body>
     <div id="app" class="page">
-      <main class="calculator-card">
+      <main class="calculator-card with-drawer" :class="{ open: isScienceMenuOpen }">
+        <button
+          type="button"
+          class="science-toggle"
+          @click="toggleScienceMenu"
+          :aria-expanded="isScienceMenuOpen ? 'true' : 'false'"
+          aria-controls="science-drawer"
+        >
+          ƒx
+        </button>
+
+        <aside id="science-drawer" class="science-drawer" aria-label="Scientific functions">
+          <p class="science-title">Scientific</p>
+          <section class="science-actions">
+            <button type="button" class="science" @click="appendScientificToken('sqrt(')">√x</button>
+            <button type="button" class="science" @click="appendScientificToken('sin(')">sin</button>
+            <button type="button" class="science" @click="appendScientificToken('tan(')">tan</button>
+            <button type="button" class="science" @click="appendScientificToken('cos(')">cos</button>
+            <button type="button" class="science" @click="appendScientificToken('ln(')">ln</button>
+            <button type="button" class="science" @click="appendScientificToken('log(')">log</button>
+            <button type="button" class="science" @click="appendScientificToken('1/(')">1/x</button>
+            <button type="button" class="science" @click="appendScientificToken('e^(')">eˣ</button>
+            <button type="button" class="science" @click="appendScientificToken('^2')">x²</button>
+            <button type="button" class="science" @click="appendScientificToken('^')">x^y</button>
+            <button type="button" class="science" @click="appendScientificToken('abs(')">|x|</button>
+            <button type="button" class="science" @click="appendScientificToken('pi')">pi</button>
+          </section>
+        </aside>
+
         <section class="display" aria-label="Expression display">
           <p class="display-label">Expression</p>
           <input
@@ -51,7 +79,7 @@
           <button type="button" @click="appendToken('.')">.</button>
           <button type="button" class="op" @click="appendToken('+')">+</button>
 
-          <button type="button" class="equal" @click="appendToken('=')">=</button>
+          <button type="button" class="ghost" @click="appendToken('=')">=</button>
         </section>
       </main>
     </div>
