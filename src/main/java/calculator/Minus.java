@@ -1,10 +1,12 @@
 package calculator;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.List;
 
 import calculator.numbers.IntegerNumber;
 import calculator.numbers.RealNumber;
+import calculator.numbers.SpecialNumber;
 
 /**
  * This class represents the arithmetic operation "-".
@@ -42,10 +44,24 @@ public final class Minus extends Operation {
     return (l - r);
   }
 
+  /**
+   * The actual computation of the arithmetic subtraction of two IntegerNumber
+   * 
+   * @param l The first IntegerNumber
+   * @param r The second IntegerNumber that should be subtracted from the first
+   * @return The IntegerNumber that is the result of the subtraction
+   */
   public IntegerNumber op(IntegerNumber l, IntegerNumber r) {
     return new IntegerNumber(l.getValue() - r.getValue());
   }
 
+  /**
+   * The actual computation of the arithmetic subtraction of two RealNumber
+   * 
+   * @param l The first RealNumber
+   * @param r The second RealNumber that should be subtracted from the first
+   * @return The RealNumber that is the result of the subtraction
+   */
   public RealNumber op(RealNumber l, RealNumber r) {
 
     RealNumber result;
@@ -57,27 +73,34 @@ public final class Minus extends Operation {
       BigDecimal rValue = r.getValue();
 
       int precision = Math.min(lValue.scale(), rValue.scale());
-      BigDecimal value = lValue.subtract(rValue);
+      BigDecimal value = lValue.subtract(rValue, MathContext.DECIMAL32);
       value.setScale(precision);
       result = new RealNumber(value);
     }
     return result;
   }
 
+  /**
+   * The actual computation of the arithmetic subtraction of two RealNumber
+   * if one of them are special (INFINITY or NaN)
+   * 
+   * @param l The first RealNumber
+   * @param r The second RealNumber that should be subtracted from the first
+   * @return The RealNumber that is the result of the subtraction
+   */
   @Override
   public RealNumber specialOp(RealNumber l, RealNumber r) {
     RealNumber result;
 
-    if (l.getSpecialValue() == RealNumber.SpecialNumbers.NaN
-        || r.getSpecialValue() == RealNumber.SpecialNumbers.NaN
-        || (l.isSpecial() && r.isSpecial() && r.sign() != l.sign())) {
-      result = new RealNumber(RealNumber.SpecialNumbers.NaN, true);
-    } else if (l.isSpecial()) {
-      result = new RealNumber(l.getSpecialValue(), true);
-    } else if (r.getSpecialValue() == RealNumber.SpecialNumbers.PositiveInfinity) {
-      result = new RealNumber(RealNumber.SpecialNumbers.NegativeInfinity, true);
+    if (l.getSpecialValue().equals(r.getSpecialValue()) || l.getSpecialValue() == SpecialNumber.NaN
+        || r.getSpecialValue() == SpecialNumber.NaN) {
+      result = new RealNumber(SpecialNumber.NaN, true);
+    } else if (r.getSpecialValue() == SpecialNumber.PositiveInfinity) {
+      result = new RealNumber(SpecialNumber.NegativeInfinity, true);
+    } else if (r.getSpecialValue() == SpecialNumber.NegativeInfinity) {
+      result = new RealNumber(SpecialNumber.PositiveInfinity, true);
     } else {
-      result = new RealNumber(RealNumber.SpecialNumbers.PositiveInfinity, true);
+      result = new RealNumber(l.getSpecialValue(), true);
     }
     return result;
 

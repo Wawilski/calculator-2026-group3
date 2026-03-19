@@ -6,11 +6,9 @@ import visitor.Visitor;
 import calculator.numbers.visitor.*;
 
 /**
- * MyNumber is a concrete class that represents arithmetic numbers,
- * which are a special kind of Expressions, just like operations are.
+ * IntegerNumber is a concrete class that represents the integer type numbers.
  *
- * @see Expression
- * @see Operation
+ * @see BaseNumber
  */
 public class IntegerNumber implements BaseNumber {
 
@@ -46,16 +44,36 @@ public class IntegerNumber implements BaseNumber {
     v.visit(this);
   }
 
+  /**
+   * accept method to implement the visitor design pattern to cost the
+   * IntegerNumber
+   * into another type of number (RealNumber, RationnalNumber, ComplexNumber) or
+   * compare
+   * its type with another BaseNumber.
+   * 
+   * Each number will pass itself to the visitor object to get processed by the
+   * visitor.
+   *
+   * @param v The visitor object
+   * @see TypeVisitor
+   */
   public void accept(TypeVisitor v) {
     v.visit(this);
   }
 
+  /**
+   * apply an operation between this and another IntegerNumber
+   *
+   * @param o         The operation to apply
+   * @param rightHand The other hand of the operation
+   *
+   */
   public BaseNumber op(Operation o, BaseNumber rightHand) {
     return o.op(this, (IntegerNumber) rightHand);
   }
 
   /**
-   * Two MyNumber expressions are equal if the values they contain are equal
+   * two IntegerNumber expressions are equal if the values they contain are equal
    *
    * @param o The object to compare to
    * @return A boolean representing the result of the equality test
@@ -63,7 +81,7 @@ public class IntegerNumber implements BaseNumber {
   @Override
   public boolean equals(Object o) {
     // No object should be equal to null (not including this check can result in an
-    // exception if a MyNumber is tested against null)
+    // exception if a IntegerNumber is tested against null)
     if (o == null)
       return false;
 
@@ -98,6 +116,6 @@ public class IntegerNumber implements BaseNumber {
 
   @Override
   public String toString() {
-    return ((java.lang.Integer) value).toString();
+    return ((Integer) value).toString();
   }
 }

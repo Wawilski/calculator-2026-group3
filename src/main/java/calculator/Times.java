@@ -1,10 +1,12 @@
 package calculator;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.List;
 
 import calculator.numbers.IntegerNumber;
 import calculator.numbers.RealNumber;
+import calculator.numbers.SpecialNumber;
 
 /**
  * This class represents the arithmetic multiplication operation "*".
@@ -42,10 +44,24 @@ public final class Times extends Operation {
     return (l * r);
   }
 
+  /**
+   * The actual computation of the arithmetic multiplication of two IntegerNumber
+   * 
+   * @param l The first IntegerNumber
+   * @param r The second IntegerNumber that should be multiplied to the first
+   * @return The IntegerNumber that is the result of the multiplication
+   */
   public IntegerNumber op(IntegerNumber l, IntegerNumber r) {
     return new IntegerNumber(l.getValue() * r.getValue());
   }
 
+  /**
+   * The actual computation of the arithmetic multiplication of two RealNumber
+   * 
+   * @param l The first RealNumber
+   * @param r The second RealNumber that should be multiplied to the first
+   * @return The RealNumber that is the result of the multiplication
+   */
   public RealNumber op(RealNumber l, RealNumber r) {
 
     RealNumber result;
@@ -57,23 +73,31 @@ public final class Times extends Operation {
       BigDecimal rValue = r.getValue();
 
       int precision = Math.min(lValue.scale(), rValue.scale());
-      BigDecimal value = lValue.multiply(rValue);
+      BigDecimal value = lValue.multiply(rValue, MathContext.DECIMAL32);
       value.setScale(precision);
       result = new RealNumber(value);
     }
     return result;
   }
 
+  /**
+   * The actual computation of the arithmetic multiplication of two RealNumber
+   * if one of them are special (INFINITY or NaN)
+   * 
+   * @param l The first RealNumber
+   * @param r The second RealNumber that should be multiplied to the first
+   * @return The RealNumber that is the result of the multiplication
+   */
   @Override
   public RealNumber specialOp(RealNumber l, RealNumber r) {
     RealNumber result;
 
     if (l.sign() == 0 || r.sign() == 0) {
-      result = new RealNumber(RealNumber.SpecialNumbers.NaN, true);
+      result = new RealNumber(SpecialNumber.NaN, true);
     } else if (l.sign() == r.sign()) {
-      result = new RealNumber(RealNumber.SpecialNumbers.PositiveInfinity, true);
+      result = new RealNumber(SpecialNumber.PositiveInfinity, true);
     } else {
-      result = new RealNumber(RealNumber.SpecialNumbers.NegativeInfinity, true);
+      result = new RealNumber(SpecialNumber.NegativeInfinity, true);
     }
 
     return result;

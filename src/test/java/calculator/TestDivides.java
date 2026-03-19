@@ -6,6 +6,7 @@ import org.junit.jupiter.api.*;
 
 import calculator.numbers.*;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -83,7 +84,7 @@ class TestDivides {
   }
 
   @Test
-  void TestDivisionByZero() {
+  void TestDivisionByZeroInteger() {
     int value3 = 0;
     params = Arrays.asList(new IntegerNumber(value1), new IntegerNumber(value3));
 
@@ -98,6 +99,63 @@ class TestDivides {
       fail();
     }
 
+  }
+
+  @Test
+  // A positive real divided by zero should be equal to +INFINITY
+  void TestDivisionByZeroPositiveReal() {
+    BigDecimal value3 = new BigDecimal(0);
+    BigDecimal value4 = new BigDecimal(42);
+    params = Arrays.asList(new RealNumber(value4), new RealNumber(value3));
+    try {
+
+      op = new Divides(params);
+      visitor.Evaluator e = new visitor.Evaluator();
+      op.accept(e);
+      RealNumber result = (RealNumber) e.getResult();
+      assertEquals(result.getSpecialValue(), SpecialNumber.PositiveInfinity);
+
+    } catch (IllegalConstruction e) {
+      fail();
+    }
+  }
+
+  @Test
+  // A negative real divided by zero should be equal to -INFINITY
+  void TestDivisionByZeroNegativeReal() {
+    BigDecimal value3 = new BigDecimal(0);
+    BigDecimal value4 = new BigDecimal(-42);
+    params = Arrays.asList(new RealNumber(value4), new RealNumber(value3));
+    try {
+
+      op = new Divides(params);
+      visitor.Evaluator e = new visitor.Evaluator();
+      op.accept(e);
+      RealNumber result = (RealNumber) e.getResult();
+      assertEquals(result.getSpecialValue(), SpecialNumber.NegativeInfinity);
+
+    } catch (IllegalConstruction e) {
+      fail();
+    }
+  }
+
+  @Test
+  // 0 divided by 0 should return NaN
+  void TestDivisionZeroByZeroReal() {
+    BigDecimal value3 = new BigDecimal(0);
+    BigDecimal value4 = new BigDecimal(0);
+    params = Arrays.asList(new RealNumber(value4), new RealNumber(value3));
+    try {
+
+      op = new Divides(params);
+      visitor.Evaluator e = new visitor.Evaluator();
+      op.accept(e);
+      RealNumber result = (RealNumber) e.getResult();
+      assertEquals(result.getSpecialValue(), SpecialNumber.NaN);
+
+    } catch (IllegalConstruction e) {
+      fail();
+    }
   }
 
 }
