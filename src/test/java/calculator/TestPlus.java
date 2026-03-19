@@ -1,11 +1,13 @@
 package calculator;
 
 import calculator.numbers.*;
+import visitor.Evaluator;
 
 //Import Junit5 libraries for unit testing:
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -83,6 +85,39 @@ class TestPlus {
   void testNullParamList() {
     params = null;
     assertThrows(IllegalConstruction.class, () -> op = new Plus(params));
+  }
+
+  @Test
+  // A number added to INFINITY shou:d return INFINITY
+  void testInfinityPlus() {
+    ArrayList<Expression> p = new ArrayList<>(
+        Arrays.asList(new RealNumber(new BigDecimal(value1)), new RealNumber(SpecialNumber.PositiveInfinity, true)));
+    try {
+      Plus e = new Plus(p);
+      Evaluator v = new Evaluator();
+      e.accept(v);
+      RealNumber result = (RealNumber) v.getResult();
+      assertEquals(SpecialNumber.PositiveInfinity, result.getSpecialValue());
+    } catch (IllegalConstruction _) {
+      fail();
+    }
+  }
+
+  @Test
+  // Add 2 Infinity of opposite signs should return a NaN
+  void testOppositeInfinityPlus() {
+    ArrayList<Expression> p = new ArrayList<>(
+        Arrays.asList(new RealNumber(SpecialNumber.NegativeInfinity, true),
+            new RealNumber(SpecialNumber.PositiveInfinity, true)));
+    try {
+      Plus e = new Plus(p);
+      Evaluator v = new Evaluator();
+      e.accept(v);
+      RealNumber result = (RealNumber) v.getResult();
+      assertEquals(SpecialNumber.NaN, result.getSpecialValue());
+    } catch (IllegalConstruction _) {
+      fail();
+    }
   }
 
 }

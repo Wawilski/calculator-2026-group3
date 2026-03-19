@@ -1,10 +1,12 @@
 package calculator;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 import calculator.numbers.IntegerNumber;
 import calculator.numbers.RealNumber;
+import calculator.numbers.SpecialNumber;
 
 /**
  * This class represents the arithmetic division operation "/".
@@ -44,6 +46,13 @@ public final class Divides extends Operation {
     return (l / r);
   }
 
+  /**
+   * The actual computation of the arithmetic division of two IntegerNumber
+   * 
+   * @param l The first IntegerNumber
+   * @param r The second IntegerNumber that should be divided to the first
+   * @return The IntegerNumber that is the result of the division
+   */
   public IntegerNumber op(IntegerNumber l, IntegerNumber r) {
     int rightHand = r.getValue();
     if (rightHand == 0)
@@ -51,6 +60,13 @@ public final class Divides extends Operation {
     return new IntegerNumber(l.getValue() / rightHand);
   }
 
+  /**
+   * The actual computation of the arithmetic division of two RealNumber
+   * 
+   * @param l The first RealNumber
+   * @param r The second RealNumber that should be divided to the first
+   * @return The RealNumber that is the result of the division
+   */
   public RealNumber op(RealNumber l, RealNumber r) {
 
     RealNumber result;
@@ -58,32 +74,42 @@ public final class Divides extends Operation {
     if (l.isSpecial() || r.isSpecial() || r.getValue().compareTo(BigDecimal.ZERO) == 0) {
       result = specialOp(l, r);
     } else {
-
       BigDecimal lValue = l.getValue();
       BigDecimal rValue = r.getValue();
-      int precision = Math.min(lValue.scale(), rValue.scale());
-      BigDecimal value = lValue.divide(rValue);
-      value.setScale(precision);
+      BigDecimal value = lValue.divide(rValue, 16, RoundingMode.CEILING);
       result = new RealNumber(value);
     }
     return result;
   }
 
+  /**
+   * The actual computation of the arithmetic division of two RealNumber
+   * if one of them are special (INFINITY or NaN) or if the divisor is 0
+   * 
+   * @param l The first RealNumber
+   * @param r The second RealNumber that should be divided to the first
+   * @return The RealNumber that is the result of the division
+   */
   @Override
   public RealNumber specialOp(RealNumber l, RealNumber r) {
     RealNumber result;
-    RealNumber.SpecialNumbers lSpecialValue = l.getSpecialValue();
-    RealNumber.SpecialNumbers rSpecialValue = r.getSpecialValue();
+    SpecialNumber lSpecialValue = l.getSpecialValue();
+    SpecialNumber rSpecialValue = r.getSpecialValue();
+    int lSign = l.sign();
+    int rSign = r.sign();
 
-    if (lSpecialValue == RealNumber.SpecialNumbers.NaN || rSpecialValue == RealNumber.SpecialNumbers.NaN
+    if (lSpecialValue == SpecialNumber.NaN
+        || rSpecialValue == SpecialNumber.NaN
+        || (l.isSpecial() && r.isSpecial())
         || (l.sign() == 0 && r.sign() == 0)) {
-      result = new RealNumber(RealNumber.SpecialNumbers.NaN, true);
-    } else if (l.sign() > 0 && r.sign() == 0) {
-      result = new RealNumber(RealNumber.SpecialNumbers.PositiveInfinity, true);
-    } else if (l.sign() < 0 && r.sign() == 0) {
-      result = new RealNumber(RealNumber.SpecialNumbers.NegativeInfinity, true);
+      result = new RealNumber(SpecialNumber.NaN, true);
+    } else if ((lSign > 0 && rSign >= 0) || (lSign < 0 && rSign < 0)) {
+      result = new RealNumber(SpecialNumber.PositiveInfinity, true);
+    } else if ((lSign < 0 && rSign >= 0) || (lSign > 0 && rSign < 0)) {
+      result = new RealNumber(SpecialNumber.NegativeInfinity, true);
     } else {
       result = new RealNumber(new BigDecimal(0));
+
     }
     return result;
 

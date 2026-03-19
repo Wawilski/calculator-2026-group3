@@ -1,11 +1,13 @@
 package calculator;
 
 import calculator.numbers.*;
+import visitor.Evaluator;
 
 //Import Junit5 libraries for unit testing:
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -19,7 +21,7 @@ class TestMinus {
 
   @BeforeEach
   void setUp() {
-    params = Arrays.asList(new MyNumber(value1), new MyNumber(value2));
+    params = Arrays.asList(new IntegerNumber(value1), new IntegerNumber(value2));
     try {
       op = new Minus(params);
     } catch (IllegalConstruction _) {
@@ -48,7 +50,7 @@ class TestMinus {
   void testEquals() {
     // Two similar expressions, constructed separately (and using different
     // constructors) should not be equal
-    List<Expression> p = Arrays.asList(new MyNumber(value1), new MyNumber(value2));
+    List<Expression> p = Arrays.asList(new IntegerNumber(value1), new IntegerNumber(value2));
     try {
       Minus e = new Minus(p);
       assertEquals(op, e);
@@ -67,7 +69,7 @@ class TestMinus {
   void testHashCode() {
     // Two similar expressions, constructed separately (and using different
     // constructors) should have the same hashcode
-    List<Expression> p = Arrays.asList(new MyNumber(value1), new MyNumber(value2));
+    List<Expression> p = Arrays.asList(new IntegerNumber(value1), new IntegerNumber(value2));
     try {
       Minus e = new Minus(p);
       assertEquals(e.hashCode(), op.hashCode());
@@ -80,6 +82,56 @@ class TestMinus {
   void testNullParamList() {
     params = null;
     assertThrows(IllegalConstruction.class, () -> op = new Minus(params));
+  }
+
+  @Test
+  // INFINITY decreased by a real number shou:d return INFINITY
+  void testInfinityMinusReal() {
+    ArrayList<Expression> p = new ArrayList<>(
+        Arrays.asList(new RealNumber(SpecialNumber.PositiveInfinity, true), new RealNumber(new BigDecimal(value1))));
+    try {
+      Minus e = new Minus(p);
+      Evaluator v = new Evaluator();
+      e.accept(v);
+      RealNumber result = (RealNumber) v.getResult();
+      System.out.println(result.getSpecialValue());
+      assertEquals(SpecialNumber.PositiveInfinity, result.getSpecialValue());
+    } catch (IllegalConstruction _) {
+      fail();
+    }
+  }
+
+  void testRealMinusInfinity() {
+    // A real number decreased by an infinite value shou:d return the opposite of
+    // the infinite value
+    ArrayList<Expression> p = new ArrayList<>(
+        Arrays.asList(new RealNumber(new BigDecimal(value1)), new RealNumber(SpecialNumber.PositiveInfinity, true)));
+    try {
+      Minus e = new Minus(p);
+      Evaluator v = new Evaluator();
+      e.accept(v);
+      RealNumber result = (RealNumber) v.getResult();
+      assertEquals(SpecialNumber.NegativeInfinity, result.getSpecialValue());
+    } catch (IllegalConstruction _) {
+      fail();
+    }
+  }
+
+  @Test
+  // Subtract 2 Infinity of same signs should return a NaN
+  void testSameSignInfinityMinus() {
+    ArrayList<Expression> p = new ArrayList<>(
+        Arrays.asList(new RealNumber(SpecialNumber.PositiveInfinity, true),
+            new RealNumber(SpecialNumber.PositiveInfinity, true)));
+    try {
+      Minus e = new Minus(p);
+      Evaluator v = new Evaluator();
+      e.accept(v);
+      RealNumber result = (RealNumber) v.getResult();
+      assertEquals(SpecialNumber.NaN, result.getSpecialValue());
+    } catch (IllegalConstruction _) {
+      fail();
+    }
   }
 
 }

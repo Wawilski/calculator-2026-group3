@@ -8,6 +8,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.Arrays;
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,12 +18,16 @@ class TestEvaluator {
 
   private Calculator calc;
   private int value1, value2;
+  private BigDecimal value3, value4;
 
   @BeforeEach
   void setUp() {
     calc = new Calculator();
     value1 = 8;
     value2 = 6;
+    value3 = new BigDecimal(4.5);
+    value4 = new BigDecimal(1.2);
+
   }
 
   @Test
@@ -30,7 +37,7 @@ class TestEvaluator {
 
   @ParameterizedTest
   @ValueSource(strings = { "*", "+", "/", "-" })
-  void testEvaluateOperations(String symbol) {
+  void testEvaluateIntegerOperations(String symbol) {
     List<Expression> params = Arrays.asList(new IntegerNumber(value1), new IntegerNumber(value2));
     try {
       // construct another type of operation depending on the input value
@@ -40,6 +47,29 @@ class TestEvaluator {
         case "-" -> assertEquals(new IntegerNumber(value1 - value2), calc.eval(new Minus(params)));
         case "*" -> assertEquals(new IntegerNumber(value1 * value2), calc.eval(new Times(params)));
         case "/" -> assertEquals(new IntegerNumber(value1 / value2), calc.eval(new Divides(params)));
+        default -> fail();
+      }
+    } catch (IllegalConstruction _) {
+      fail();
+    }
+  }
+
+  @ParameterizedTest
+  @ValueSource(strings = { "*", "+", "/", "-" })
+  void testEvaluateRealOperations(String symbol) {
+    List<Expression> params = Arrays.asList(new RealNumber(value3), new RealNumber(value4));
+    try {
+      // construct another type of operation depending on the input value
+      // of the parameterised test
+      switch (symbol) {
+        case "+" ->
+          assertEquals(new RealNumber(value3.add(value4, MathContext.DECIMAL32)), calc.eval(new Plus(params)));
+        case "-" ->
+          assertEquals(new RealNumber(value3.subtract(value4, MathContext.DECIMAL32)), calc.eval(new Minus(params)));
+        case "*" ->
+          assertEquals(new RealNumber(value3.multiply(value4, MathContext.DECIMAL32)), calc.eval(new Times(params)));
+        case "/" ->
+          assertEquals(new RealNumber(value3.divide(value4, 16, RoundingMode.CEILING)), calc.eval(new Divides(params)));
         default -> fail();
       }
     } catch (IllegalConstruction _) {

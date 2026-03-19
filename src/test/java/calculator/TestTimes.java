@@ -1,10 +1,13 @@
 package calculator;
 
 import calculator.numbers.*;
+import visitor.Evaluator;
+
 //Import Junit5 libraries for unit testing:
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -77,6 +80,23 @@ class TestTimes {
   void testNullParamList() {
     params = null;
     assertThrows(IllegalConstruction.class, () -> op = new Times(params));
+  }
+
+  @Test
+  // An infinite value times 0 should return a NaN
+  void testInfinityTimesZero() {
+
+    ArrayList<Expression> p = new ArrayList<>(
+        Arrays.asList(new RealNumber(new BigDecimal(0)), new RealNumber(SpecialNumber.PositiveInfinity, true)));
+    try {
+      Times e = new Times(p);
+      Evaluator v = new Evaluator();
+      e.accept(v);
+      RealNumber result = (RealNumber) v.getResult();
+      assertEquals(SpecialNumber.NaN, result.getSpecialValue());
+    } catch (IllegalConstruction _) {
+      fail();
+    }
   }
 
 }
