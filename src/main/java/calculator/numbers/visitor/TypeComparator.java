@@ -30,4 +30,11 @@ public class TypeComparator extends TypeVisitor {
 
   }
 
+  @Override
+  public void visit(RationalNumber r) {
+    if (castType == NumberType.INTEGER) {
+      castType = NumberType.RATIONAL;
+    }
+  }
+
 }

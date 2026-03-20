@@ -4,6 +4,7 @@ import calculator.MyNumber;
 import calculator.Operation;
 import calculator.numbers.RealNumber;
 import calculator.numbers.IntegerNumber;
+import calculator.numbers.RationalNumber;
 
 /**
  * Visitor design pattern
@@ -18,18 +19,25 @@ public abstract class Visitor {
   public abstract void visit(MyNumber n);
 
   /**
-   * The Visitor can traverse a real
-   *
-   * @param r The real being visited
-   */
-  public abstract void visit(RealNumber r);
-
-  /**
    * The Visitor can traverse an integer
    *
    * @param n The integer being visited
    */
   public abstract void visit(IntegerNumber r);
+
+  /**
+   * The Visitor can traverse a rational
+   *
+   * @param r The rational being visited
+   */
+  public abstract void visit(RationalNumber r);
+
+  /**
+   * The Visitor can traverse a real
+   *
+   * @param r The real being visited
+   */
+  public abstract void visit(RealNumber r);
 
   /**
    * The Visitor can traverse an operation (a subtype of Expression)

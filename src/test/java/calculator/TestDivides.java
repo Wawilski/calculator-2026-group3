@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.*;
 
 import calculator.numbers.*;
+import visitor.Evaluator;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -91,7 +92,7 @@ class TestDivides {
     try {
 
       op = new Divides(params);
-      visitor.Evaluator e = new visitor.Evaluator();
+      Evaluator e = new Evaluator();
       ArithmeticException exception = assertThrows(ArithmeticException.class, () -> op.accept(e));
       assertEquals("Division by zero is not allowed.", exception.getMessage());
 
@@ -110,7 +111,7 @@ class TestDivides {
     try {
 
       op = new Divides(params);
-      visitor.Evaluator e = new visitor.Evaluator();
+      Evaluator e = new Evaluator();
       op.accept(e);
       RealNumber result = (RealNumber) e.getResult();
       assertEquals(result.getSpecialValue(), SpecialNumber.PositiveInfinity);
@@ -129,7 +130,7 @@ class TestDivides {
     try {
 
       op = new Divides(params);
-      visitor.Evaluator e = new visitor.Evaluator();
+      Evaluator e = new Evaluator();
       op.accept(e);
       RealNumber result = (RealNumber) e.getResult();
       assertEquals(result.getSpecialValue(), SpecialNumber.NegativeInfinity);
@@ -148,7 +149,7 @@ class TestDivides {
     try {
 
       op = new Divides(params);
-      visitor.Evaluator e = new visitor.Evaluator();
+      Evaluator e = new Evaluator();
       op.accept(e);
       RealNumber result = (RealNumber) e.getResult();
       assertEquals(result.getSpecialValue(), SpecialNumber.NaN);
@@ -158,4 +159,43 @@ class TestDivides {
     }
   }
 
+  @Test
+  void testRationalDivision() {
+    RationalNumber left = new RationalNumber(1, 2);
+    RationalNumber right = new RationalNumber(3, 2);
+
+    ArrayList<Expression> p = new ArrayList<>(
+        Arrays.asList(left, right));
+    try {
+      Divides t = new Divides(p);
+      Evaluator v = new Evaluator();
+      t.accept(v);
+      RationalNumber result = (RationalNumber) v.getResult();
+
+      assertEquals(result, new RationalNumber(1, 3));
+    } catch (IllegalConstruction _) {
+      fail();
+    }
+
+  }
+
+  @Test
+  void testRationalDivisionByZero() {
+    RationalNumber left = new RationalNumber(1, 2);
+    RationalNumber right = new RationalNumber(0, 1);
+
+    ArrayList<Expression> p = new ArrayList<>(
+        Arrays.asList(left, right));
+    try {
+
+      op = new Divides(p);
+      Evaluator e = new Evaluator();
+      ArithmeticException exception = assertThrows(ArithmeticException.class, () -> op.accept(e));
+      assertEquals("Division by zero is not allowed.", exception.getMessage());
+
+    } catch (IllegalConstruction e) {
+      fail();
+    }
+
+  }
 }

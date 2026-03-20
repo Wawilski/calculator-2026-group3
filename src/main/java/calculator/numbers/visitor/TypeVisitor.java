@@ -1,8 +1,7 @@
 package calculator.numbers.visitor;
 
-import calculator.numbers.IllegalCasting;
 import calculator.numbers.IntegerNumber;
-
+import calculator.numbers.RationalNumber;
 import calculator.numbers.RealNumber;
 
 /**
@@ -23,5 +22,12 @@ public abstract class TypeVisitor {
    * @param i the IntegerNumber visited
    */
   public abstract void visit(IntegerNumber i);
+
+  /**
+   * The Visitor can traverse an integer type number
+   *
+   * @param r the RationalNumber visited
+   */
+  public abstract void visit(RationalNumber r);
 
 }

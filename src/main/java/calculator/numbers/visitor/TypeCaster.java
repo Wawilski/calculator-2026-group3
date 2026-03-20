@@ -30,22 +30,10 @@ public class TypeCaster extends TypeVisitor {
   }
 
   /**
-   * Visiting a Real Atom to cast it to the specified type of the visitor
+   * Visiting an IntegerNumber to cast it to the specified type of the visitor
    *
-   * @param r The visited RealNumber to be cast
-   * @throws IllegalCasting in case of an impossible cast
+   * @param r The visited IntegerNumber to be cast
    */
-  @Override
-  public void visit(RealNumber r) {
-    switch (type) {
-      case REAL:
-        result = r;
-        break;
-      default:
-        break;
-    }
-  }
-
   @Override
   public void visit(IntegerNumber i) {
     switch (type) {
@@ -55,8 +43,46 @@ public class TypeCaster extends TypeVisitor {
       case REAL:
         result = new RealNumber(new BigDecimal(i.getValue()));
         break;
-      default:
+      case RATIONAL:
+        result = new RationalNumber(i.getValue(), 1);
         break;
+      default:
+        throw new IllegalCast();
+    }
+  }
+
+  /**
+   * Visiting an RationalNumber to cast it to the specified type of the visitor
+   *
+   * @param r The visited RationalNumber to be cast
+   */
+  @Override
+  public void visit(RationalNumber r) {
+    switch (type) {
+      case REAL:
+        result = new RealNumber(r.getNumerator() / r.getDenominator());
+        break;
+      case RATIONAL:
+        result = r;
+        break;
+      default:
+        throw new IllegalCast();
+    }
+  }
+
+  /**
+   * Visiting a RealNumber to cast it to the specified type of the visitor
+   *
+   * @param r The visited RealNumber to be cast
+   */
+  @Override
+  public void visit(RealNumber r) {
+    switch (type) {
+      case REAL:
+        result = r;
+        break;
+      default:
+        throw new IllegalCast();
     }
   }
 

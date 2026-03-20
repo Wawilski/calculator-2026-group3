@@ -99,4 +99,24 @@ class TestTimes {
     }
   }
 
+  @Test
+  void testRationalMultiplication() {
+    RationalNumber left = new RationalNumber(1, 2);
+    RationalNumber right = new RationalNumber(3, 2);
+
+    ArrayList<Expression> p = new ArrayList<>(
+        Arrays.asList(left, right));
+    try {
+      Times t = new Times(p);
+      Evaluator v = new Evaluator();
+      t.accept(v);
+      RationalNumber result = (RationalNumber) v.getResult();
+
+      assertEquals(result, new RationalNumber(3, 4));
+    } catch (IllegalConstruction _) {
+      fail();
+    }
+
+  }
+
 }

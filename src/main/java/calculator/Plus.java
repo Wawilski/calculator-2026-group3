@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 
 import calculator.numbers.IntegerNumber;
+import calculator.numbers.RationalNumber;
 import calculator.numbers.RealNumber;
 import calculator.numbers.SpecialNumber;
 
@@ -54,6 +55,20 @@ public final class Plus extends Operation {
    */
   public IntegerNumber op(IntegerNumber l, IntegerNumber r) {
     return new IntegerNumber(l.getValue() + r.getValue());
+  }
+
+  /**
+   * The actual computation of the arithmetic addition of two RationalNumber
+   * 
+   * @param l The first RationalNumber
+   * @param r The second RationalNumber that should be added to the first
+   * @return The RationalNumber that is the result of the addition
+   */
+  public RationalNumber op(RationalNumber l, RationalNumber r) {
+    int numerator = l.getNumerator() * r.getDenominator() + r.getNumerator() * l.getDenominator();
+    int denominator = l.getDenominator() * r.getDenominator();
+
+    return new RationalNumber(numerator, denominator);
   }
 
   /**

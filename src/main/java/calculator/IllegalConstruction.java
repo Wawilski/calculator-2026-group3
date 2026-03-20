@@ -5,4 +5,5 @@ package calculator;
  * expression is encountered.
  */
 public class IllegalConstruction extends Exception {
+
 }

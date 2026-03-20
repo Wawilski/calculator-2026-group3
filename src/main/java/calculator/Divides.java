@@ -5,6 +5,7 @@ import java.math.RoundingMode;
 import java.util.List;
 
 import calculator.numbers.IntegerNumber;
+import calculator.numbers.RationalNumber;
 import calculator.numbers.RealNumber;
 import calculator.numbers.SpecialNumber;
 
@@ -58,6 +59,22 @@ public final class Divides extends Operation {
     if (rightHand == 0)
       throw new ArithmeticException("Division by zero is not allowed.");
     return new IntegerNumber(l.getValue() / rightHand);
+  }
+
+  /**
+   * The actual computation of the arithmetic division of two RationalNumber
+   * 
+   * @param l The first RationalNumber
+   * @param r The second RationalNumber that should be divided to the first
+   * @return The RationalNumber that is the result of the division
+   */
+  public RationalNumber op(RationalNumber l, RationalNumber r) {
+    int numerator = l.getNumerator() * r.getDenominator();
+    int denominator = l.getDenominator() * r.getNumerator();
+
+    if (denominator == 0)
+      throw new ArithmeticException("Division by zero is not allowed.");
+    return new RationalNumber(numerator, denominator);
   }
 
   /**

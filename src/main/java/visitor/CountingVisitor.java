@@ -4,6 +4,7 @@ import calculator.MyNumber;
 import calculator.Operation;
 import calculator.numbers.RealNumber;
 import calculator.numbers.IntegerNumber;
+import calculator.numbers.RationalNumber;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -43,7 +44,12 @@ public class CountingVisitor extends Visitor {
   public void visit(IntegerNumber r) {
     numbersCount++;
     depths.push(0);
+  }
 
+  @Override
+  public void visit(RationalNumber r) {
+    numbersCount++;
+    depths.push(0);
   }
 
   /**
