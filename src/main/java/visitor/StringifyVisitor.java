@@ -1,10 +1,14 @@
 package visitor;
 
+import calculator.Divides;
+import calculator.Expression;
+import calculator.IllegalConstruction;
 import calculator.MyNumber;
 import calculator.Notation;
 import calculator.Operation;
 import calculator.numbers.RealNumber;
 import calculator.numbers.IntegerNumber;
+import calculator.numbers.RationalNumber;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -52,9 +56,19 @@ public class StringifyVisitor extends Visitor {
   }
 
   @Override
+  public void visit(RationalNumber r) {
+    String rendered = switch (notation) {
+      case INFIX -> "( " + r.getNumerator() + " / " + r.getDenominator() + " )";
+      case PREFIX -> "/ ( " + Integer.toString(r.getNumerator()) + ", " + Integer.toString(r.getDenominator()) + " )";
+      case POSTFIX -> "( " + Integer.toString(r.getNumerator()) + ", " + Integer.toString(r.getDenominator()) + " ) /";
+    };
+
+    renderedExpressions.push(rendered);
+  }
+
+  @Override
   public void visit(RealNumber r) {
     renderedExpressions.push(r.toString());
-
   }
 
   /**

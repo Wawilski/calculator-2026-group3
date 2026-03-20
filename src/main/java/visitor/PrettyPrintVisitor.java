@@ -4,6 +4,7 @@ import calculator.MyNumber;
 import calculator.Operation;
 import calculator.numbers.RealNumber;
 import calculator.numbers.IntegerNumber;
+import calculator.numbers.RationalNumber;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -53,6 +54,11 @@ public class PrettyPrintVisitor extends Visitor {
   public void visit(RealNumber r) {
     renderedExpressions.push(new RenderedNode(r.toString(), 3, false));
 
+  }
+
+  @Override
+  public void visit(RationalNumber r) {
+    renderedExpressions.push(new RenderedNode(r.toString(), 3, false));
   }
 
   @Override

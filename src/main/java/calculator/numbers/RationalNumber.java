@@ -1,0 +1,124 @@
+package calculator.numbers;
+
+import calculator.Operation;
+import calculator.numbers.visitor.TypeVisitor;
+import visitor.Visitor;
+
+/**
+ * RationalNumber
+ */
+public class RationalNumber implements BaseNumber {
+
+  private int numerator;
+
+  private int denominator;
+
+  public /* constructor */ RationalNumber(int numerator, int denominator) throws IllegalNumberConstruction {
+    if (denominator == 0) {
+      throw new IllegalNumberConstruction();
+    }
+    this.numerator = numerator;
+    this.denominator = denominator;
+    this.simplify();
+  }
+
+  public int getNumerator() {
+    return numerator;
+  }
+
+  public int getDenominator() {
+    return denominator;
+  }
+
+  @Override
+  public void accept(TypeVisitor v) {
+    v.visit(this);
+  }
+
+  @Override
+  public void accept(Visitor v) {
+    v.visit(this);
+  }
+
+  public void simplify() {
+    int num = Math.abs(this.numerator);
+    int den = Math.abs(this.denominator);
+    int sign = ((this.numerator < 0) ^ (this.denominator) < 0) ? -1 : 1;
+    int temp;
+    while (den != 0) {
+      temp = den;
+      den = num % den;
+      num = temp;
+    }
+
+    this.numerator = (int) sign * Math.abs(numerator / num);
+    this.denominator = (int) Math.abs(denominator / num);
+
+  }
+
+  @Override
+  public BaseNumber op(Operation o, BaseNumber rightHand) {
+    return o.op(this, ((RationalNumber) rightHand));
+  }
+
+  /**
+   * Two RationalNumber expressions are equal if the values they contain are equal
+   *
+   * @param o The object to compare to
+   * @return A boolean representing the result of the equality test
+   */
+  @Override
+  public boolean equals(Object o) {
+    // No object should be equal to null (not including this check can result in an
+    // exception if a RealNumber is tested against null)
+    if (o == null)
+      return false;
+
+    // If the object is compared to itself then return true
+    if (o == this) {
+      return true;
+    }
+
+    // If the value of the Integer number is equal to the numerator and the
+    // denominator is equal to 1 than the two objects are equal
+    if (o instanceof IntegerNumber) {
+      return this.denominator == 1 && this.numerator == ((IntegerNumber) o).getValue();
+    }
+
+    // If the value of the Real number is equal to the devision between the
+    // numerator and the denominator than two objects are equal
+    if (o instanceof RealNumber) {
+      return ((RealNumber) o).equals(new RealNumber(this.numerator / this.denominator));
+    }
+
+    if (!(o instanceof RationalNumber)) {
+      return false;
+    }
+
+    return this.numerator == ((RationalNumber) o).getNumerator()
+        && this.denominator == ((RationalNumber) o).getDenominator();
+  }
+
+  /**
+   * The method hashCode needs to be overridden if the equals method is
+   * overridden;
+   * otherwise there may be problems when you use your object in hashed
+   * collections
+   * such as HashMap, HashSet, LinkedHashSet.
+   *
+   * @return The result of computing the hash.
+   */
+  @Override
+  public int hashCode() {
+    return Math.powExact(numerator, 2) + Math.powExact(denominator, 3);
+  }
+
+  @Override
+  public String toString() {
+
+    String denominatorString = (this.denominator == 1) ? "" : " / " + ((Integer) this.denominator).toString();
+
+    return ((Integer) this.numerator).toString() + denominatorString;
+  }
+
+}

@@ -8,6 +8,7 @@ import calculator.numbers.visitor.TypeCaster;
 import calculator.numbers.visitor.TypeComparator;
 import calculator.numbers.BaseNumber;
 import calculator.numbers.IntegerNumber;
+import calculator.numbers.RationalNumber;
 
 import java.util.ArrayList;
 
@@ -50,6 +51,11 @@ public class Evaluator extends Visitor {
   @Override
   public void visit(IntegerNumber i) {
     computedValue = i;
+  }
+
+  @Override
+  public void visit(RationalNumber r) {
+    computedValue = r;
   }
 
   /**

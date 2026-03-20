@@ -134,4 +134,23 @@ class TestMinus {
     }
   }
 
+  @Test
+  void testRationalSubtraction() {
+    RationalNumber left = new RationalNumber(1, 2);
+    RationalNumber right = new RationalNumber(3, 2);
+
+    ArrayList<Expression> p = new ArrayList<>(
+        Arrays.asList(left, right));
+    try {
+      Minus t = new Minus(p);
+      Evaluator v = new Evaluator();
+      t.accept(v);
+      RationalNumber result = (RationalNumber) v.getResult();
+
+      assertEquals(result, new RationalNumber(-1, 1));
+    } catch (IllegalConstruction _) {
+      fail();
+    }
+
+  }
 }

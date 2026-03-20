@@ -1,14 +1,13 @@
 package calculator;
 
 import java.math.BigDecimal;
-import java.math.MathContext;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
 import calculator.numbers.IntegerNumber;
+import calculator.numbers.RationalNumber;
 import calculator.numbers.RealNumber;
 
 /**
@@ -70,6 +69,13 @@ public class Main {
       List<Expression> params5 = new ArrayList<>();
       Collections.addAll(params5, new RealNumber(new BigDecimal(3.5)), new RealNumber(new BigDecimal(4.5)));
       e = new Divides(params5);
+      c.print(e);
+      c.eval(e);
+      logger.info("Postfix form: " + c.format(e, Notation.POSTFIX));
+
+      List<Expression> params6 = new ArrayList<>();
+      Collections.addAll(params6, new RationalNumber(1, 2), new RationalNumber(1, 2));
+      e = new Plus(params6);
       c.print(e);
       c.eval(e);
       logger.info("Postfix form: " + c.format(e, Notation.POSTFIX));
