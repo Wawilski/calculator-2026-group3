@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.List;
 
+import calculator.numbers.ComplexNumber;
 import calculator.numbers.IntegerNumber;
 import calculator.numbers.RationalNumber;
 import calculator.numbers.RealNumber;
@@ -109,15 +110,27 @@ public final class Minus extends Operation {
 
     if (l.getSpecialValue().equals(r.getSpecialValue()) || l.getSpecialValue() == SpecialNumber.NaN
         || r.getSpecialValue() == SpecialNumber.NaN) {
-      result = new RealNumber(SpecialNumber.NaN, true);
+      result = new RealNumber(SpecialNumber.NaN);
     } else if (r.getSpecialValue() == SpecialNumber.PositiveInfinity) {
-      result = new RealNumber(SpecialNumber.NegativeInfinity, true);
+      result = new RealNumber(SpecialNumber.NegativeInfinity);
     } else if (r.getSpecialValue() == SpecialNumber.NegativeInfinity) {
-      result = new RealNumber(SpecialNumber.PositiveInfinity, true);
+      result = new RealNumber(SpecialNumber.PositiveInfinity);
     } else {
-      result = new RealNumber(l.getSpecialValue(), true);
+      result = new RealNumber(l.getSpecialValue());
     }
     return result;
 
+  }
+
+  @Override
+  public ComplexNumber op(ComplexNumber l, ComplexNumber r) {
+    ComplexNumber result;
+
+    if (l.isNaN() || r.isNaN()) {
+      result = new ComplexNumber();
+    } else {
+      result = new ComplexNumber(l.getReal().subtract(r.getReal()), l.getImaginary().subtract(r.getImaginary()));
+    }
+    return result;
   }
 }

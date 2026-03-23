@@ -46,7 +46,7 @@ public class RealNumber implements BaseNumber {
     this.specialValue = null;
   }
 
-  public /* constructor */ RealNumber(SpecialNumber specialValue, boolean isSpecial) {
+  public /* constructor */ RealNumber(SpecialNumber specialValue) {
     this.value = null;
     this.special = true;
     this.specialValue = specialValue;
@@ -165,7 +165,7 @@ public class RealNumber implements BaseNumber {
       return this.specialValue.equals(((RealNumber) o).getSpecialValue());
     }
 
-    return this.value.equals(((RealNumber) o).getValue());
+    return this.value.compareTo(((RealNumber) o).getValue()) == 0;
   }
 
   /**

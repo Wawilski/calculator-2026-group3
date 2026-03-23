@@ -3,6 +3,7 @@ package visitor;
 import calculator.MyNumber;
 import calculator.Operation;
 import calculator.numbers.RealNumber;
+import calculator.numbers.ComplexNumber;
 import calculator.numbers.IntegerNumber;
 import calculator.numbers.RationalNumber;
 
@@ -59,6 +60,11 @@ public class PrettyPrintVisitor extends Visitor {
   @Override
   public void visit(RationalNumber r) {
     renderedExpressions.push(new RenderedNode(r.toString(), 3, false));
+  }
+
+  @Override
+  public void visit(ComplexNumber c) {
+    renderedExpressions.push(new RenderedNode(c.toString(), 3, false));
   }
 
   @Override

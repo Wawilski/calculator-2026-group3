@@ -8,6 +8,7 @@ import calculator.numbers.*;
 import visitor.Evaluator;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -198,4 +199,66 @@ class TestDivides {
     }
 
   }
+
+  @Test
+  void testComplexDivision() {
+    ComplexNumber left = new ComplexNumber(1, 6.00);
+    ComplexNumber right = new ComplexNumber(8.00, 4);
+
+    ArrayList<Expression> p = new ArrayList<>(
+        Arrays.asList(left, right));
+    try {
+      Divides t = new Divides(p);
+      Evaluator v = new Evaluator();
+      t.accept(v);
+      ComplexNumber result = (ComplexNumber) v.getResult();
+
+      ComplexNumber test = new ComplexNumber(0.05555556, 0.07638889);
+      // To compare solution and result we need to scale the result to the solution
+      BigDecimal real = result.getReal().setScale(8, RoundingMode.CEILING);
+      BigDecimal im = result.getImaginary().setScale(8, RoundingMode.CEILING);
+      assertEquals(test, new ComplexNumber(real, im));
+    } catch (IllegalConstruction _) {
+      fail();
+    }
+  }
+
+  @Test
+  void testComplexNaNDivision() {
+    ComplexNumber left = new ComplexNumber(1, 6);
+    ComplexNumber right = new ComplexNumber();
+
+    ArrayList<Expression> p = new ArrayList<>(
+        Arrays.asList(left, right));
+    try {
+      Divides t = new Divides(p);
+      Evaluator v = new Evaluator();
+      t.accept(v);
+      ComplexNumber result = (ComplexNumber) v.getResult();
+
+      assertEquals(result, new ComplexNumber());
+    } catch (IllegalConstruction _) {
+      fail();
+    }
+  }
+
+  @Test
+  void testComplexDivisionByZero() {
+    ComplexNumber left = new ComplexNumber(1, 6);
+    ComplexNumber right = new ComplexNumber(0, 0);
+
+    ArrayList<Expression> p = new ArrayList<>(
+        Arrays.asList(left, right));
+    try {
+      Divides t = new Divides(p);
+      Evaluator v = new Evaluator();
+      t.accept(v);
+      ComplexNumber result = (ComplexNumber) v.getResult();
+
+      assertEquals(result, new ComplexNumber());
+    } catch (IllegalConstruction _) {
+      fail();
+    }
+  }
+
 }

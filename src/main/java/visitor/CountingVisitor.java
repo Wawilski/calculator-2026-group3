@@ -3,6 +3,7 @@ package visitor;
 import calculator.MyNumber;
 import calculator.Operation;
 import calculator.numbers.RealNumber;
+import calculator.numbers.ComplexNumber;
 import calculator.numbers.IntegerNumber;
 import calculator.numbers.RationalNumber;
 
@@ -48,6 +49,12 @@ public class CountingVisitor extends Visitor {
 
   @Override
   public void visit(RationalNumber r) {
+    numbersCount++;
+    depths.push(0);
+  }
+
+  @Override
+  public void visit(ComplexNumber c) {
     numbersCount++;
     depths.push(0);
   }

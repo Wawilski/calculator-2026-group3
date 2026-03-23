@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.List;
 
+import calculator.numbers.ComplexNumber;
 import calculator.numbers.IntegerNumber;
 import calculator.numbers.RationalNumber;
 import calculator.numbers.RealNumber;
@@ -108,14 +109,42 @@ public final class Times extends Operation {
     RealNumber result;
 
     if (l.sign() == 0 || r.sign() == 0) {
-      result = new RealNumber(SpecialNumber.NaN, true);
+      result = new RealNumber(SpecialNumber.NaN);
     } else if (l.sign() == r.sign()) {
-      result = new RealNumber(SpecialNumber.PositiveInfinity, true);
+      result = new RealNumber(SpecialNumber.PositiveInfinity);
     } else {
-      result = new RealNumber(SpecialNumber.NegativeInfinity, true);
+      result = new RealNumber(SpecialNumber.NegativeInfinity);
     }
 
     return result;
 
   }
+
+  /**
+   * The actual computation of the arithmetic multiplication of two ComplexNumber
+   * 
+   * @param l The first ComplexNumber
+   * @param r The second ComplexNumber that should be multiplied to the first
+   * @return The ComplexNumber that is the result of the multiplication
+   */
+  @Override
+  public ComplexNumber op(ComplexNumber l, ComplexNumber r) {
+    ComplexNumber result;
+    if (l.isNaN() || r.isNaN()) {
+      result = new ComplexNumber();
+    } else {
+      BigDecimal lReal = l.getReal();
+      BigDecimal rReal = r.getReal();
+      BigDecimal lImaginary = l.getImaginary();
+      BigDecimal rImaginary = r.getImaginary();
+
+      BigDecimal realPart = lReal.multiply(rReal).subtract(lImaginary.multiply(rImaginary));
+      BigDecimal imPart = lReal.multiply(rImaginary).add(rReal.multiply(lImaginary));
+
+      result = new ComplexNumber(realPart, imPart);
+    }
+    return result;
+
+  }
+
 }

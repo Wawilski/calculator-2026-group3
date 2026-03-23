@@ -10,7 +10,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import calculator.numbers.IllegalNumberConstruction;
-import calculator.numbers.IntegerNumber;
 import calculator.numbers.RationalNumber;
 
 /**

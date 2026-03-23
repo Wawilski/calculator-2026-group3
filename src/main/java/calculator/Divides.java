@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
 
+import calculator.numbers.ComplexNumber;
 import calculator.numbers.IntegerNumber;
 import calculator.numbers.RationalNumber;
 import calculator.numbers.RealNumber;
@@ -88,7 +89,7 @@ public final class Divides extends Operation {
 
     RealNumber result;
 
-    if (l.isSpecial() || r.isSpecial() || r.getValue().compareTo(BigDecimal.ZERO) == 0) {
+    if (l.isSpecial() || r.isSpecial() || r.equals(new RealNumber(0))) {
       result = specialOp(l, r);
     } else {
       BigDecimal lValue = l.getValue();
@@ -119,16 +120,39 @@ public final class Divides extends Operation {
         || rSpecialValue == SpecialNumber.NaN
         || (l.isSpecial() && r.isSpecial())
         || (l.sign() == 0 && r.sign() == 0)) {
-      result = new RealNumber(SpecialNumber.NaN, true);
+      result = new RealNumber(SpecialNumber.NaN);
     } else if ((lSign > 0 && rSign >= 0) || (lSign < 0 && rSign < 0)) {
-      result = new RealNumber(SpecialNumber.PositiveInfinity, true);
+      result = new RealNumber(SpecialNumber.PositiveInfinity);
     } else if ((lSign < 0 && rSign >= 0) || (lSign > 0 && rSign < 0)) {
-      result = new RealNumber(SpecialNumber.NegativeInfinity, true);
+      result = new RealNumber(SpecialNumber.NegativeInfinity);
     } else {
       result = new RealNumber(new BigDecimal(0));
 
     }
     return result;
 
+  }
+
+  @Override
+  public ComplexNumber op(ComplexNumber l, ComplexNumber r) {
+    ComplexNumber result;
+    if (l.isNaN() || r.isNaN() || r.equals(new ComplexNumber(0, 0))) {
+      result = new ComplexNumber();
+    } else {
+
+      BigDecimal lReal = l.getReal();
+      BigDecimal rReal = r.getReal();
+      BigDecimal lImaginary = l.getImaginary();
+      BigDecimal rImaginary = r.getImaginary();
+
+      BigDecimal mod = (lImaginary.pow(2)).multiply(rImaginary.pow(2));
+
+      BigDecimal realPart = lReal.multiply(rReal).add(lImaginary.multiply(rImaginary));
+      BigDecimal imPart = rReal.multiply(lImaginary).subtract(lReal.multiply(rImaginary));
+
+      result = new ComplexNumber(realPart.divide(mod, 16, RoundingMode.CEILING),
+          imPart.divide(mod, 16, RoundingMode.CEILING));
+    }
+    return result;
   }
 }

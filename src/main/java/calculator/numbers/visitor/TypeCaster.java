@@ -46,6 +46,9 @@ public class TypeCaster extends TypeVisitor {
       case RATIONAL:
         result = new RationalNumber(i.getValue(), 1);
         break;
+      case COMPLEX:
+        result = new ComplexNumber(i.getValue(), 0);
+        break;
       default:
         throw new IllegalCast();
     }
@@ -65,6 +68,9 @@ public class TypeCaster extends TypeVisitor {
       case RATIONAL:
         result = r;
         break;
+      case COMPLEX:
+        result = new ComplexNumber(r.getNumerator() / r.getDenominator(), 0);
+        break;
       default:
         throw new IllegalCast();
     }
@@ -79,6 +85,25 @@ public class TypeCaster extends TypeVisitor {
   public void visit(RealNumber r) {
     switch (type) {
       case REAL:
+        result = r;
+        break;
+      case COMPLEX:
+        result = (r.isSpecial()) ? new ComplexNumber() : new ComplexNumber(r.getValue(), new BigDecimal(0));
+        break;
+      default:
+        throw new IllegalCast();
+    }
+  }
+
+  /**
+   * Visiting a ComplexNumber to cast it to the specified type of the visitor
+   *
+   * @param r The visited RealNumber to be cast
+   */
+  @Override
+  public void visit(ComplexNumber r) {
+    switch (type) {
+      case COMPLEX:
         result = r;
         break;
       default:

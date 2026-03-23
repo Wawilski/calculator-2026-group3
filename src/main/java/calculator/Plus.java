@@ -5,6 +5,7 @@ import java.lang.Math;
 import java.math.BigDecimal;
 import java.math.MathContext;
 
+import calculator.numbers.ComplexNumber;
 import calculator.numbers.IntegerNumber;
 import calculator.numbers.RationalNumber;
 import calculator.numbers.RealNumber;
@@ -109,14 +110,31 @@ public final class Plus extends Operation {
     RealNumber result;
 
     if (l.isSpecial() && r.isSpecial() && r.sign() != l.sign()) {
-      result = new RealNumber(SpecialNumber.NaN, true);
+      result = new RealNumber(SpecialNumber.NaN);
     } else if (l.isSpecial()) {
-      result = new RealNumber(l.getSpecialValue(), true);
+      result = new RealNumber(l.getSpecialValue());
     } else {
-      result = new RealNumber(r.getSpecialValue(), true);
+      result = new RealNumber(r.getSpecialValue());
     }
     return result;
 
   }
 
+  /**
+   * The actual computation of the arithmetic addition of two ComplexNumber
+   * 
+   * @param l The first ComplexNumber
+   * @param r The second ComplexNumber that should be added to the first
+   * @return The ComplexNumber that is the result of the addition
+   */
+  @Override
+  public ComplexNumber op(ComplexNumber l, ComplexNumber r) {
+    ComplexNumber result;
+    if (l.isNaN() || r.isNaN()) {
+      result = new ComplexNumber();
+    } else {
+      result = new ComplexNumber(l.getReal().add(r.getReal()), l.getImaginary().add(r.getImaginary()));
+    }
+    return result;
+  }
 }

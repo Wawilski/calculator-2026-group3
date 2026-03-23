@@ -1,5 +1,6 @@
 package calculator.numbers.visitor;
 
+import calculator.numbers.ComplexNumber;
 import calculator.numbers.IntegerNumber;
 import calculator.numbers.RationalNumber;
 import calculator.numbers.RealNumber;
@@ -29,5 +30,12 @@ public abstract class TypeVisitor {
    * @param r the RationalNumber visited
    */
   public abstract void visit(RationalNumber r);
+
+  /**
+   * The Visitor can traverse a complex type number
+   *
+   * @param r the ComplexNumber visited
+   */
+  public abstract void visit(ComplexNumber r);
 
 }

@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
+import calculator.numbers.ComplexNumber;
 import calculator.numbers.IntegerNumber;
 import calculator.numbers.RationalNumber;
 import calculator.numbers.RealNumber;
@@ -76,6 +77,13 @@ public class Main {
       List<Expression> params6 = new ArrayList<>();
       Collections.addAll(params6, new RationalNumber(1, 2), new RationalNumber(1, 2));
       e = new Plus(params6);
+      c.print(e);
+      c.eval(e);
+      logger.info("Postfix form: " + c.format(e, Notation.POSTFIX));
+
+      List<Expression> params7 = new ArrayList<>();
+      Collections.addAll(params7, new ComplexNumber(1, 2), new ComplexNumber(1, 2));
+      e = new Plus(params7);
       c.print(e);
       c.eval(e);
       logger.info("Postfix form: " + c.format(e, Notation.POSTFIX));

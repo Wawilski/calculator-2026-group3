@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.List;
 import visitor.StringifyVisitor;
 import calculator.numbers.BaseNumber;
+import calculator.numbers.ComplexNumber;
 import calculator.numbers.IntegerNumber;
 import calculator.numbers.RationalNumber;
 import calculator.numbers.RealNumber;
@@ -76,6 +77,8 @@ public abstract class Operation implements Expression {
   public abstract RationalNumber op(RationalNumber l, RationalNumber r);
 
   public abstract RealNumber op(RealNumber l, RealNumber r);
+
+  public abstract ComplexNumber op(ComplexNumber l, ComplexNumber r);
 
   public abstract RealNumber specialOp(RealNumber l, RealNumber r);
   // the operation itself is specified in the subclasses

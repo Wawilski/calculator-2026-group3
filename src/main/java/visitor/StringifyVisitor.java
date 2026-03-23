@@ -1,12 +1,10 @@
 package visitor;
 
-import calculator.Divides;
-import calculator.Expression;
-import calculator.IllegalConstruction;
 import calculator.MyNumber;
 import calculator.Notation;
 import calculator.Operation;
 import calculator.numbers.RealNumber;
+import calculator.numbers.ComplexNumber;
 import calculator.numbers.IntegerNumber;
 import calculator.numbers.RationalNumber;
 
@@ -69,6 +67,20 @@ public class StringifyVisitor extends Visitor {
   @Override
   public void visit(RealNumber r) {
     renderedExpressions.push(r.toString());
+  }
+
+  @Override
+  public void visit(ComplexNumber c) {
+    if (c.isNaN()) {
+      renderedExpressions.push(c.toString());
+    } else {
+      String rendered = switch (notation) {
+        case INFIX -> "( " + c.getReal().toString() + " + " + c.getImaginary().toString() + "i" + " )";
+        case PREFIX -> "+ ( " + c.getReal().toString() + ", * ( " + c.getImaginary().toString() + " , i ) )";
+        case POSTFIX -> "( " + c.getReal().toString() + ", ( " + c.getImaginary().toString() + " , i ) * ) +";
+      };
+      renderedExpressions.push(rendered);
+    }
   }
 
   /**
