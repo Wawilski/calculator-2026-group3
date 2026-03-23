@@ -91,7 +91,7 @@ class TestPlus {
   // A number added to INFINITY shou:d return INFINITY
   void testInfinityPlus() {
     ArrayList<Expression> p = new ArrayList<>(
-        Arrays.asList(new RealNumber(new BigDecimal(value1)), new RealNumber(SpecialNumber.PositiveInfinity, true)));
+        Arrays.asList(new RealNumber(new BigDecimal(value1)), new RealNumber(SpecialNumber.PositiveInfinity)));
     try {
       Plus e = new Plus(p);
       Evaluator v = new Evaluator();
@@ -107,8 +107,8 @@ class TestPlus {
   // Add 2 Infinity of opposite signs should return a NaN
   void testOppositeInfinityPlus() {
     ArrayList<Expression> p = new ArrayList<>(
-        Arrays.asList(new RealNumber(SpecialNumber.NegativeInfinity, true),
-            new RealNumber(SpecialNumber.PositiveInfinity, true)));
+        Arrays.asList(new RealNumber(SpecialNumber.NegativeInfinity),
+            new RealNumber(SpecialNumber.PositiveInfinity)));
     try {
       Plus e = new Plus(p);
       Evaluator v = new Evaluator();
@@ -138,5 +138,43 @@ class TestPlus {
       fail();
     }
 
+  }
+
+  @Test
+  void testComplexAddition() {
+    ComplexNumber left = new ComplexNumber(1.1, 6.8);
+    ComplexNumber right = new ComplexNumber(8.9, 4);
+
+    ArrayList<Expression> p = new ArrayList<>(
+        Arrays.asList(left, right));
+    try {
+      Plus t = new Plus(p);
+      Evaluator v = new Evaluator();
+      t.accept(v);
+      ComplexNumber result = (ComplexNumber) v.getResult();
+
+      assertEquals(result, new ComplexNumber(10, 10.8));
+    } catch (IllegalConstruction _) {
+      fail();
+    }
+  }
+
+  @Test
+  void testComplexNaNAddition() {
+    ComplexNumber left = new ComplexNumber(1, 6);
+    ComplexNumber right = new ComplexNumber();
+
+    ArrayList<Expression> p = new ArrayList<>(
+        Arrays.asList(left, right));
+    try {
+      Plus t = new Plus(p);
+      Evaluator v = new Evaluator();
+      t.accept(v);
+      ComplexNumber result = (ComplexNumber) v.getResult();
+
+      assertEquals(result, new ComplexNumber());
+    } catch (IllegalConstruction _) {
+      fail();
+    }
   }
 }

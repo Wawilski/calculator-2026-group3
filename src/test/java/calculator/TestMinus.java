@@ -88,7 +88,7 @@ class TestMinus {
   // INFINITY decreased by a real number shou:d return INFINITY
   void testInfinityMinusReal() {
     ArrayList<Expression> p = new ArrayList<>(
-        Arrays.asList(new RealNumber(SpecialNumber.PositiveInfinity, true), new RealNumber(new BigDecimal(value1))));
+        Arrays.asList(new RealNumber(SpecialNumber.PositiveInfinity), new RealNumber(new BigDecimal(value1))));
     try {
       Minus e = new Minus(p);
       Evaluator v = new Evaluator();
@@ -105,7 +105,7 @@ class TestMinus {
     // A real number decreased by an infinite value shou:d return the opposite of
     // the infinite value
     ArrayList<Expression> p = new ArrayList<>(
-        Arrays.asList(new RealNumber(new BigDecimal(value1)), new RealNumber(SpecialNumber.PositiveInfinity, true)));
+        Arrays.asList(new RealNumber(new BigDecimal(value1)), new RealNumber(SpecialNumber.PositiveInfinity)));
     try {
       Minus e = new Minus(p);
       Evaluator v = new Evaluator();
@@ -121,8 +121,8 @@ class TestMinus {
   // Subtract 2 Infinity of same signs should return a NaN
   void testSameSignInfinityMinus() {
     ArrayList<Expression> p = new ArrayList<>(
-        Arrays.asList(new RealNumber(SpecialNumber.PositiveInfinity, true),
-            new RealNumber(SpecialNumber.PositiveInfinity, true)));
+        Arrays.asList(new RealNumber(SpecialNumber.PositiveInfinity),
+            new RealNumber(SpecialNumber.PositiveInfinity)));
     try {
       Minus e = new Minus(p);
       Evaluator v = new Evaluator();
@@ -152,5 +152,43 @@ class TestMinus {
       fail();
     }
 
+  }
+
+  @Test
+  void testComplexSubtraction() {
+    ComplexNumber left = new ComplexNumber(1.1, 6.8);
+    ComplexNumber right = new ComplexNumber(8.9, 4);
+
+    ArrayList<Expression> p = new ArrayList<>(
+        Arrays.asList(left, right));
+    try {
+      Minus t = new Minus(p);
+      Evaluator v = new Evaluator();
+      t.accept(v);
+      ComplexNumber result = (ComplexNumber) v.getResult();
+
+      assertEquals(result, new ComplexNumber(-7.8, 2.8));
+    } catch (IllegalConstruction _) {
+      fail();
+    }
+  }
+
+  @Test
+  void testComplexNaNSubtraction() {
+    ComplexNumber left = new ComplexNumber(1, 6);
+    ComplexNumber right = new ComplexNumber();
+
+    ArrayList<Expression> p = new ArrayList<>(
+        Arrays.asList(left, right));
+    try {
+      Minus t = new Minus(p);
+      Evaluator v = new Evaluator();
+      t.accept(v);
+      ComplexNumber result = (ComplexNumber) v.getResult();
+
+      assertEquals(result, new ComplexNumber());
+    } catch (IllegalConstruction _) {
+      fail();
+    }
   }
 }

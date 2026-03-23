@@ -7,6 +7,7 @@ import calculator.numbers.RealNumber;
 import calculator.numbers.visitor.TypeCaster;
 import calculator.numbers.visitor.TypeComparator;
 import calculator.numbers.BaseNumber;
+import calculator.numbers.ComplexNumber;
 import calculator.numbers.IntegerNumber;
 import calculator.numbers.RationalNumber;
 
@@ -56,6 +57,11 @@ public class Evaluator extends Visitor {
   @Override
   public void visit(RationalNumber r) {
     computedValue = r;
+  }
+
+  @Override
+  public void visit(ComplexNumber c) {
+    computedValue = c;
   }
 
   /**

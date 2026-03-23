@@ -19,15 +19,6 @@ public class TypeComparator extends TypeVisitor {
     if (castType == NumberType.INTEGER) {
       castType = NumberType.INTEGER;
     }
-
-  }
-
-  @Override
-  public void visit(RealNumber r) {
-    if (castType == NumberType.INTEGER || castType == NumberType.RATIONAL || castType == NumberType.REAL) {
-      castType = NumberType.REAL;
-    }
-
   }
 
   @Override
@@ -35,6 +26,19 @@ public class TypeComparator extends TypeVisitor {
     if (castType == NumberType.INTEGER) {
       castType = NumberType.RATIONAL;
     }
+  }
+
+  @Override
+  public void visit(RealNumber r) {
+    if (castType == NumberType.INTEGER || castType == NumberType.RATIONAL) {
+      castType = NumberType.REAL;
+    }
+
+  }
+
+  @Override
+  public void visit(ComplexNumber r) {
+    castType = NumberType.COMPLEX;
   }
 
 }
