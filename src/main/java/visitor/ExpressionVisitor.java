@@ -23,6 +23,6 @@ import calculator.Operation;
  * EquationListener
  */
 
-public class ExpressionVisitor extends calculatorBaseVisitor<Operation> {
+public class ExpressionVisitor {
 
 }
