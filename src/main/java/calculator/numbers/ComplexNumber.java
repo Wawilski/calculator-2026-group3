@@ -13,31 +13,39 @@ import visitor.Visitor;
  */
 public class ComplexNumber implements BaseNumber {
 
+  // Real part of the complex number
+
   private BigDecimal real;
 
+  // Imaginary part of the complex number
   private BigDecimal imaginary;
 
+  // Is true if the complex number is a NaN
+  // (e.g. if it should represent an infinite value in complex)
   private boolean isNaN;
 
-  public ComplexNumber(BigDecimal real, BigDecimal imaginary) {
+  public /* constructor */ ComplexNumber(BigDecimal real, BigDecimal imaginary) {
     this.real = real;
     this.imaginary = imaginary;
     this.isNaN = false;
   }
 
-  public ComplexNumber(int real, int imaginary) {
+  public /* constructor */ ComplexNumber(int real, int imaginary) {
     this.real = new BigDecimal(real, MathContext.DECIMAL32);
     this.imaginary = new BigDecimal(imaginary, MathContext.DECIMAL32);
     this.isNaN = false;
   }
 
-  public ComplexNumber(double real, double imaginary) {
+  public /* constructor */ ComplexNumber(double real, double imaginary) {
     this.real = new BigDecimal(real, MathContext.DECIMAL32);
     this.imaginary = new BigDecimal(imaginary, MathContext.DECIMAL32);
     this.isNaN = false;
   }
 
-  public ComplexNumber() {
+  /*
+   * Constructor for a NaN complex number
+   */
+  public /* constructor */ ComplexNumber() {
     this.real = null;
     this.imaginary = null;
     this.isNaN = true;
