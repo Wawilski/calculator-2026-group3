@@ -1,6 +1,5 @@
 package visitor;
 
-import calculator.MyNumber;
 import calculator.Notation;
 import calculator.Operation;
 import calculator.numbers.RealNumber;
@@ -35,16 +34,6 @@ public class StringifyVisitor extends Visitor {
    */
   public StringifyVisitor(Notation notation) {
     this.notation = notation == null ? Notation.INFIX : notation;
-  }
-
-  /**
-   * The Visitor can traverse a number (a subtype of Expression
-   * 
-   * @param n The number being visited
-   */
-  @Override
-  public void visit(MyNumber n) {
-    renderedExpressions.push(Integer.toString(n.getValue()));
   }
 
   @Override

@@ -17,7 +17,7 @@ import calculator.numbers.RealNumber;
  * which are a special kind of Expressions, just like numbers are.
  *
  * @see Expression
- * @see MyNumber
+ * @see BaseNumber
  */
 public abstract class Operation implements Expression {
   /**

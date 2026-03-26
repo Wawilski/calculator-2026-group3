@@ -1,6 +1,5 @@
 package visitor;
 
-import calculator.MyNumber;
 import calculator.Operation;
 import calculator.numbers.RealNumber;
 import calculator.numbers.ComplexNumber;
@@ -11,13 +10,6 @@ import calculator.numbers.RationalNumber;
  * Visitor design pattern
  */
 public abstract class Visitor {
-
-  /**
-   * The Visitor can traverse a number (a subtype of Expression)
-   *
-   * @param n The number being visited
-   */
-  public abstract void visit(MyNumber n);
 
   /**
    * The Visitor can traverse an integer

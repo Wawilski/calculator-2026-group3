@@ -1,6 +1,5 @@
 package visitor;
 
-import calculator.MyNumber;
 import calculator.Operation;
 import calculator.numbers.RealNumber;
 import calculator.numbers.ComplexNumber;
@@ -22,17 +21,6 @@ public class CountingVisitor extends Visitor {
   private int numbersCount; // number of numbers
   private final Deque<Integer> depths = new ArrayDeque<>(); // stack to keep track of the depth of the current
                                                             // expression
-
-  /**
-   * The Visitor can traverse a number (a subtype of Expression)
-   * 
-   * @param n The number being visited
-   */
-  @Override
-  public void visit(MyNumber n) {
-    numbersCount++;
-    depths.push(0);
-  }
 
   @Override
   public void visit(RealNumber r) {
