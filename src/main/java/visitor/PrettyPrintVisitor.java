@@ -1,6 +1,5 @@
 package visitor;
 
-import calculator.MyNumber;
 import calculator.Operation;
 import calculator.numbers.RealNumber;
 import calculator.numbers.ComplexNumber;
@@ -39,11 +38,6 @@ public class PrettyPrintVisitor extends Visitor {
 
   private final Deque<RenderedNode> renderedExpressions = new ArrayDeque<>();// stack to keep track of the rendered
                                                                              // sub-expressions
-
-  @Override
-  public void visit(MyNumber n) {
-    renderedExpressions.push(new RenderedNode(Integer.toString(n.getValue()), 3, false));
-  }
 
   @Override
   public void visit(IntegerNumber i) {

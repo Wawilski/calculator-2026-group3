@@ -1,7 +1,6 @@
 package visitor;
 
 import calculator.Expression;
-import calculator.MyNumber;
 import calculator.Operation;
 import calculator.numbers.RealNumber;
 import calculator.numbers.visitor.TypeCaster;
@@ -33,16 +32,6 @@ public class Evaluator extends Visitor {
    */
   public BaseNumber getResult() {
     return computedValue;
-  }
-
-  /**
-   * Use the visitor design pattern to visit a number.
-   *
-   * @param n The number being visited
-   */
-  @Override
-  public void visit(MyNumber n) {
-
   }
 
   public void visit(RealNumber r) {
