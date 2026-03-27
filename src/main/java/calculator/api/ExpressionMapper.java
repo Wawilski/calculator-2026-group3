@@ -1,19 +1,20 @@
 package calculator.api;
 
-
+import calculator.Divides;
 import calculator.Expression;
 import calculator.IllegalConstruction;
-import calculator.Divides;
 import calculator.Minus;
 import calculator.MyNumber;
 import calculator.Plus;
 import calculator.Times;
+import calculator.api.exception.RequestValidationException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-
-import org.springframework.stereotype.Component;
 
 /**
  * @author oussama hakik
@@ -30,19 +31,37 @@ import org.springframework.stereotype.Component;
 @Component
 public class ExpressionMapper {
 
+    private final int maxExpressionDepth;
+    private final int maxOperationArgs;
+
     public ExpressionMapper() {
+        this(20, 20);
+    }
+
+    @Autowired
+    public ExpressionMapper(
+            @Value("${calculator.api.max-expression-depth:20}") int maxExpressionDepth,
+            @Value("${calculator.api.max-operation-args:20}") int maxOperationArgs
+    ) {
+        this.maxExpressionDepth = maxExpressionDepth;
+        this.maxOperationArgs = maxOperationArgs;
     }
 
     // Main entry point used to convert an API request into the internal expression model.
     public Expression map(ExpressionRequest request) {
+        return map(request, 1);
+    }
+
+    private Expression map(ExpressionRequest request, int depth) {
         if (request == null) {
             throw new IllegalArgumentException("Expression request must not be null.");
         }
+        enforceMaxDepth(depth);
 
         String normalizedType = normalizeType(request.getType());
         return switch (normalizedType) {
             case "number" -> mapNumber(request);
-            case "plus", "minus", "times", "divides" -> mapOperation(request, normalizedType);
+            case "plus", "minus", "times", "divides" -> mapOperation(request, normalizedType, depth);
             default -> throw new IllegalArgumentException("Unknown expression type: " + request.getType());
         };
     }
@@ -51,7 +70,6 @@ public class ExpressionMapper {
         if (type == null || type.trim().isEmpty()) {
             throw new IllegalArgumentException("Expression type must not be null or empty.");
         }
-        // Normalize the type to make the mapping case-insensitive.
         return type.trim().toLowerCase(Locale.ROOT);
     }
 
@@ -62,13 +80,13 @@ public class ExpressionMapper {
         return new MyNumber(request.getValue());
     }
 
-    private Expression mapOperation(ExpressionRequest request, String opType) {
+    private Expression mapOperation(ExpressionRequest request, String opType, int depth) {
         if (request.getArgs() == null) {
             throw new IllegalArgumentException("Operation '" + opType + "' must provide a non-null args list.");
         }
+        enforceMaxArgs(opType, request.getArgs().size());
 
-        // First map all children recursively, then build the matching operation object.
-        List<Expression> mappedArgs = mapArgs(request.getArgs());
+        List<Expression> mappedArgs = mapArgs(request.getArgs(), depth + 1);
         try {
             return buildOperation(opType, mappedArgs);
         } catch (IllegalConstruction e) {
@@ -76,15 +94,31 @@ public class ExpressionMapper {
         }
     }
 
-    private List<Expression> mapArgs(List<ExpressionRequest> args) {
+    private List<Expression> mapArgs(List<ExpressionRequest> args, int depth) {
         List<Expression> mapped = new ArrayList<>();
         for (ExpressionRequest arg : args) {
             if (arg == null) {
                 throw new IllegalArgumentException("Operation arguments must not contain null elements.");
             }
-            mapped.add(map(arg));
+            mapped.add(map(arg, depth));
         }
         return mapped;
+    }
+
+    private void enforceMaxDepth(int depth) {
+        if (depth > maxExpressionDepth) {
+            throw new RequestValidationException(
+                    "Expression nesting exceeds the maximum depth of " + maxExpressionDepth + "."
+            );
+        }
+    }
+
+    private void enforceMaxArgs(String opType, int argCount) {
+        if (argCount > maxOperationArgs) {
+            throw new RequestValidationException(
+                    "Operation '" + opType + "' exceeds the maximum of " + maxOperationArgs + " arguments."
+            );
+        }
     }
 
     private Expression buildOperation(String opType, List<Expression> args) throws IllegalConstruction {
@@ -96,5 +130,4 @@ public class ExpressionMapper {
             default -> throw new IllegalArgumentException("Unsupported operation type: " + opType);
         };
     }
-
 }

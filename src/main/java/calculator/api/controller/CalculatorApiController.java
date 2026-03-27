@@ -3,13 +3,13 @@ package calculator.api.controller;
 import calculator.api.EvaluationResponse;
 import calculator.api.ExpressionRequest;
 import calculator.api.service.CalculatorApiService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin
 public class CalculatorApiController {
 
     private final CalculatorApiService calculatorApiService;
@@ -20,7 +20,7 @@ public class CalculatorApiController {
 
     // Main REST endpoint used by the web client to evaluate an expression.
     @PostMapping("/evaluate")
-    public EvaluationResponse evaluate(@RequestBody ExpressionRequest request) {
+    public EvaluationResponse evaluate(@Valid @RequestBody ExpressionRequest request) {
         return calculatorApiService.evaluate(request);
     }
 

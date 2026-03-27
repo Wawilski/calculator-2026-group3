@@ -6,6 +6,7 @@ import calculator.Minus;
 import calculator.MyNumber;
 import calculator.Plus;
 import calculator.Times;
+import calculator.api.exception.RequestValidationException;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -21,7 +22,6 @@ class TestExpressionMapper {
 
     @Test
     void testMapNumber() {
-        // A number request should become a MyNumber expression.
         ExpressionRequest request = new ExpressionRequest("number", 8, null);
 
         Expression expression = mapper.map(request);
@@ -32,7 +32,6 @@ class TestExpressionMapper {
 
     @Test
     void testMapPlusOperation() {
-        // A plus node should keep both children after mapping.
         ExpressionRequest left = new ExpressionRequest("number", 3, null);
         ExpressionRequest right = new ExpressionRequest("number", 4, null);
         ExpressionRequest request = new ExpressionRequest("plus", null, List.of(left, right));
@@ -45,7 +44,6 @@ class TestExpressionMapper {
 
     @Test
     void testMapNestedOperation() {
-        // This checks that recursive mapping works for nested expressions.
         ExpressionRequest plus = new ExpressionRequest(
                 "plus",
                 null,
@@ -73,7 +71,6 @@ class TestExpressionMapper {
 
     @Test
     void testMapDividesOperation() {
-        // Basic check for the division operation type.
         ExpressionRequest request = new ExpressionRequest(
                 "divides",
                 null,
@@ -90,7 +87,6 @@ class TestExpressionMapper {
 
     @Test
     void testMapRejectsNullRequest() {
-        // Null input should be rejected immediately.
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> mapper.map(null));
 
         assertEquals("Expression request must not be null.", exception.getMessage());
@@ -98,7 +94,6 @@ class TestExpressionMapper {
 
     @Test
     void testMapRejectsUnknownType() {
-        // Unknown operation names should not be accepted.
         ExpressionRequest request = new ExpressionRequest("modulo", null, List.of());
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> mapper.map(request));
@@ -108,7 +103,6 @@ class TestExpressionMapper {
 
     @Test
     void testMapRejectsMissingNumberValue() {
-        // A number node without value is invalid.
         ExpressionRequest request = new ExpressionRequest("number", null, null);
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> mapper.map(request));
@@ -118,7 +112,6 @@ class TestExpressionMapper {
 
     @Test
     void testMapRejectsNullArgsList() {
-        // An operation must have an args list, even if it is empty.
         ExpressionRequest request = new ExpressionRequest("plus", null, null);
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> mapper.map(request));
@@ -128,7 +121,6 @@ class TestExpressionMapper {
 
     @Test
     void testMapRejectsNullArgumentElement() {
-        // Null children inside args should also be rejected.
         ExpressionRequest request = new ExpressionRequest(
                 "minus",
                 null,
@@ -138,5 +130,54 @@ class TestExpressionMapper {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> mapper.map(request));
 
         assertEquals("Operation arguments must not contain null elements.", exception.getMessage());
+    }
+
+    @Test
+    void testMapRejectsTooDeepExpression() {
+        ExpressionMapper limitedMapper = new ExpressionMapper(3, 20);
+        ExpressionRequest request = new ExpressionRequest(
+                "plus",
+                null,
+                List.of(
+                        new ExpressionRequest(
+                                "plus",
+                                null,
+                                List.of(
+                                        new ExpressionRequest(
+                                                "plus",
+                                                null,
+                                                List.of(
+                                                        new ExpressionRequest("number", 1, null),
+                                                        new ExpressionRequest("number", 2, null)
+                                                )
+                                        ),
+                                        new ExpressionRequest("number", 3, null)
+                                )
+                        ),
+                        new ExpressionRequest("number", 4, null)
+                )
+        );
+
+        RequestValidationException exception = assertThrows(RequestValidationException.class, () -> limitedMapper.map(request));
+
+        assertEquals("Expression nesting exceeds the maximum depth of 3.", exception.getMessage());
+    }
+
+    @Test
+    void testMapRejectsTooManyArguments() {
+        ExpressionMapper limitedMapper = new ExpressionMapper(20, 2);
+        ExpressionRequest request = new ExpressionRequest(
+                "plus",
+                null,
+                List.of(
+                        new ExpressionRequest("number", 1, null),
+                        new ExpressionRequest("number", 2, null),
+                        new ExpressionRequest("number", 3, null)
+                )
+        );
+
+        RequestValidationException exception = assertThrows(RequestValidationException.class, () -> limitedMapper.map(request));
+
+        assertEquals("Operation 'plus' exceeds the maximum of 2 arguments.", exception.getMessage());
     }
 }
