@@ -23,6 +23,7 @@ import java.util.Locale;
 @JsonIgnoreProperties(ignoreUnknown = false)
 public class ExpressionRequest {
 
+    // I validate the type here so the controller can reject bad payloads before the mapper.
     @NotBlank(message = "type must not be blank")
     @Pattern(
             regexp = "(?i)number|plus|minus|times|divides",
@@ -32,6 +33,7 @@ public class ExpressionRequest {
 
     private Integer value;
 
+    // Recursive validation is needed because args can contain nested expressions.
     @Valid
     private List<ExpressionRequest> args;
 
@@ -69,6 +71,7 @@ public class ExpressionRequest {
         this.args = args;
     }
 
+    // If the node is a number, I only accept a value and I reject args.
     @AssertTrue(message = "number expressions require value and must not define args")
     public boolean isNumberShapeValid() {
         String normalizedType = normalizedType();
@@ -78,6 +81,7 @@ public class ExpressionRequest {
         return value != null && args == null;
     }
 
+    // If the node is an operation, I do the opposite: args must exist and value must stay null.
     @AssertTrue(message = "operation expressions require args and must not define value")
     public boolean isOperationShapeValid() {
         String normalizedType = normalizedType();

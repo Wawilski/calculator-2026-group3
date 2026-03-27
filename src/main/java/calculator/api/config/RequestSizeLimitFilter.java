@@ -11,18 +11,11 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-
-/**
- * @author Oussama HAKIK
- * @description:
- * Filter to enforce a maximum request size for specific API endpoints. It checks the Content-Length header of incoming requests and rejects those that exceed the configured limit with a 413 Payload Too Large response.
- * This helps protect the API from excessively large requests that could lead to performance issues or resource exhaustion.
- * The filter is applied only to the /api/evaluate endpoint for POST requests, as this is where the main expression evaluation occurs and where large payloads are most likely to be a concern.
- */
 @Component
 public class RequestSizeLimitFilter extends OncePerRequestFilter {
 
-    private final long maxRequestSizeBytes; // Define the maximum request size
+    // This limit is checked before the request reaches the controller.
+    private final long maxRequestSizeBytes;
 
     public RequestSizeLimitFilter(
             @Value("${calculator.api.max-request-size-bytes:8192}") long maxRequestSizeBytes
@@ -30,11 +23,6 @@ public class RequestSizeLimitFilter extends OncePerRequestFilter {
         this.maxRequestSizeBytes = maxRequestSizeBytes;
     }
 
-
-    /**
-     * This method is called for each incoming request. It checks the Content-Length header to determine the size of the request payload. If the payload exceeds the configured maximum size, it writes a 413 Payload Too Large response and does not proceed with the filter chain.
-     * Otherwise, it allows the request to continue through the filter chain for normal processing.
-     */
     @Override
     protected void doFilterInternal(
             HttpServletRequest request,
@@ -43,6 +31,7 @@ public class RequestSizeLimitFilter extends OncePerRequestFilter {
     ) throws ServletException, IOException {
         long contentLength = request.getContentLengthLong();
         if (contentLength > maxRequestSizeBytes) {
+            // I return directly here because there is no reason to deserialize a request that is already too big.
             writePayloadTooLargeResponse(request, response, contentLength);
             return;
         }
@@ -51,6 +40,7 @@ public class RequestSizeLimitFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
+        // For now I only apply this protection to the evaluation endpoint.
         return !"/api/evaluate".equals(request.getRequestURI()) || !"POST".equalsIgnoreCase(request.getMethod());
     }
 
@@ -63,6 +53,7 @@ public class RequestSizeLimitFilter extends OncePerRequestFilter {
                 "Payload size of " + contentLength + " bytes exceeds the maximum of "
                         + maxRequestSizeBytes + " bytes."
         );
+        // I keep the same JSON structure as the rest of the API errors.
         response.setStatus(413);
         response.setContentType("application/json");
         response.getWriter().write("""
@@ -75,6 +66,7 @@ public class RequestSizeLimitFilter extends OncePerRequestFilter {
     }
 
     private String escapeJson(String value) {
+        // Small helper to avoid breaking the JSON error body.
         return value.replace("\\", "\\\\").replace("\"", "\\\"");
     }
 }

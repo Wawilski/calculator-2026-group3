@@ -31,6 +31,7 @@ import java.util.Locale;
 @Component
 public class ExpressionMapper {
 
+    // These limits are here to avoid very deep or very large expressions.
     private final int maxExpressionDepth;
     private final int maxOperationArgs;
 
@@ -84,6 +85,7 @@ public class ExpressionMapper {
         if (request.getArgs() == null) {
             throw new IllegalArgumentException("Operation '" + opType + "' must provide a non-null args list.");
         }
+        // I check the number of args before recursion, so the API can stop early.
         enforceMaxArgs(opType, request.getArgs().size());
 
         List<Expression> mappedArgs = mapArgs(request.getArgs(), depth + 1);
@@ -107,6 +109,7 @@ public class ExpressionMapper {
 
     private void enforceMaxDepth(int depth) {
         if (depth > maxExpressionDepth) {
+            // This protects the API from payloads that are too deeply nested.
             throw new RequestValidationException(
                     "Expression nesting exceeds the maximum depth of " + maxExpressionDepth + "."
             );
@@ -115,6 +118,7 @@ public class ExpressionMapper {
 
     private void enforceMaxArgs(String opType, int argCount) {
         if (argCount > maxOperationArgs) {
+            // This avoids very large operations like plus with hundreds of children.
             throw new RequestValidationException(
                     "Operation '" + opType + "' exceeds the maximum of " + maxOperationArgs + " arguments."
             );

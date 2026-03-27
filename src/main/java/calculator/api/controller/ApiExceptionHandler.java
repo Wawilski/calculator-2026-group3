@@ -18,7 +18,7 @@ import java.util.List;
 @RestControllerAdvice
 public class ApiExceptionHandler {
 
-
+    // I group validation errors here to return one consistent JSON format for the frontend.
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidation(
             MethodArgumentNotValidException exception,
@@ -29,6 +29,8 @@ public class ApiExceptionHandler {
                 .stream()
                 .map(error -> {
                     if (error instanceof FieldError fieldError) {
+                        // The synthetic fields from @AssertTrue are not useful for the client,
+                        // so I only keep the plain message in that case.
                         if (fieldError.getField().endsWith("ShapeValid")) {
                             return error.getDefaultMessage();
                         }
@@ -50,6 +52,7 @@ public class ApiExceptionHandler {
                 : exception.getMessage();
         boolean bodyMissing = detail != null
                 && (detail.contains("Required request body is missing") || detail.contains("No content to map"));
+        // I separate empty body from malformed JSON because the client should not get the same code.
         String message = bodyMissing ? "Request body is required." : "Malformed JSON request.";
         String code = bodyMissing ? "REQUEST_BODY_MISSING" : "MALFORMED_JSON";
         return buildResponse(HttpStatus.BAD_REQUEST, code, message, request, List.of(detail));
@@ -107,6 +110,7 @@ public class ApiExceptionHandler {
             HttpServletRequest request,
             List<String> details
     ) {
+        // All API errors go through this helper so the response shape stays the same everywhere.
         ErrorResponse body = new ErrorResponse(
                 Instant.now(),
                 status.value(),

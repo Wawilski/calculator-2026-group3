@@ -8,17 +8,13 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * @author: Oussama HAKIK
- * @description: Configuration class to set up CORS for the API endpoints. It reads allowed origins from application properties and applies them to all /api/** endpoints.
- */
 @Configuration
 public class ApiWebConfig implements WebMvcConfigurer {
 
-    // List of allowed origins for CORS, read from application properties and processed in the constructor.
+    // I moved CORS here instead of leaving a global @CrossOrigin on the controller.
     private final List<String> allowedOrigins;
 
-    // Constructor that takes the allowed origins as a comma-separated string, splits it, trims whitespace, and filters out empty entries to create a list of allowed origins.
+    // The property is a comma-separated string, so I split and clean it once here.
     public ApiWebConfig(
             @Value("${calculator.api.cors.allowed-origins:http://localhost:3000,http://127.0.0.1:3000}")
             String allowedOrigins
@@ -29,10 +25,6 @@ public class ApiWebConfig implements WebMvcConfigurer {
                 .toList();
     }
 
-    /**
-     * Configures CORS mappings for the API endpoints. It applies the allowed origins, HTTP methods, and headers to all endpoints under /api/**.
-     * @param registry The CorsRegistry to which the CORS configuration will be applied.
-     */
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/api/**")
