@@ -61,6 +61,11 @@ public class RationalNumber implements BaseNumber {
     return o.op(this, ((RationalNumber) rightHand));
   }
 
+  @Override
+  public BaseNumber negate() {
+    return new RationalNumber(-this.numerator, -this.denominator);
+  }
+
   /**
    * Two RationalNumber expressions are equal if the values they contain are equal
    *

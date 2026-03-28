@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import calculator.Operation;
 import visitor.Visitor;
 import calculator.numbers.visitor.*;
+import calculator.numbers.SpecialNumber;
 
 /**
  * RealNumber is a concrete class that represents the real type numbers.
@@ -125,7 +126,7 @@ public class RealNumber implements BaseNumber {
    */
   public int sign() {
     int sign;
-    if (!this.isSpecial()) {
+    if (!this.special) {
       sign = this.value.compareTo(BigDecimal.ZERO);
     } else if (this.specialValue == SpecialNumber.PositiveInfinity) {
       sign = 1;
@@ -136,6 +137,29 @@ public class RealNumber implements BaseNumber {
     }
 
     return sign;
+  }
+
+  @Override
+  public BaseNumber negate() {
+    RealNumber result;
+    if (this.special) {
+      result = negateSpecial();
+    } else {
+      result = new RealNumber(this.value.negate());
+    }
+    return result;
+  }
+
+  public RealNumber negateSpecial() {
+    RealNumber result;
+    if (this.specialValue == SpecialNumber.PositiveInfinity) {
+      result = new RealNumber(SpecialNumber.NegativeInfinity);
+    } else if (this.specialValue == SpecialNumber.NegativeInfinity) {
+      result = new RealNumber(SpecialNumber.PositiveInfinity);
+    } else {
+      result = new RealNumber(SpecialNumber.NaN);
+    }
+    return result;
   }
 
   /**

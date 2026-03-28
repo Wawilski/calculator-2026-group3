@@ -1,92 +1,120 @@
 grammar calculator;
 
-equation : ( postfix | infix | prefix)  ;
+equation : postfix EOF #PostFix
+         | infix EOF #InFix
+         | prefix EOF #PreFix;
 
 // Infix Calculator
 
-infix : add_infix;
+infix : add_infix #InBase;
 
-add_infix : mul_infix (sign mul_infix)*;
+add_infix : mul_infix (sign mul_infix)* #InAdd;
 
-mul_infix : pow_infix (mul pow_infix)*
-          | (LPAREN infix RPAREN)* atom (LPAREN infix RPAREN)*
-;
-pow_infix : factor (pow factor)*;
+mul_infix : pow_infix (mul pow_infix)* #InMul
+          | (LPAREN infix RPAREN)* atom (LPAREN infix RPAREN)* #InMulAtom
+          ;
+pow_infix : factor (pow factor)* #InPow;
 
-factor : fct LPAREN infix (COMMAT infix)* RPAREN 
-       | LPAREN infix RPAREN (LPAREN infix RPAREN)*
-       | (sign)? atom (num_const)*;
+factor : fct LPAREN infix (COMMAT infix)* RPAREN    #InFct
+       | LPAREN infix RPAREN (LPAREN infix RPAREN)* #InParenthesis
+       | (sign)? (num_const)* atom (num_const)*     #InAtom
+       ;
 
 // Prefix Calculator
 
-prefix : space_prefix | paren_prefix;
+prefix : space_prefix #SpacedPreFix 
+       | paren_prefix #ParenthesisPreFix
+       ;
 
-space_prefix: (operator | fct)? LPAREN (space_prefix)+ RPAREN
-            | fct space_prefix
-            | operator space_prefix space_prefix
-            | LPAREN sign atom RPAREN
-            | atom;
+space_prefix: (operator | fct)? LPAREN (space_prefix)+ RPAREN #PreSpaceWrappedOp
+            | fct space_prefix                                #PreSpaceFct
+            | operator space_prefix space_prefix              #PreSpaceSigned
+            | LPAREN (sign)? atom RPAREN                      #PreSpaceSigned
+            | atom                                            #PreSpaceAtom
+            ;
 
-paren_prefix: (operator|fct)? LPAREN paren_prefix (COMMAT paren_prefix)* RPAREN
-            | fct paren_prefix
-            | LPAREN sign atom RPAREN
-            | atom;
-
+paren_prefix: (operator|fct)? LPAREN paren_prefix (COMMAT paren_prefix)* RPAREN #PreWrappedOp
+            | fct paren_prefix                                                  #PreFct
+            | LPAREN (sign)? atom RPAREN                                        #PreSigned
+            | atom                                                              #PreAtom 
+            ;
 
 // Postfix Calculator
 
-postfix : space_postfix | paren_postfix;
+postfix : space_postfix #SpacedPostFix 
+        | paren_postfix #ParenthesisPostFix
+        ;
 
-space_postfix: LPAREN (space_postfix)+ RPAREN (operator | fct )? 
-            | space_postfix fct
-            | space_postfix space_postfix operator 
-            | LPAREN (sign)? atom RPAREN
-            | atom;
+space_postfix: LPAREN space_postfix (space_postfix)+ RPAREN (operator)? #PostSpaceWrappedOp
+             | LPAREN space_postfix (space_postfix)* RPAREN fct         #PostSpaceWrappedFct
+             | space_postfix fct                                        #PostSpaceFct
+             | space_postfix space_postfix (operator)?                  #PostSpaceSimpleOp
+             | LPAREN (sign)? atom RPAREN                               #PostSpaceSigned
+             | atom                                                     #PostSpaceAtom
+             ;
 
-paren_postfix: LPAREN paren_postfix (COMMAT paren_postfix)* RPAREN (operator | fct)?
-             | paren_postfix fct
-            | LPAREN (sign)? atom RPAREN
-            | atom;
+paren_postfix: LPAREN paren_postfix (COMMAT paren_postfix)+ RPAREN (operator)?  #PostWrappedOp
+             | LPAREN paren_postfix (COMMAT paren_postfix)* RPAREN fct          #PostWrappedFct
+             | paren_postfix fct                                                #PostFct
+             | LPAREN (sign)? atom RPAREN                                       #PostSigned
+             | atom                                                             #PostAtom 
+             ;
 
 
 
 // types of number
 
-atom : number | complex ;
+atom : number #GlobalNumber
+     | complex #ComplexNumber
+     ;
 
 // Real numbers 
 // Ex: 2, 5.1023 , 10E-8 , 9E12 , pi
 
-number: real | scientific | num_const ;
+number: real #RealNumber
+      | scientific #ScientificNumber
+      | num_const #Constant
+      ;
 
-scientific : INT E (sign)? INT ;
+scientific : INT E (sign)? INT #BaseScientificNumber
+;
 
-real : INT (DOT INT)? ;
+real : INT (DOT INT)? #BaseNumber ;
 
 // Complex numbers
 // Ex : 2i, i 
-complex: (number)? I;
+complex: (number)? I #BaseComplexNumber ; 
 
 
 // additive operators
 
-sign : PLUS | MINUS ;
+sign : PLUS  
+     | MINUS
+     ; 
 
 // multiplicative operators
 
-mul : TIMES | DIV ;
+mul : TIMES #Times
+    | DIV #Div
+    ;
 
 // exponantiation operator
 
-pow : POW;
+pow : POW ;
 
-operator : sign | mul | pow;
+operator : sign
+         | mul 
+         | pow
+         ;
 
 
 
 // numerical constants
 
-num_const: PI | EULER | PHI;
+num_const: PI #Pi
+         | EULER #EulerNumber 
+         | PHI #Phi
+         ;
 
 I: 'i'; 
 E : 'E';
@@ -96,15 +124,15 @@ PHI: 'phi';
 
 // functions
 
-fct : COS
-    | TAN
-    | SIN
-    | ACOS
-    | ATAN
-    | ASIN           
-    | LN
-    | SQRT
-    | LOG
+fct : COS  #FctCos
+    | TAN  #FctTan
+    | SIN  #FctSin
+    | ACOS #FctAcos
+    | ATAN #FctAtan
+    | ASIN #FctAsin     
+    | LN   #FctLn
+    | SQRT #FctSqrt
+    | LOG  #FctLog
     ;
            
 COS : 'cos';

@@ -72,6 +72,10 @@ public class IntegerNumber implements BaseNumber {
     return o.op(this, (IntegerNumber) rightHand);
   }
 
+  public BaseNumber negate() {
+    return new IntegerNumber(-this.value);
+  }
+
   /**
    * two IntegerNumber expressions are equal if the values they contain are equal
    *

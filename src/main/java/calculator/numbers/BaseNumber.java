@@ -11,4 +11,5 @@ public interface BaseNumber extends Expression {
 
   public BaseNumber op(Operation o, BaseNumber rightHand);
 
+  public BaseNumber negate();
 }

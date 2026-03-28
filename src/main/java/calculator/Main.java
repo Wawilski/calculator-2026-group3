@@ -88,6 +88,12 @@ public class Main {
       c.eval(e);
       logger.info("Postfix form: " + c.format(e, Notation.POSTFIX));
 
+      ExpressionParser parser = new ExpressionParser();
+      e = parser.parse("((1 , 2) +, 1) +");
+      c.print(e);
+      c.eval(e);
+      logger.info("Postfix form: " + c.format(e, Notation.POSTFIX));
+
     }
 
     catch (IllegalConstruction _) {

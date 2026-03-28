@@ -78,6 +78,17 @@ public class ComplexNumber implements BaseNumber {
     return o.op(this, (ComplexNumber) rightHand);
   }
 
+  @Override
+  public BaseNumber negate() {
+    ComplexNumber result;
+    if (this.isNaN) {
+      result = new ComplexNumber();
+    } else {
+      result = new ComplexNumber(this.real.negate(), this.imaginary.negate());
+    }
+    return result;
+  }
+
   /**
    * Two ComplexNumber expressions are equal if the values they contain are equal
    *
