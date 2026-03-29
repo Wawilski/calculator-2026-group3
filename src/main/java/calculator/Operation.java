@@ -72,13 +72,13 @@ public abstract class Operation implements Expression {
    */
   public abstract int op(int l, int r);
 
-  public abstract IntegerNumber op(IntegerNumber l, IntegerNumber r);
+  public abstract BaseNumber op(IntegerNumber l, IntegerNumber r);
 
-  public abstract RationalNumber op(RationalNumber l, RationalNumber r);
+  public abstract BaseNumber op(RationalNumber l, RationalNumber r);
 
-  public abstract RealNumber op(RealNumber l, RealNumber r);
+  public abstract BaseNumber op(RealNumber l, RealNumber r);
 
-  public abstract ComplexNumber op(ComplexNumber l, ComplexNumber r);
+  public abstract BaseNumber op(ComplexNumber l, ComplexNumber r);
 
   public abstract RealNumber specialOp(RealNumber l, RealNumber r);
   // the operation itself is specified in the subclasses
