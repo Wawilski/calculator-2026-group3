@@ -9,6 +9,17 @@ import java.util.List;
  * @see Minus
  * @see Times
  * @see Plus
+ * @see Sqrt
+ * @see Sin
+ * @see Cos
+ * @see Tan
+ * @see Ln
+ * @see Log
+ * @see Reciprocal
+ * @see Exponential
+ * @see PowerTwo
+ * @see Power
+ * @see Abs
  */
 public final class Divides extends Operation
 {

@@ -9,6 +9,17 @@ import java.util.List;
  * @see Plus
  * @see Times
  * @see Divides
+ * @see Sqrt
+ * @see Sin
+ * @see Cos
+ * @see Tan
+ * @see Ln
+ * @see Log
+ * @see Reciprocal
+ * @see Exponential
+ * @see PowerTwo
+ * @see Power
+ * @see Abs
  */
 public final class Minus extends Operation
  {
