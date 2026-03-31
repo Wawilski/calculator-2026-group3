@@ -15,6 +15,7 @@ import java.util.Deque;
  * 
  * @author Oussama Hakik
  */
+@SuppressWarnings("javadocs")
 public class CountingVisitor extends Visitor {
 
   private int opsCount; // number of operations
@@ -37,14 +38,16 @@ public class CountingVisitor extends Visitor {
 
   @Override
   public void visit(RationalNumber r) {
-    numbersCount++;
-    depths.push(0);
+    numbersCount += 2;
+    opsCount++;
+    depths.push(2);
   }
 
   @Override
   public void visit(ComplexNumber c) {
-    numbersCount++;
-    depths.push(0);
+    numbersCount += 2;
+    opsCount++;
+    depths.push(2);
   }
 
   /**
@@ -62,14 +65,31 @@ public class CountingVisitor extends Visitor {
     depths.push(maxDepth + 1);
   }
 
+  /**
+   * getter method to obtain the depth of the current expression
+   * 
+   * @return the depth of the expression
+   */
+
   public int getDepth() {
     return depths.isEmpty() ? 0 : depths.peek();
   }
+
+  /**
+   * getter method to obtain the number of operations
+   * 
+   * @return the number of operations
+   */
 
   public int getOpsCount() {
     return opsCount;
   }
 
+  /**
+   * getter method to obtain the number of numbers
+   * 
+   * @return the number of numbers
+   */
   public int getNumbersCount() {
     return numbersCount;
   }

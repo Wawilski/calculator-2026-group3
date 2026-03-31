@@ -7,9 +7,13 @@ import visitor.Visitor;
 import calculator.numbers.visitor.*;
 
 /**
- * RealNumber is a concrete class that represents the real type numbers.
- *
+ * This class represents the real numbers.
+ * The class implements the inteface BaseNumber.
+ * 
  * @see BaseNumber
+ * @see IntegerNumber
+ * @see RationalNumber
+ * @see ComplexNumber
  */
 public class RealNumber implements BaseNumber {
 
@@ -28,24 +32,48 @@ public class RealNumber implements BaseNumber {
    */
   private SpecialNumber specialValue;
 
+  /**
+   * class constructor which specify the value of the real number as a BigDecimal
+   *
+   *
+   * @param value the BigDecimal value representing the real number
+   */
   public /* constructor */ RealNumber(BigDecimal value) {
     this.value = value;
     this.special = false;
     this.specialValue = null;
   }
 
+  /**
+   * class constructor which specify the value of the real number as an integer
+   *
+   *
+   * @param value the integer value representing the real number
+   */
   public /* constructor */ RealNumber(int value) {
     this.value = new BigDecimal(value);
     this.special = false;
     this.specialValue = null;
   }
 
+  /**
+   * class constructor which specify the value of the real number as a double
+   *
+   *
+   * @param value the double value representing the real number
+   */
   public /* constructor */ RealNumber(double value) {
     this.value = new BigDecimal(value);
     this.special = false;
     this.specialValue = null;
   }
 
+  /**
+   * class constructor for a special real number (+INF, -INF, NaN)
+   *
+   *
+   * @param specialValue the value of the special real number
+   */
   public /* constructor */ RealNumber(SpecialNumber specialValue) {
     this.value = null;
     this.special = true;
@@ -72,6 +100,8 @@ public class RealNumber implements BaseNumber {
 
   /**
    * getter method to obtain the special flag value
+   *
+   * @return If the real is a Special one
    */
   public boolean isSpecial() {
     return special;

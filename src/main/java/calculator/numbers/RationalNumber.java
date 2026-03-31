@@ -5,15 +5,33 @@ import calculator.numbers.visitor.TypeVisitor;
 import visitor.Visitor;
 
 /**
- * RationalNumber
+ * This class represents the rational numbers.
+ * The class implements the inteface BaseNumber.
+ * 
+ * @see BaseNumber
+ * @see IntegerNumber
+ * @see RealNumber
+ * @see ComplexNumber
  */
 public class RationalNumber implements BaseNumber {
 
+  // Numerator of the rational number
   private int numerator;
 
+  // Denominator of the rational number
   private int denominator;
 
+  /**
+   * class constructor which specify the numerator and denominator of the rational
+   * number
+   *
+   * @throws IllegalNumberConstruction the denominator can't be 0
+   *
+   * @param numerator   the integer representing the numerator
+   * @param denominator the integer representing the denominator
+   */
   public /* constructor */ RationalNumber(int numerator, int denominator) throws IllegalNumberConstruction {
+
     if (denominator == 0) {
       throw new IllegalNumberConstruction();
     }
@@ -22,24 +40,57 @@ public class RationalNumber implements BaseNumber {
     this.simplify();
   }
 
+  /**
+   * getter method to obtain the numerator of the rational number
+   *
+   * @return the numerator of the rational number
+   */
   public int getNumerator() {
     return numerator;
   }
 
+  /**
+   * getter method to obtain the denominator of the rational number
+   *
+   * @return the denominator of the rational number
+   */
   public int getDenominator() {
     return denominator;
   }
 
+  /**
+   * accept method to implement the visitor design pattern to traverse arithmetic
+   * expressions.
+   * Each number will pass itself to the visitor object to get processed by the
+   * visitor.
+   *
+   * @param v The visitor object
+   */
   @Override
   public void accept(TypeVisitor v) {
     v.visit(this);
   }
 
+  /**
+   * accept method to implement the visitor design pattern to cost the
+   * RationalNumber
+   * into another type of number (IntegerNumber, RealNumber, ComplexNumber) or
+   * compare its type with another BaseNumber.
+   * 
+   * Each number will pass itself to the visitor object to get processed by the
+   * visitor.
+   *
+   * @param v The visitor object
+   * @see TypeVisitor
+   */
   @Override
   public void accept(Visitor v) {
     v.visit(this);
   }
 
+  /**
+   * simplify the rational number such as pgc(numerator, denominator) == 1
+   */
   public void simplify() {
     int num = Math.abs(this.numerator);
     int den = Math.abs(this.denominator);
@@ -56,6 +107,13 @@ public class RationalNumber implements BaseNumber {
 
   }
 
+  /**
+   * apply an operation between this and another RationalNumber
+   *
+   * @param o         The operation to apply
+   * @param rightHand The other hand of the operation
+   *
+   */
   @Override
   public BaseNumber op(Operation o, BaseNumber rightHand) {
     return o.op(this, ((RationalNumber) rightHand));

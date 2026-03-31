@@ -14,12 +14,12 @@ import visitor.StringifyVisitor;
  */
 public class Calculator {
 
+  /**
+   * Default constructor of the class.
+   * Does nothing since the class does not have any variables that need to be
+   * initialised.
+   **/
   public Calculator() {
-    /**
-     * Default constructor of the class.
-     * Does nothing since the class does not have any variables that need to be
-     * initialised.
-     **/
   }
 
   /*

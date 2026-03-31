@@ -6,7 +6,7 @@ import calculator.numbers.RationalNumber;
 import calculator.numbers.RealNumber;
 
 /**
- * e TypeVisitor
+ * visitor design pattern
  */
 public abstract class TypeVisitor {
 

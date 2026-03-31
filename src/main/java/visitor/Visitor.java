@@ -14,9 +14,9 @@ public abstract class Visitor {
   /**
    * The Visitor can traverse an integer
    *
-   * @param n The integer being visited
+   * @param i The integer being visited
    */
-  public abstract void visit(IntegerNumber r);
+  public abstract void visit(IntegerNumber i);
 
   /**
    * The Visitor can traverse a rational
@@ -35,7 +35,7 @@ public abstract class Visitor {
   /**
    * The Visitor can traverse an complex number
    *
-   * @param n The complex number being visited
+   * @param c The complex number being visited
    */
   public abstract void visit(ComplexNumber c);
 
