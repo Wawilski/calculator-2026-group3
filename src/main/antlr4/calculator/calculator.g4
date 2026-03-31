@@ -11,7 +11,8 @@ infix : add_infix #InBase;
 add_infix : mul_infix (sign mul_infix)* #InAdd;
 
 mul_infix : pow_infix (mul pow_infix)* #InMul
-          | (LPAREN infix RPAREN)* atom (LPAREN infix RPAREN)* #InMulAtom
+          | (atom LPAREN infix RPAREN)+ (atom)? #InMulAtomPrev
+          | ((LPAREN infix RPAREN) atom)+ #InMulAtomPost
           ;
 pow_infix : factor (pow factor)* #InPow;
 

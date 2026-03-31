@@ -1,7 +1,6 @@
 package visitor;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.math.BigDecimal;
 
@@ -26,12 +25,9 @@ import calculator.numbers.RealNumber;
 
 public class ParserVisitor extends calculatorBaseVisitor<Expression> {
   /**
-   * {@inheritDoc}
-   *
-   * <p>
-   * The default implementation returns the result of calling
-   * {@link #visitChildren} on {@code ctx}.
-   * </p>
+   * visits the grammar rule equation : postfix EOF
+   * 
+   * @return Expression resulting from the equation
    */
   @Override
   public Expression visitPostFix(PostFixContext ctx) {
@@ -39,12 +35,9 @@ public class ParserVisitor extends calculatorBaseVisitor<Expression> {
   }
 
   /**
-   * {@inheritDoc}
-   *
-   * <p>
-   * The default implementation returns the result of calling
-   * {@link #visitChildren} on {@code ctx}.
-   * </p>
+   * visits the grammar rule equation : infix EOF
+   * 
+   * @return Expression resulting from the equation
    */
   @Override
   public Expression visitInFix(InFixContext ctx) {
@@ -52,12 +45,9 @@ public class ParserVisitor extends calculatorBaseVisitor<Expression> {
   }
 
   /**
-   * {@inheritDoc}
-   *
-   * <p>
-   * The default implementation returns the result of calling
-   * {@link #visitChildren} on {@code ctx}.
-   * </p>
+   * visits the grammar rule equation : prefix EOF
+   * 
+   * @return Expression resulting from the equation
    */
   @Override
   public Expression visitPreFix(PreFixContext ctx) {
@@ -65,12 +55,9 @@ public class ParserVisitor extends calculatorBaseVisitor<Expression> {
   }
 
   /**
-   * {@inheritDoc}
-   *
-   * <p>
-   * The default implementation returns the result of calling
-   * {@link #visitChildren} on {@code ctx}.
-   * </p>
+   * visits the grammar rule infix : add_infix
+   * 
+   * @return Expression resulting from add_infix
    */
   @Override
   public Expression visitInBase(InBaseContext ctx) {
@@ -78,12 +65,9 @@ public class ParserVisitor extends calculatorBaseVisitor<Expression> {
   }
 
   /**
-   * {@inheritDoc}
-   *
-   * <p>
-   * The default implementation returns the result of calling
-   * {@link #visitChildren} on {@code ctx}.
-   * </p>
+   * visits the grammar rule add_infix : mul_infix (sign mul_infix)*
+   * 
+   * @return Expression representing a sum/difference of mul_infix
    */
   @Override
   public Expression visitInAdd(InAddContext ctx) {
@@ -96,74 +80,72 @@ public class ParserVisitor extends calculatorBaseVisitor<Expression> {
       signs.add(sign.getText());
     }
 
-    Expression operation = createOp(signs.get(0), args.subList(0, 2));
-    for (int i = 1; i < signs.size(); i++) {
-      ArrayList<Expression> temp = new ArrayList<>();
-      temp.add(operation);
-      temp.add(args.get(i + 1));
-      operation = createOp(signs.get(i), temp);
-
-    }
-    return operation;
+    return createGlobalOp(args, signs);
   }
 
   /**
-   * {@inheritDoc}
-   *
-   * <p>
-   * The default implementation returns the result of calling
-   * {@link #visitChildren} on {@code ctx}.
-   * </p>
+   * visits the grammar rule mul_infix : pow_infix (mul pow_infix)*
+   * 
+   * @return Expression representing a multiplication/division of pow_infix
    */
   @Override
   public Expression visitInMul(InMulContext ctx) {
     ArrayList<Expression> args = new ArrayList<>();
-    ArrayList<String> signs = new ArrayList<>();
+    ArrayList<String> muls = new ArrayList<>();
     for (Pow_infixContext mul_infix : ctx.pow_infix()) {
       args.add(visit(mul_infix));
     }
-    for (MulContext sign : ctx.mul()) {
-      signs.add(sign.getText());
+    for (MulContext mul : ctx.mul()) {
+      muls.add(mul.getText());
     }
 
-    Expression operation = createOp(signs.get(0), args.subList(0, 2));
-    for (int i = 1; i < signs.size(); i++) {
-      ArrayList<Expression> temp = new ArrayList<>();
-      temp.add(operation);
-      temp.add(args.get(i + 1));
-      operation = createOp(signs.get(i), temp);
-
-    }
-    return operation;
+    return createGlobalOp(args, muls);
   }
 
   /**
-   * {@inheritDoc}
-   *
-   * <p>
-   * The default implementation returns the result of calling
-   * {@link #visitChildren} on {@code ctx}.
-   * </p>
+   * visits the grammar rule
+   * mul_infix : (atom LPAREN infix RPAREN)+ (atom)?
+   * 
+   * @return Expression representing an multiplication of an atom and infixes
+   *         expressions between parenthesis
    */
   @Override
-  public Expression visitInMulAtom(InMulAtomContext ctx) {
-
+  public Expression visitInMulAtomPrev(InMulAtomPrevContext ctx) {
     ArrayList<Expression> args = new ArrayList<>();
     for (InfixContext infix : ctx.infix()) {
       args.add(visit(infix));
     }
-    args.add(visit(ctx.atom()));
+    for (AtomContext atom : ctx.atom()) {
+      args.add(visit(atom));
+    }
 
     return createOp("*", args);
   }
 
   /**
-   * {@inheritDoc}
-   *
-   * <p>
-   * The default implementation returns the result of calling
-   * {@link #visitChildren} on {@code ctx}.
-   * </p>
+   * visits the grammar rule
+   * mul_infix : (LPAREN infix RPAREN atom)+
+   * 
+   * @return Expression representing an multiplication of an atom and infixes
+   *         expressions between parenthesis
+   */
+  @Override
+  public Expression visitInMulAtomPost(InMulAtomPostContext ctx) {
+    ArrayList<Expression> args = new ArrayList<>();
+    for (InfixContext infix : ctx.infix()) {
+      args.add(visit(infix));
+    }
+    for (AtomContext atom : ctx.atom()) {
+      args.add(visit(atom));
+    }
+
+    return createOp("*", args);
+  }
+
+  /**
+   * visits the grammar rule pow_infix : factor (pow factor)*
+   * 
+   * @return Expression representing an exponentiation of pow_infix
    */
   @Override
   public Expression visitInPow(InPowContext ctx) {
@@ -177,12 +159,10 @@ public class ParserVisitor extends calculatorBaseVisitor<Expression> {
   }
 
   /**
-   * {@inheritDoc}
-   *
-   * <p>
-   * The default implementation returns the result of calling
-   * {@link #visitChildren} on {@code ctx}.
-   * </p>
+   * visits the grammar rule
+   * factor : fct LPAREN infix (COMMAT infix)* RPAREN
+   * 
+   * @return Expression representing an function
    */
   @Override
   public Expression visitInFct(InFctContext ctx) {
@@ -190,20 +170,18 @@ public class ParserVisitor extends calculatorBaseVisitor<Expression> {
   }
 
   /**
-   * {@inheritDoc}
-   *
-   * <p>
-   * The default implementation returns the result of calling
-   * {@link #visitChildren} on {@code ctx}.
-   * </p>
+   * visits the grammar rule
+   * factor : LPAREN infix RPAREN (LPAREN infix RPAREN)*
+   * 
+   * @return Expression representing an expression between parenthesis
    */
   @Override
   public Expression visitInParenthesis(InParenthesisContext ctx) {
     ArrayList<Expression> args = new ArrayList<>();
     for (InfixContext infix : ctx.infix()) {
-
       args.add(visit(infix));
     }
+
     Expression operation;
     if (args.size() > 1) {
       operation = createOp("*", args);
@@ -214,15 +192,19 @@ public class ParserVisitor extends calculatorBaseVisitor<Expression> {
   }
 
   /**
-   * {@inheritDoc}
-   *
-   * <p>
-   * The default implementation returns the result of calling
-   * {@link #visitChildren} on {@code ctx}.
-   * </p>
+   * visits the grammar rule
+   * factor : (sign)? (num_const)* atom (num_const)*
+   * 
+   * @return Expression representing an expression between parenthesis
    */
   @Override
   public Expression visitInAtom(InAtomContext ctx) {
+    BaseNumber atom = (BaseNumber) visit(ctx.atom());
+    if (ctx.sign().getText() == "-") {
+      atom = atom.negate();
+    }
+    ArrayList<BaseNumber> args = new ArrayList<>();
+
     return visit(ctx.atom());
   }
 
@@ -854,4 +836,18 @@ public class ParserVisitor extends calculatorBaseVisitor<Expression> {
       throw new RuntimeException(e);
     }
   }
+
+  public Expression createGlobalOp(List<Expression> args, List<String> operands) {
+
+    Expression operation = createOp(operands.get(0), args.subList(0, 2));
+    for (int i = 1; i < operands.size(); i++) {
+      ArrayList<Expression> temp = new ArrayList<>();
+      temp.add(operation);
+      temp.add(args.get(i + 1));
+      operation = createOp(operands.get(i), temp);
+    }
+    return operation;
+
+  }
+
 }
