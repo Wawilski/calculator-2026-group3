@@ -7,6 +7,8 @@ import calculator.Notation;
 import calculator.api.EvaluationResponse;
 import calculator.api.ExpressionMapper;
 import calculator.api.ExpressionRequest;
+import calculator.numbers.BaseNumber;
+import calculator.numbers.IntegerNumber;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -32,10 +34,13 @@ public class CalculatorApiService {
     // This method connects the API layer to the calculator core.
     public EvaluationResponse evaluate(ExpressionRequest request){
         Expression expression = expressionMapper.map(request);
-        int result = calculator.eval(expression);
+        BaseNumber evaluated = calculator.eval(expression);
+        if (!(evaluated instanceof IntegerNumber integerResult)) {
+            throw new IllegalStateException("API currently supports integer results only.");
+        }
         // Build the response with the computed value and some string formats.
         EvaluationResponse response = new EvaluationResponse();
-        response.setResult(result);
+        response.setResult(integerResult.getValue());
         response.setInfix(calculator.format(expression, Notation.INFIX));
         response.setPretty(calculator.prettyFormat(expression));
         response.setPrefix(calculator.format(expression, Notation.PREFIX));

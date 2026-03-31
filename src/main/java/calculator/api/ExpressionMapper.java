@@ -4,10 +4,10 @@ import calculator.Divides;
 import calculator.Expression;
 import calculator.IllegalConstruction;
 import calculator.Minus;
-import calculator.MyNumber;
 import calculator.Plus;
 import calculator.Times;
 import calculator.api.exception.RequestValidationException;
+import calculator.numbers.IntegerNumber;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -78,7 +78,7 @@ public class ExpressionMapper {
         if (request.getValue() == null) {
             throw new IllegalArgumentException("Number expression must provide a non-null value.");
         }
-        return new MyNumber(request.getValue());
+        return new IntegerNumber(request.getValue());
     }
 
     private Expression mapOperation(ExpressionRequest request, String opType, int depth) {

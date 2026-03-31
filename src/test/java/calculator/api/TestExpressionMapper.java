@@ -3,9 +3,9 @@ package calculator.api;
 import calculator.Divides;
 import calculator.Expression;
 import calculator.Minus;
-import calculator.MyNumber;
 import calculator.Plus;
 import calculator.Times;
+import calculator.numbers.IntegerNumber;
 import calculator.api.exception.RequestValidationException;
 import org.junit.jupiter.api.Test;
 
@@ -26,7 +26,7 @@ class TestExpressionMapper {
 
         Expression expression = mapper.map(request);
 
-        MyNumber number = assertInstanceOf(MyNumber.class, expression);
+        IntegerNumber number = assertInstanceOf(IntegerNumber.class, expression);
         assertEquals(8, number.getValue());
     }
 
