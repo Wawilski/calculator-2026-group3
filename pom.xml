@@ -27,12 +27,6 @@
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.version>3.15.0</maven.compiler.version>
-        <!-- As of JDK 23, annotation processing is only run with some explicit configuration
-             of annotation processing or with an explicit request to run annotation processing
-             on the javac command line. This is a change in behavior from the existing default
-             of looking to run annotation processing by searching the class path for processors
-             without any explicit annotation processing related options needing to be present.
-             In order to be enable this in Mavan, we need to turn on full compilation processing: -->
         <maven.compiler.proc>full</maven.compiler.proc>
         <maven.surefire.version>3.5.4</maven.surefire.version>
         <maven-surefire-plugin.version>3.5.4</maven-surefire-plugin.version>
@@ -115,8 +109,13 @@
       </dependencies>
 
     <build>
-        <plugins>
+      <plugins>
             <plugin>
+               <groupId>org.apache.maven.plugins</groupId>
+               <artifactId>maven-site-plugin</artifactId>
+               <version>3.21.0</version>
+            </plugin>
+              <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven.compiler.version}</version>
@@ -160,14 +159,12 @@
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>${jacoco.version}</version>
                 <executions>
-                    <!--configures testing coverage-->
                     <execution>
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
                     </execution>
 
-                    <!--generates report in target/site/jacoco-->
                     <execution>
                         <id>report</id>
                         <phase>test</phase>
@@ -188,12 +185,9 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>${javadoc.version}</version>
                 <configuration>
-                    <!--needed to prevent module problem-->
                     <detectJavaApiLink>false</detectJavaApiLink>
                 </configuration>
                 <executions>
-                    <!-- Exports JavaDocs to regular HTML files -->
-                    <!--javadoc to target/site/apidocs-->
                     <execution>
                         <id>javadoc-html</id>
                         <phase>package</phase>

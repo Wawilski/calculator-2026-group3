@@ -9,8 +9,15 @@ import calculator.numbers.visitor.TypeVisitor;
 import visitor.Visitor;
 
 /**
- * ComplexNumber
+ * This class represents the complex numbers.
+ * The class implements the inteface BaseNumber.
+ * 
+ * @see BaseNumber
+ * @see IntegerNumber
+ * @see RationalNumber
+ * @see RealNumber
  */
+
 public class ComplexNumber implements BaseNumber {
 
   // Real part of the complex number
@@ -24,25 +31,43 @@ public class ComplexNumber implements BaseNumber {
   // (e.g. if it should represent an infinite value in complex)
   private boolean isNaN;
 
+  /**
+   * class constructor which specify the real and imaginary part as BigDecimal
+   *
+   * @param real      the BigDecimal representing the real part
+   * @param imaginary the BigDecimal representing the imaginary part
+   */
   public /* constructor */ ComplexNumber(BigDecimal real, BigDecimal imaginary) {
     this.real = real;
     this.imaginary = imaginary;
     this.isNaN = false;
   }
 
+  /**
+   * class constructor which specify the real and imaginary part as integer
+   *
+   * @param real      the integer representing the real part
+   * @param imaginary the integer representing the imaginary part
+   */
   public /* constructor */ ComplexNumber(int real, int imaginary) {
     this.real = new BigDecimal(real, MathContext.DECIMAL32);
     this.imaginary = new BigDecimal(imaginary, MathContext.DECIMAL32);
     this.isNaN = false;
   }
 
+  /**
+   * class constructor which specify the real and imaginary part as double
+   *
+   * @param real      the double representing the real part
+   * @param imaginary the double representing the imaginary part
+   */
   public /* constructor */ ComplexNumber(double real, double imaginary) {
     this.real = new BigDecimal(real, MathContext.DECIMAL32);
     this.imaginary = new BigDecimal(imaginary, MathContext.DECIMAL32);
     this.isNaN = false;
   }
 
-  /*
+  /**
    * Constructor for a NaN complex number
    */
   public /* constructor */ ComplexNumber() {
@@ -51,23 +76,56 @@ public class ComplexNumber implements BaseNumber {
     this.isNaN = true;
   }
 
+  /**
+   * getter method to return the real part of the complex number
+   *
+   * @return The real part of the complex number
+   */
   public BigDecimal getReal() {
     return this.real;
   }
 
+  /**
+   * getter method to return the imaginary part of the complex number
+   *
+   * @return The imaginary part of the complex number
+   */
   public BigDecimal getImaginary() {
     return this.imaginary;
   }
 
+  /**
+   * method to tell if the complex number is a NaN
+   * 
+   * @return if the complex number is a NaN
+   */
   public boolean isNaN() {
     return this.isNaN;
   }
 
+  /**
+   * Accept method to implement the visitor design pattern to numbers.
+   * Each operation will delegate the visitor to each of its arguments
+   * expressions,
+   * and will then pass itself to the visitor object to get processed by the
+   * visitor object.
+   *
+   * @param v The visitor object
+   */
   @Override
   public void accept(TypeVisitor v) {
     v.visit(this);
   }
 
+  /**
+   * Accept method to implement the visitor design pattern to numbers.
+   * Each operation will delegate the visitor to each of its arguments
+   * expressions,
+   * and will then pass itself to the visitor object to get processed by the
+   * visitor object.
+   *
+   * @param v The visitor object
+   */
   @Override
   public void accept(Visitor v) {
     v.visit(this);

@@ -76,6 +76,11 @@ public class PrettyPrintVisitor extends Visitor {
     renderedExpressions.push(new RenderedNode(text, precedence, true));
   }
 
+  /**
+   * Get the expression render
+   * 
+   * @return the render of the expression
+   */
   public String getResult() {
     return renderedExpressions.isEmpty() ? "" : renderedExpressions.peek().text;
   }

@@ -72,14 +72,59 @@ public abstract class Operation implements Expression {
    */
   public abstract int op(int l, int r);
 
+  /**
+   * Abstract method representing the actual binary arithmetic operation to
+   * compute between two IntegerNumber
+   *
+   * @see IntegerNumber
+   * @param l first argument of the binary operation
+   * @param r second argument of the binary operation
+   * @return result of computing the binary operation
+   */
   public abstract BaseNumber op(IntegerNumber l, IntegerNumber r);
 
+  /**
+   * Abstract method representing the actual binary arithmetic operation to
+   * compute between two RationalNumber
+   * 
+   * @see RationalNumber
+   * @param l first argument of the binary operation
+   * @param r second argument of the binary operation
+   * @return result of computing the binary operation
+   */
   public abstract BaseNumber op(RationalNumber l, RationalNumber r);
 
+  /**
+   * Abstract method representing the actual binary arithmetic operation to
+   * compute between two RealNumber
+   *
+   * @see RealNumber
+   * @param l first argument of the binary operation
+   * @param r second argument of the binary operation
+   * @return result of computing the binary operation
+   */
   public abstract BaseNumber op(RealNumber l, RealNumber r);
 
+  /**
+   * Abstract method representing the actual binary arithmetic operation to
+   * compute between two ComplexNumber
+   * 
+   * @see ComplexNumber
+   * @param l first argument of the binary operation
+   * @param r second argument of the binary operation
+   * @return result of computing the binary operation
+   */
   public abstract BaseNumber op(ComplexNumber l, ComplexNumber r);
 
+  /**
+   * Abstract method representing the actual binary arithmetic operation to
+   * compute two special RealNumber
+   * 
+   * @see RealNumber
+   * @param l first argument of the binary operation
+   * @param r second argument of the binary operation
+   * @return result of computing the binary operation
+   */
   public abstract RealNumber specialOp(RealNumber l, RealNumber r);
   // the operation itself is specified in the subclasses
 
