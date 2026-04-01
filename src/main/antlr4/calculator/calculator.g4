@@ -18,7 +18,7 @@ pow_infix : factor (pow factor)* #InPow;
 
 factor : fct LPAREN infix (COMMAT infix)* RPAREN    #InFct
        | LPAREN infix RPAREN (LPAREN infix RPAREN)* #InParenthesis
-       | (sign)? (num_const)* atom (num_const)*     #InAtom
+       | (MINUS)? (num_const)* atom (num_const)*     #InAtom
        ;
 
 // Prefix Calculator
@@ -30,13 +30,13 @@ prefix : space_prefix #SpacedPreFix
 space_prefix: (operator | fct)? LPAREN space_prefix (space_prefix)+ RPAREN #PreSpaceWrappedOp
             | fct space_prefix                                             #PreSpaceFct
             | operator space_prefix space_prefix                           #PreSpaceOperator
-            | LPAREN (sign)? atom RPAREN                                   #PreSpaceSigned
+            | LPAREN (MINUS)? atom RPAREN                                   #PreSpaceSigned
             | atom                                                         #PreSpaceAtom
             ;
 
 paren_prefix: (operator|fct)? LPAREN paren_prefix (COMMAT paren_prefix)* RPAREN #PreWrappedOp
             | fct paren_prefix                                                  #PreFct
-            | LPAREN (sign)? atom RPAREN                                        #PreSigned
+            | LPAREN (MINUS)? atom RPAREN                                        #PreSigned
             | atom                                                              #PreAtom 
             ;
 
@@ -49,15 +49,15 @@ postfix : space_postfix #SpacedPostFix
 space_postfix: LPAREN space_postfix (space_postfix)+ RPAREN (operator)? #PostSpaceWrappedOp
              | LPAREN space_postfix (space_postfix)* RPAREN fct         #PostSpaceWrappedFct
              | space_postfix fct                                        #PostSpaceFct
-             | space_postfix space_postfix (operator)?                  #PostSpaceSimpleOp
-             | LPAREN (sign)? atom RPAREN                               #PostSpaceSigned
+             | space_postfix space_postfix operator                     #PostSpaceSimpleOp
+             | LPAREN (MINUS)? atom RPAREN                               #PostSpaceSigned
              | atom                                                     #PostSpaceAtom
              ;
 
 paren_postfix: LPAREN paren_postfix (COMMAT paren_postfix)+ RPAREN (operator)?  #PostWrappedOp
              | LPAREN paren_postfix (COMMAT paren_postfix)* RPAREN fct          #PostWrappedFct
              | paren_postfix fct                                                #PostFct
-             | LPAREN (sign)? atom RPAREN                                       #PostSigned
+             | LPAREN (MINUS)? atom RPAREN                                       #PostSigned
              | atom                                                             #PostAtom 
              ;
 

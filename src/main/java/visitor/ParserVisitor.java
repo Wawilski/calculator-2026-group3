@@ -195,7 +195,7 @@ public class ParserVisitor extends calculatorBaseVisitor<Expression> {
   @Override
   public Expression visitInAtom(InAtomContext ctx) {
     BaseNumber atom = (BaseNumber) visit(ctx.atom());
-    if (ctx.sign() != null && ctx.sign().getText() == "-") {
+    if (ctx.MINUS() != null) {
       atom = atom.negate();
     }
     ArrayList<Expression> args = new ArrayList<>();
@@ -288,7 +288,7 @@ public class ParserVisitor extends calculatorBaseVisitor<Expression> {
   @Override
   public Expression visitPreSpaceSigned(PreSpaceSignedContext ctx) {
     BaseNumber atom = (BaseNumber) visit(ctx.atom());
-    if (ctx.sign() != null && ctx.sign().getText() == "-") {
+    if (ctx.MINUS() != null) {
       atom = atom.negate();
     }
     return atom;
@@ -349,7 +349,7 @@ public class ParserVisitor extends calculatorBaseVisitor<Expression> {
   @Override
   public Expression visitPreSigned(PreSignedContext ctx) {
     BaseNumber atom = (BaseNumber) visit(ctx.atom());
-    if (ctx.sign() != null && ctx.sign().getText() == "-") {
+    if (ctx.MINUS() != null) {
       atom = atom.negate();
     }
     return atom;
@@ -442,7 +442,7 @@ public class ParserVisitor extends calculatorBaseVisitor<Expression> {
       args.add(visit(sPostfixContext));
     }
 
-    String op = (ctx.operator() == null) ? "" : ctx.operator().getText();
+    String op = ctx.operator().getText();
     return createOp(op, args);
   }
 
@@ -455,7 +455,7 @@ public class ParserVisitor extends calculatorBaseVisitor<Expression> {
   @Override
   public Expression visitPostSpaceSigned(PostSpaceSignedContext ctx) {
     BaseNumber atom = (BaseNumber) visit(ctx.atom());
-    if (ctx.sign() != null && ctx.sign().getText() == "-") {
+    if (ctx.MINUS() != null) {
       atom = atom.negate();
     }
     return atom;
@@ -529,7 +529,7 @@ public class ParserVisitor extends calculatorBaseVisitor<Expression> {
   @Override
   public Expression visitPostSigned(PostSignedContext ctx) {
     BaseNumber atom = (BaseNumber) visit(ctx.atom());
-    if (ctx.sign() != null && ctx.sign().getText() == "-") {
+    if (ctx.MINUS() != null) {
       atom = atom.negate();
     }
     return atom;
@@ -722,6 +722,7 @@ public class ParserVisitor extends calculatorBaseVisitor<Expression> {
         default:
           throw new IllegalArgumentException();
       }
+
       return op;
 
     } catch (IllegalConstruction e) {

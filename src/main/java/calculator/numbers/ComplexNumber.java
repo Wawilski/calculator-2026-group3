@@ -139,10 +139,13 @@ public class ComplexNumber implements BaseNumber {
   @Override
   public BaseNumber negate() {
     ComplexNumber result;
+
+    System.out.println(this);
     if (this.isNaN) {
       result = new ComplexNumber();
     } else {
       result = new ComplexNumber(this.real.negate(), this.imaginary.negate());
+      System.out.println(result);
     }
     return result;
   }
@@ -204,9 +207,10 @@ public class ComplexNumber implements BaseNumber {
       s = "NaN";
     } else {
       String realPart = (this.real.equals(BigDecimal.ZERO)) ? "" : this.real.toString();
-      String imPart = (this.imaginary.equals(BigDecimal.ZERO)) ? "" : " + " + this.imaginary.toString() + "i";
+      String imPart = (this.imaginary.equals(BigDecimal.ZERO)) ? "" : this.imaginary.toString() + " i";
+      String sign = (realPart == "" || imPart == "") ? "" : "+";
 
-      s = realPart + imPart;
+      s = realPart + sign + imPart;
 
     }
     return s;
