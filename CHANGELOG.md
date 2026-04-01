@@ -12,8 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Initial project structure
 - Basics Artithmetic operations
 - Documentation Files
-
+- All types of number Support (Reals, Integers, Rationals, Complex)
 ### Changed
 
 - Added target/ to .gitignore
+
 
