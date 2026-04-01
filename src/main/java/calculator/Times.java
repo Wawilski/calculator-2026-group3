@@ -88,9 +88,7 @@ public final class Times extends Operation {
       BigDecimal lValue = l.getValue();
       BigDecimal rValue = r.getValue();
 
-      int precision = Math.min(lValue.scale(), rValue.scale());
       BigDecimal value = lValue.multiply(rValue, MathContext.DECIMAL32);
-      value.setScale(precision);
       result = new RealNumber(value);
     }
     return result;
