@@ -88,25 +88,25 @@ public class Main {
       c.eval(e);
       logger.info("Postfix form: " + c.format(e, Notation.POSTFIX));
 
-      ExpressionParser parser = new ExpressionParser();
-      e = parser.parse("1 + 1i * 2");
-      c.print(e);
-      c.eval(e);
-      e = parser.parse("1 + 6 - 1i");
-      c.print(e);
-      c.eval(e);
-      e = parser.parse(" + (1, i)");
-      c.print(e);
-      c.eval(e);
-      e = parser.parse("i pi +");
-      c.print(e);
-      c.eval(e);
-      e = parser.parse("(1 + 2)(2.0 / 4.0)*2*(7-1)*4");
-      c.print(e);
-      c.eval(e);
-      e = parser.parse("(3)(0.5)*2*(7-1)*4");
-      c.print(e);
-      c.eval(e);
+      // ExpressionParser parser = new ExpressionParser();
+      // e = parser.parse("1 + 1i * 2");
+      // c.print(e);
+      // c.eval(e);
+      // e = parser.parse("1 + 6 - 1i");
+      // c.print(e);
+      // c.eval(e);
+      // e = parser.parse(" + (1, i)");
+      // c.print(e);
+      // c.eval(e);
+      // e = parser.parse("i pi +");
+      // c.print(e);
+      // c.eval(e);
+      // e = parser.parse("(1 + 2)(2.0 / 4.0)*2*(7-1)*4");
+      // c.print(e);
+      // c.eval(e);
+      // e = parser.parse("(3)(0.5)*2*(7-1)*4");
+      // c.print(e);
+      // c.eval(e);
 
     }
 

@@ -732,8 +732,8 @@ public class ParserVisitor extends calculatorBaseVisitor<Expression> {
   /**
    * create an global operation using a list of operation signs and a list of args
    * 
-   * @param sign List of operation to apply
-   * @param args List of arguments
+   * @param args     List of arguments
+   * @param operands List of operation to apply
    * @return Expression resulting from the operations and the arguments
    */
   public Expression createGlobalOp(List<Expression> args, List<String> operands) {

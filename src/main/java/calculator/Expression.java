@@ -1,16 +1,17 @@
 package calculator;
 
+import calculator.numbers.BaseNumber;
 import visitor.Visitor;
 
 /**
- * Expression is an abstract class that represents arithmetic expressions.
- * It has two concrete subclasses Operation and BaseNumber.
+ * Expression is an interface that represents arithmetic expressions.
+ * It has two concrete subclasses Operation and MyNumber.
  *
  * @see Operation
  * @see BaseNumber
  */
-public interface Expression {
 
+public interface Expression {
   /**
    * accept is a method needed to implement the visitor design pattern
    *

@@ -15,6 +15,7 @@ import java.util.Deque;
  * 
  * @author Oussama Hakik
  */
+@SuppressWarnings("javadocs")
 public class CountingVisitor extends Visitor {
 
   private int opsCount; // number of operations

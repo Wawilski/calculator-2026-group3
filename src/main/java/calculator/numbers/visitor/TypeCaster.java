@@ -16,6 +16,11 @@ public class TypeCaster extends TypeVisitor {
   /** Cast result */
   private BaseNumber result;
 
+  /**
+   * class constructor
+   * 
+   * @param type the type to cast to
+   */
   public /* constructor */ TypeCaster(NumberType type) {
     this.type = type;
   }
@@ -32,7 +37,7 @@ public class TypeCaster extends TypeVisitor {
   /**
    * Visiting an IntegerNumber to cast it to the specified type of the visitor
    *
-   * @param r The visited IntegerNumber to be cast
+   * @param i The visited IntegerNumber to be cast
    */
   @Override
   public void visit(IntegerNumber i) {
@@ -98,13 +103,13 @@ public class TypeCaster extends TypeVisitor {
   /**
    * Visiting a ComplexNumber to cast it to the specified type of the visitor
    *
-   * @param r The visited RealNumber to be cast
+   * @param c The visited ComplexlNumber to be cast
    */
   @Override
-  public void visit(ComplexNumber r) {
+  public void visit(ComplexNumber c) {
     switch (type) {
       case COMPLEX:
-        result = r;
+        result = c;
         break;
       default:
         throw new IllegalCast();

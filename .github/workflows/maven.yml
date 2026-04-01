@@ -4,9 +4,9 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ "master", "feat/parser" ]
+    branches: [ master , dev, feat/parser]
   pull_request:
-    branches: [ "master", "feat/parser" ]
+    branches: [ master  , dev, feat/parser]
 
 permissions:
   contents: read

@@ -6,9 +6,13 @@ import visitor.Visitor;
 import calculator.numbers.visitor.*;
 
 /**
- * IntegerNumber is a concrete class that represents the integer type numbers.
- *
+ * This class represents the integer numbers.
+ * The class implements the inteface BaseNumber.
+ * 
  * @see BaseNumber
+ * @see RationalNumber
+ * @see RealNumber
+ * @see ComplexNumber
  */
 public class IntegerNumber implements BaseNumber {
 
@@ -48,8 +52,7 @@ public class IntegerNumber implements BaseNumber {
    * accept method to implement the visitor design pattern to cost the
    * IntegerNumber
    * into another type of number (RealNumber, RationnalNumber, ComplexNumber) or
-   * compare
-   * its type with another BaseNumber.
+   * compare its type with another BaseNumber.
    * 
    * Each number will pass itself to the visitor object to get processed by the
    * visitor.
