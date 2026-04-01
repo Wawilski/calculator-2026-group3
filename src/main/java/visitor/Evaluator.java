@@ -1,16 +1,17 @@
 package visitor;
 
+import java.util.ArrayList;
+
 import calculator.Expression;
+import calculator.Function;
 import calculator.Operation;
-import calculator.numbers.RealNumber;
-import calculator.numbers.visitor.TypeCaster;
-import calculator.numbers.visitor.TypeComparator;
 import calculator.numbers.BaseNumber;
 import calculator.numbers.ComplexNumber;
 import calculator.numbers.IntegerNumber;
 import calculator.numbers.RationalNumber;
-
-import java.util.ArrayList;
+import calculator.numbers.RealNumber;
+import calculator.numbers.visitor.TypeCaster;
+import calculator.numbers.visitor.TypeComparator;
 
 /**
  * Evaluation is a concrete visitor that serves to
@@ -90,6 +91,47 @@ public class Evaluator extends Visitor {
       temp = temp.op(o, rightHand);
     }
     // store the accumulated result
+    computedValue = temp;
+  }
+
+  @Override
+  public void visit(Function f) {
+    ArrayList<BaseNumber> evaluatedArgs = new ArrayList<>();
+    for (Expression a : f.getArgs()) {
+      a.accept(this);
+      evaluatedArgs.add(computedValue);
+    }
+
+    if (evaluatedArgs.isEmpty()) {
+      computedValue = new IntegerNumber(f.getNeutral());
+      return;
+    }
+
+    BaseNumber temp = evaluatedArgs.get(0);
+
+    if (f.getArity() == 1) {
+      computedValue = temp.function(f);
+      return;
+    }
+
+    int max = evaluatedArgs.size();
+    TypeComparator comparator = new TypeComparator();
+    temp.accept(comparator);
+
+    for (int counter = 1; counter < max; counter++) {
+      BaseNumber rightHand = evaluatedArgs.get(counter);
+
+      TypeCaster caster = new TypeCaster(comparator.getCastType());
+
+      temp.accept(caster);
+      temp = caster.getResult();
+
+      rightHand.accept(caster);
+      rightHand = caster.getResult();
+
+      temp = temp.function(f, rightHand);
+    }
+
     computedValue = temp;
   }
 }

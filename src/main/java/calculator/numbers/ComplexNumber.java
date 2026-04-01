@@ -4,6 +4,7 @@ package calculator.numbers;
 import java.math.BigDecimal;
 import java.math.MathContext;
 
+import calculator.Function;
 import calculator.Operation;
 import calculator.numbers.visitor.TypeVisitor;
 import visitor.Visitor;
@@ -134,6 +135,16 @@ public class ComplexNumber implements BaseNumber {
   @Override
   public BaseNumber op(Operation o, BaseNumber rightHand) {
     return o.op(this, (ComplexNumber) rightHand);
+  }
+
+  @Override
+  public BaseNumber function(Function f) {
+    return f.function(this, null);
+  }
+
+  @Override
+  public BaseNumber function(Function f, BaseNumber rightHand) {
+    return f.function(this, (ComplexNumber) rightHand);
   }
 
   /**

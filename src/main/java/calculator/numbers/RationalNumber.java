@@ -1,6 +1,7 @@
 package calculator.numbers;
 
 import calculator.Operation;
+import calculator.Function;
 import calculator.numbers.visitor.TypeVisitor;
 import visitor.Visitor;
 
@@ -117,6 +118,16 @@ public class RationalNumber implements BaseNumber {
   @Override
   public BaseNumber op(Operation o, BaseNumber rightHand) {
     return o.op(this, ((RationalNumber) rightHand));
+  }
+
+  @Override
+  public BaseNumber function(Function f) {
+    return f.function(this, null);
+  }
+
+  @Override
+  public BaseNumber function(Function f, BaseNumber rightHand) {
+    return f.function(this, (RationalNumber) rightHand);
   }
 
   /**

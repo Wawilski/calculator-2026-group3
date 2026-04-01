@@ -1,9 +1,10 @@
 
 package calculator.numbers;
 
+import calculator.Function;
 import calculator.Operation;
+import calculator.numbers.visitor.TypeVisitor;
 import visitor.Visitor;
-import calculator.numbers.visitor.*;
 
 /**
  * This class represents the integer numbers.
@@ -73,6 +74,16 @@ public class IntegerNumber implements BaseNumber {
    */
   public BaseNumber op(Operation o, BaseNumber rightHand) {
     return o.op(this, (IntegerNumber) rightHand);
+  }
+
+  @Override
+  public BaseNumber function(Function f) {
+    return f.function(this, null);
+  }
+
+  @Override
+  public BaseNumber function(Function f, BaseNumber rightHand) {
+    return f.function(this, (IntegerNumber) rightHand);
   }
 
   /**

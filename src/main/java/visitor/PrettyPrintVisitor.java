@@ -1,16 +1,17 @@
 package visitor;
 
-import calculator.Operation;
-import calculator.numbers.RealNumber;
-import calculator.numbers.ComplexNumber;
-import calculator.numbers.IntegerNumber;
-import calculator.numbers.RationalNumber;
-
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.List;
+
+import calculator.Function;
+import calculator.Operation;
+import calculator.numbers.ComplexNumber;
+import calculator.numbers.IntegerNumber;
+import calculator.numbers.RationalNumber;
+import calculator.numbers.RealNumber;
 
 /**
  * PrettyPrintVisitor renders expressions in infix form with minimal parentheses
@@ -74,6 +75,23 @@ public class PrettyPrintVisitor extends Visitor {
     String text = renderOperation(symbol, precedence, args);// render the operation with the appropriate parentheses
                                                             // based on the precedence of the sub-expressions
     renderedExpressions.push(new RenderedNode(text, precedence, true));
+  }
+
+  @Override
+  public void visit(Function f) {
+    List<RenderedNode> args = new ArrayList<>();
+    for (int i = 0; i < f.getArgs().size(); i++) {
+      args.add(renderedExpressions.pop());
+    }
+    Collections.reverse(args);
+
+    List<String> renderedArgs = new ArrayList<>();
+    for (RenderedNode node : args) {
+      renderedArgs.add(node.text);
+    }
+
+    String text = f.getSymbol() + "(" + String.join(", ", renderedArgs) + ")";
+    renderedExpressions.push(new RenderedNode(text, 3, true));
   }
 
   /**
