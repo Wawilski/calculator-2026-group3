@@ -11,8 +11,8 @@ infix : add_infix #InBase;
 add_infix : mul_infix (sign mul_infix)* #InAdd;
 
 mul_infix : pow_infix (mul pow_infix)* #InMul
-          | (atom LPAREN infix RPAREN)+ (atom)? #InMulAtomPrev
-          | ((LPAREN infix RPAREN) atom)+ #InMulAtomPost
+          | (atom LPAREN infix RPAREN)+ (atom)? #InMulAtom
+          | ((LPAREN infix RPAREN) atom)+ #InMulAtom
           ;
 pow_infix : factor (pow factor)* #InPow;
 
@@ -27,11 +27,11 @@ prefix : space_prefix #SpacedPreFix
        | paren_prefix #ParenthesisPreFix
        ;
 
-space_prefix: (operator | fct)? LPAREN (space_prefix)+ RPAREN #PreSpaceWrappedOp
-            | fct space_prefix                                #PreSpaceFct
-            | operator space_prefix space_prefix              #PreSpaceSigned
-            | LPAREN (sign)? atom RPAREN                      #PreSpaceSigned
-            | atom                                            #PreSpaceAtom
+space_prefix: (operator | fct)? LPAREN space_prefix (space_prefix)+ RPAREN #PreSpaceWrappedOp
+            | fct space_prefix                                             #PreSpaceFct
+            | operator space_prefix space_prefix                           #PreSpaceOperator
+            | LPAREN (sign)? atom RPAREN                                   #PreSpaceSigned
+            | atom                                                         #PreSpaceAtom
             ;
 
 paren_prefix: (operator|fct)? LPAREN paren_prefix (COMMAT paren_prefix)* RPAREN #PreWrappedOp
@@ -125,15 +125,16 @@ PHI: 'phi';
 
 // functions
 
-fct : COS  #FctCos
-    | TAN  #FctTan
-    | SIN  #FctSin
-    | ACOS #FctAcos
-    | ATAN #FctAtan
-    | ASIN #FctAsin     
-    | LN   #FctLn
-    | SQRT #FctSqrt
-    | LOG  #FctLog
+fct : COS  
+    | TAN  
+    | SIN  
+    | ACOS 
+    | ATAN 
+    | ASIN 
+    | LN   
+    | SQRT 
+    | LOG  
+    | ABS  
     ;
            
 COS : 'cos';
@@ -145,6 +146,7 @@ ATAN : 'atan' ;
 LN : 'ln' ;
 LOG : 'log' ;
 SQRT : 'sqrt' ;
+ABS : 'abs' ;
 
 
 

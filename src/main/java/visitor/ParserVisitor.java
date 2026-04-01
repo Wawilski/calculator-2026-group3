@@ -77,10 +77,18 @@ public class ParserVisitor extends calculatorBaseVisitor<Expression> {
       args.add(visit(mul_infix));
     }
     for (SignContext sign : ctx.sign()) {
-      signs.add(sign.getText());
+      String op = (sign == null) ? "" : sign.getText();
+      signs.add(op);
+    }
+    Expression expr;
+    if (args.size() > 1) {
+      expr = createGlobalOp(args, signs);
+
+    } else {
+      expr = args.get(0);
     }
 
-    return createGlobalOp(args, signs);
+    return expr;
   }
 
   /**
@@ -99,7 +107,14 @@ public class ParserVisitor extends calculatorBaseVisitor<Expression> {
       muls.add(mul.getText());
     }
 
-    return createGlobalOp(args, muls);
+    Expression op;
+    if (args.size() > 1) {
+      op = createGlobalOp(args, muls);
+    } else {
+      op = args.get(0);
+    }
+
+    return op;
   }
 
   /**
@@ -110,27 +125,7 @@ public class ParserVisitor extends calculatorBaseVisitor<Expression> {
    *         expressions between parenthesis
    */
   @Override
-  public Expression visitInMulAtomPrev(InMulAtomPrevContext ctx) {
-    ArrayList<Expression> args = new ArrayList<>();
-    for (InfixContext infix : ctx.infix()) {
-      args.add(visit(infix));
-    }
-    for (AtomContext atom : ctx.atom()) {
-      args.add(visit(atom));
-    }
-
-    return createOp("*", args);
-  }
-
-  /**
-   * visits the grammar rule
-   * mul_infix : (LPAREN infix RPAREN atom)+
-   * 
-   * @return Expression representing an multiplication of an atom and infixes
-   *         expressions between parenthesis
-   */
-  @Override
-  public Expression visitInMulAtomPost(InMulAtomPostContext ctx) {
+  public Expression visitInMulAtom(InMulAtomContext ctx) {
     ArrayList<Expression> args = new ArrayList<>();
     for (InfixContext infix : ctx.infix()) {
       args.add(visit(infix));
@@ -186,7 +181,7 @@ public class ParserVisitor extends calculatorBaseVisitor<Expression> {
     if (args.size() > 1) {
       operation = createOp("*", args);
     } else {
-      operation = args.get(1);
+      operation = args.get(0);
     }
     return operation;
   }
@@ -200,86 +195,110 @@ public class ParserVisitor extends calculatorBaseVisitor<Expression> {
   @Override
   public Expression visitInAtom(InAtomContext ctx) {
     BaseNumber atom = (BaseNumber) visit(ctx.atom());
-    if (ctx.sign().getText() == "-") {
+    if (ctx.sign() != null && ctx.sign().getText() == "-") {
       atom = atom.negate();
     }
-    ArrayList<BaseNumber> args = new ArrayList<>();
+    ArrayList<Expression> args = new ArrayList<>();
+    for (Num_constContext num_const : ctx.num_const()) {
+      args.add(visit(num_const));
+    }
+    args.add(atom);
 
-    return visit(ctx.atom());
+    return createOp("*", args);
   }
 
   /**
-   * {@inheritDoc}
+   * visits the grammar rule
+   * prefix : space_prefix
    *
-   * <p>
-   * The default implementation returns the result of calling
-   * {@link #visitChildren} on {@code ctx}.
-   * </p>
+   * @return Expression representing a prefix expression with spaces
    */
   @Override
   public Expression visitSpacedPreFix(SpacedPreFixContext ctx) {
-    return visitChildren(ctx);
+    return visit(ctx.space_prefix());
   }
 
   /**
-   * {@inheritDoc}
+   * visits the grammar rule
+   * prefix : paren_prefix
    *
-   * <p>
-   * The default implementation returns the result of calling
-   * {@link #visitChildren} on {@code ctx}.
-   * </p>
+   * @return Expression representing a prefix expression with commas and
+   *         parenthesis
    */
   @Override
   public Expression visitParenthesisPreFix(ParenthesisPreFixContext ctx) {
-    return visitChildren(ctx);
+    return visit(ctx.paren_prefix());
   }
 
   /**
-   * {@inheritDoc}
-   *
-   * <p>
-   * The default implementation returns the result of calling
-   * {@link #visitChildren} on {@code ctx}.
-   * </p>
+   * visits the grammar rule
+   * space_prefix: (operator | fct)? LPAREN space_prefix (space_prefix)+ RPAREN
+   * 
+   * @return Expression representing a fonction or operation with more than 2
+   *         attribute
    */
   @Override
   public Expression visitPreSpaceWrappedOp(PreSpaceWrappedOpContext ctx) {
-    return visitChildren(ctx);
+    ArrayList<Expression> args = new ArrayList<>();
+    for (Space_prefixContext sPreFixContext : ctx.space_prefix()) {
+      args.add(visit(sPreFixContext));
+    }
+    Expression operation;
+    if (ctx.fct() != null) {
+      operation = new RealNumber(1);
+    } else {
+      operation = createOp(ctx.operator().getText(), args);
+    }
+    return operation;
+
   }
 
   /**
-   * {@inheritDoc}
+   * visits the grammar rule
+   * space_prefix : fct space_prefix
    *
-   * <p>
-   * The default implementation returns the result of calling
-   * {@link #visitChildren} on {@code ctx}.
-   * </p>
+   * @return Expression representing a function with one parameter
    */
   @Override
   public Expression visitPreSpaceFct(PreSpaceFctContext ctx) {
-    return visitChildren(ctx);
+    return new RealNumber(1);
   }
 
   /**
-   * {@inheritDoc}
+   * visits the grammar rule
+   * space_prefix : operator space_prefix space_prefix
    *
-   * <p>
-   * The default implementation returns the result of calling
-   * {@link #visitChildren} on {@code ctx}.
-   * </p>
+   * @return Expression representing an operator with two parameters
+   */
+  @Override
+  public Expression visitPreSpaceOperator(PreSpaceOperatorContext ctx) {
+    ArrayList<Expression> args = new ArrayList<>();
+    for (Space_prefixContext sPrefixContext : ctx.space_prefix()) {
+      args.add(visit(sPrefixContext));
+    }
+    return createOp(ctx.operator().getText(), args);
+  }
+
+  /**
+   * visits the grammar rule
+   * space_prefix : LPAREN (sign)? atom RPAREN
+   * 
+   * @return Expression representing a signed number
    */
   @Override
   public Expression visitPreSpaceSigned(PreSpaceSignedContext ctx) {
-    return visitChildren(ctx);
+    BaseNumber atom = (BaseNumber) visit(ctx.atom());
+    if (ctx.sign() != null && ctx.sign().getText() == "-") {
+      atom = atom.negate();
+    }
+    return atom;
   }
 
   /**
-   * {@inheritDoc}
+   * visits the grammar rule
+   * space_prefix : atom
    *
-   * <p>
-   * The default implementation returns the result of calling
-   * {@link #visitChildren} on {@code ctx}.
-   * </p>
+   * @return Expression representing a simple number
    */
   @Override
   public Expression visitPreSpaceAtom(PreSpaceAtomContext ctx) {
@@ -287,51 +306,60 @@ public class ParserVisitor extends calculatorBaseVisitor<Expression> {
   }
 
   /**
-   * {@inheritDoc}
+   * visits the grammar rule
+   * paren_prefix: (operator|fct)? LPAREN paren_prefix (COMMAT paren_prefix)*
+   * RPAREN
    *
-   * <p>
-   * The default implementation returns the result of calling
-   * {@link #visitChildren} on {@code ctx}.
-   * </p>
+   * @return Expression representing a fonction or operation with more than 2
+   *         attribute
    */
   @Override
   public Expression visitPreWrappedOp(PreWrappedOpContext ctx) {
-    return visitChildren(ctx);
+    ArrayList<Expression> args = new ArrayList<>();
+    for (Paren_prefixContext sPreFixContext : ctx.paren_prefix()) {
+      args.add(visit(sPreFixContext));
+    }
+    Expression operation;
+    if (ctx.fct() != null) {
+      operation = new RealNumber(1);
+    } else {
+      String op = (ctx.operator() == null) ? "" : ctx.operator().getText();
+      operation = createOp(op, args);
+    }
+    return operation;
   }
 
   /**
-   * {@inheritDoc}
+   * visits the grammar rule
+   * paren_prefix : fct paren_prefix
    *
-   * <p>
-   * The default implementation returns the result of calling
-   * {@link #visitChildren} on {@code ctx}.
-   * </p>
+   * @return Expression representing a function with one parameter
    */
   @Override
   public Expression visitPreFct(PreFctContext ctx) {
-    return visitChildren(ctx);
+    return new RealNumber(1);
   }
 
   /**
-   * {@inheritDoc}
-   *
-   * <p>
-   * The default implementation returns the result of calling
-   * {@link #visitChildren} on {@code ctx}.
-   * </p>
+   * visits the grammar rule
+   * paren_prefix : LPAREN (sign)? atom RPAREN
+   * 
+   * @return Expression representing a signed number
    */
   @Override
   public Expression visitPreSigned(PreSignedContext ctx) {
-    return visitChildren(ctx);
+    BaseNumber atom = (BaseNumber) visit(ctx.atom());
+    if (ctx.sign() != null && ctx.sign().getText() == "-") {
+      atom = atom.negate();
+    }
+    return atom;
   }
 
   /**
-   * {@inheritDoc}
+   * visits the grammar rule
+   * paren_prefix : atom
    *
-   * <p>
-   * The default implementation returns the result of calling
-   * {@link #visitChildren} on {@code ctx}.
-   * </p>
+   * @return Expression representing a simple number
    */
   @Override
   public Expression visitPreAtom(PreAtomContext ctx) {
@@ -339,12 +367,10 @@ public class ParserVisitor extends calculatorBaseVisitor<Expression> {
   }
 
   /**
-   * {@inheritDoc}
+   * visits the grammar rule
+   * postfix : space_postfix
    *
-   * <p>
-   * The default implementation returns the result of calling
-   * {@link #visitChildren} on {@code ctx}.
-   * </p>
+   * @return Expression representing a postfix expression with spaces
    */
   @Override
   public Expression visitSpacedPostFix(SpacedPostFixContext ctx) {
@@ -352,12 +378,11 @@ public class ParserVisitor extends calculatorBaseVisitor<Expression> {
   }
 
   /**
-   * {@inheritDoc}
+   * visits the grammar rule
+   * postfix : paren_postfix
    *
-   * <p>
-   * The default implementation returns the result of calling
-   * {@link #visitChildren} on {@code ctx}.
-   * </p>
+   * @return Expression representing a postfix expression with commas and
+   *         parenthesis
    */
   @Override
   public Expression visitParenthesisPostFix(ParenthesisPostFixContext ctx) {
@@ -365,25 +390,10 @@ public class ParserVisitor extends calculatorBaseVisitor<Expression> {
   }
 
   /**
-   * {@inheritDoc}
+   * visits the grammar rule
+   * space_postfix: LPAREN space_postfix (space_postfix)+ RPAREN (operator)?
    *
-   * <p>
-   * The default implementation returns the result of calling
-   * {@link #visitChildren} on {@code ctx}.
-   * </p>
-   */
-  @Override
-  public Expression visitPostSpaceFct(PostSpaceFctContext ctx) {
-    return new RealNumber(1);
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   * <p>
-   * The default implementation returns the result of calling
-   * {@link #visitChildren} on {@code ctx}.
-   * </p>
+   * @return Expression representing a postfix operation with multiple arguments
    */
   @Override
   public Expression visitPostSpaceWrappedOp(PostSpaceWrappedOpContext ctx) {
@@ -392,53 +402,70 @@ public class ParserVisitor extends calculatorBaseVisitor<Expression> {
       args.add(visit(postFix));
     }
 
-    Expression operator = createOp(ctx.operator().getText(), args);
+    String op = (ctx.operator() == null) ? "" : ctx.operator().getText();
+    Expression operator = createOp(op, args);
     return operator;
   }
 
   /**
-   * {@inheritDoc}
+   * visits the grammar rule
+   * space_postfix: LPAREN space_postfix (space_postfix)+ RPAREN fct
    *
-   * <p>
-   * The default implementation returns the result of calling
-   * {@link #visitChildren} on {@code ctx}.
-   * </p>
+   * @return Expression representing a postfix function with multiple arguments
    */
   @Override
-  public Expression visitPostSpaceSigned(PostSpaceSignedContext ctx) {
-    BaseNumber result;
-    if (ctx.sign().getText() == "-") {
-      result = ((BaseNumber) visit(ctx.atom())).negate();
-    } else {
-      result = (BaseNumber) visit(ctx.atom());
-    }
-    return result;
+  public Expression visitPostSpaceWrappedFct(PostSpaceWrappedFctContext ctx) {
+    return new RealNumber(1);
   }
 
   /**
-   * {@inheritDoc}
+   * visits the grammar rule
+   * space_postfix: space_postfix fct
    *
-   * <p>
-   * The default implementation returns the result of calling
-   * {@link #visitChildren} on {@code ctx}.
-   * </p>
+   * @return Expression representing a postfix function with one argument
+   */
+  @Override
+  public Expression visitPostSpaceFct(PostSpaceFctContext ctx) {
+    return new RealNumber(1);
+  }
+
+  /**
+   * visits the grammar rule
+   * space_postfix : space_postfix space_postfix (operator)?
+   * 
+   * @return Expression representing an operator with two parameters
    */
   @Override
   public Expression visitPostSpaceSimpleOp(PostSpaceSimpleOpContext ctx) {
     ArrayList<Expression> args = new ArrayList<>();
+    for (Space_postfixContext sPostfixContext : ctx.space_postfix()) {
+      args.add(visit(sPostfixContext));
+    }
 
-    args.add(visit(ctx.space_postfix(0)));
-    args.add(visit(ctx.space_postfix(1)));
-    return createOp(ctx.operator().getText(), args);
+    String op = (ctx.operator() == null) ? "" : ctx.operator().getText();
+    return createOp(op, args);
   }
 
   /**
-   * {@inheritDoc}
-   *
-   * <p>
-   * The default implementation returns the result of calling
-   * {@link #visitChildren} on {@code ctx}.
-   * </p>
+   * visits the grammar rule
+   * space_postfix: LPAREN (sign)? atom RPAREN
+   * 
+   * @return Expression representing a signed number
+   */
+  @Override
+  public Expression visitPostSpaceSigned(PostSpaceSignedContext ctx) {
+    BaseNumber atom = (BaseNumber) visit(ctx.atom());
+    if (ctx.sign() != null && ctx.sign().getText() == "-") {
+      atom = atom.negate();
+    }
+    return atom;
+  }
+
+  /**
+   * visits the grammar rule
+   * space_postfix: atom
+   * 
+   * @return Expression representing a simple number
    */
   @Override
   public Expression visitPostSpaceAtom(PostSpaceAtomContext ctx) {
@@ -446,38 +473,12 @@ public class ParserVisitor extends calculatorBaseVisitor<Expression> {
   }
 
   /**
-   * {@inheritDoc}
+   * visits the grammar rule
+   * paren_postfix: LPAREN paren_postfix (COMMAT paren_postfix)+ RPAREN
+   * (operator)?
    *
-   * <p>
-   * The default implementation returns the result of calling
-   * {@link #visitChildren} on {@code ctx}.
-   * </p>
-   */
-  @Override
-  public Expression visitPostAtom(PostAtomContext ctx) {
-    return visit(ctx.atom());
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   * <p>
-   * The default implementation returns the result of calling
-   * {@link #visitChildren} on {@code ctx}.
-   * </p>
-   */
-  @Override
-  public Expression visitPostFct(PostFctContext ctx) {
-    return new RealNumber(1);
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   * <p>
-   * The default implementation returns the result of calling
-   * {@link #visitChildren} on {@code ctx}.
-   * </p>
+   * @return Expression representing a postfix operation with multiple arguments,
+   *         commas and parentheis
    */
   @Override
   public Expression visitPostWrappedOp(PostWrappedOpContext ctx) {
@@ -486,11 +487,17 @@ public class ParserVisitor extends calculatorBaseVisitor<Expression> {
       args.add(visit(postFix));
     }
 
-    Expression operator = createOp(ctx.operator().getText(), args);
-    return operator;
+    return createOp(ctx.operator().getText(), args);
 
   }
 
+  /**
+   * visits the grammar rule
+   * paren_postfix: LPAREN paren_postfix (COMMAT paren_postfix)+ RPAREN fct
+   *
+   * @return Expression representing a postfix function with multiple arguments,
+   *         commas and parentheis
+   */
   @Override
   public Expression visitPostWrappedFct(PostWrappedFctContext ctx) {
     ArrayList<Expression> args = new ArrayList<>();
@@ -503,31 +510,47 @@ public class ParserVisitor extends calculatorBaseVisitor<Expression> {
   }
 
   /**
-   * {@inheritDoc}
+   * visits the grammar rule
+   * paren_postfix: paren_postfix fct
    *
-   * <p>
-   * The default implementation returns the result of calling
-   * {@link #visitChildren} on {@code ctx}.
-   * </p>
+   * @return Expression representing a postfix function with one argument
    */
   @Override
-  public Expression visitPostSigned(PostSignedContext ctx) {
-    BaseNumber result;
-    if (ctx.sign().getText() == "-") {
-      result = ((BaseNumber) visit(ctx.atom())).negate();
-    } else {
-      result = (BaseNumber) visit(ctx.atom());
-    }
-    return result;
+  public Expression visitPostFct(PostFctContext ctx) {
+    return new RealNumber(1);
   }
 
   /**
-   * {@inheritDoc}
-   *
-   * <p>
-   * The default implementation returns the result of calling
-   * {@link #visitChildren} on {@code ctx}.
-   * </p>
+   * visits the grammar rule
+   * paren_postfix: LPAREN (sign)? atom RPAREN
+   * 
+   * @return Expression representing a signed number
+   */
+  @Override
+  public Expression visitPostSigned(PostSignedContext ctx) {
+    BaseNumber atom = (BaseNumber) visit(ctx.atom());
+    if (ctx.sign() != null && ctx.sign().getText() == "-") {
+      atom = atom.negate();
+    }
+    return atom;
+  }
+
+  /**
+   * visits the grammar rule
+   * paren_postfix: atom
+   * 
+   * @return Expression representing a simple number
+   */
+  @Override
+  public Expression visitPostAtom(PostAtomContext ctx) {
+    return visit(ctx.atom());
+  }
+
+  /**
+   * visits the grammar rule
+   * atom : number
+   * 
+   * @return Expression representing non complex number
    */
   @Override
   public Expression visitGlobalNumber(GlobalNumberContext ctx) {
@@ -535,12 +558,10 @@ public class ParserVisitor extends calculatorBaseVisitor<Expression> {
   }
 
   /**
-   * {@inheritDoc}
-   *
-   * <p>
-   * The default implementation returns the result of calling
-   * {@link #visitChildren} on {@code ctx}.
-   * </p>
+   * visits the grammar rule
+   * atom : complex
+   * 
+   * @return Expression representing complex number
    */
   @Override
   public Expression visitComplexNumber(ComplexNumberContext ctx) {
@@ -548,12 +569,10 @@ public class ParserVisitor extends calculatorBaseVisitor<Expression> {
   }
 
   /**
-   * {@inheritDoc}
-   *
-   * <p>
-   * The default implementation returns the result of calling
-   * {@link #visitChildren} on {@code ctx}.
-   * </p>
+   * visits the grammar rule
+   * number : real
+   * 
+   * @return Expression representing a real number
    */
   @Override
   public Expression visitRealNumber(RealNumberContext ctx) {
@@ -561,12 +580,10 @@ public class ParserVisitor extends calculatorBaseVisitor<Expression> {
   }
 
   /**
-   * {@inheritDoc}
-   *
-   * <p>
-   * The default implementation returns the result of calling
-   * {@link #visitChildren} on {@code ctx}.
-   * </p>
+   * visits the grammar rule
+   * number : scientific
+   * 
+   * @return Expression representing a real number in scientific notation
    */
   @Override
   public Expression visitScientificNumber(ScientificNumberContext ctx) {
@@ -574,12 +591,10 @@ public class ParserVisitor extends calculatorBaseVisitor<Expression> {
   }
 
   /**
-   * {@inheritDoc}
-   *
-   * <p>
-   * The default implementation returns the result of calling
-   * {@link #visitChildren} on {@code ctx}.
-   * </p>
+   * visits the grammar rule
+   * number : num_const
+   * 
+   * @return Expression representing a constant number
    */
   @Override
   public Expression visitConstant(ConstantContext ctx) {
@@ -587,12 +602,10 @@ public class ParserVisitor extends calculatorBaseVisitor<Expression> {
   }
 
   /**
-   * {@inheritDoc}
-   *
-   * <p>
-   * The default implementation returns the result of calling
-   * {@link #visitChildren} on {@code ctx}.
-   * </p>
+   * visits the grammar rule
+   * scientific : INT E (sign)? INT
+   * 
+   * @return Expression representing a real number in scientific notation
    */
   @Override
   public Expression visitBaseScientificNumber(BaseScientificNumberContext ctx) {
@@ -600,12 +613,10 @@ public class ParserVisitor extends calculatorBaseVisitor<Expression> {
   }
 
   /**
-   * {@inheritDoc}
-   *
-   * <p>
-   * The default implementation returns the result of calling
-   * {@link #visitChildren} on {@code ctx}.
-   * </p>
+   * visits the grammar rule
+   * real : INT (DOT INT)?
+   * 
+   * @return Expression representing a concrete real number
    */
   @Override
   public Expression visitBaseNumber(BaseNumberContext ctx) {
@@ -620,27 +631,23 @@ public class ParserVisitor extends calculatorBaseVisitor<Expression> {
   }
 
   /**
-   * {@inheritDoc}
-   *
-   * <p>
-   * The default implementation returns the result of calling
-   * {@link #visitChildren} on {@code ctx}.
-   * </p>
+   * visits the grammar rule
+   * complex: (number)? I
+   * 
+   * @return Expression representing a concrete complex number
    */
   @Override
   public Expression visitBaseComplexNumber(BaseComplexNumberContext ctx) {
-    if (ctx.number().isEmpty()) {
-      return new ComplexNumber(0, 0);
+    if (ctx.number() == null) {
+      return new ComplexNumber(0, 1);
     }
     ComplexNumber result;
     Expression e = visit(ctx.number());
     if (e instanceof IntegerNumber) {
       result = new ComplexNumber(0, ((IntegerNumber) e).getValue());
-    }
-    if (e instanceof RealNumber && !((RealNumber) e).isSpecial()) {
+    } else if (e instanceof RealNumber && !((RealNumber) e).isSpecial()) {
       result = new ComplexNumber(new BigDecimal(0), ((RealNumber) e).getValue());
-    }
-    if (e instanceof RationalNumber) {
+    } else if (e instanceof RationalNumber) {
       result = new ComplexNumber(0, ((RationalNumber) e).getNumerator() / ((RationalNumber) e).getDenominator());
     } else {
       result = new ComplexNumber();
@@ -651,12 +658,10 @@ public class ParserVisitor extends calculatorBaseVisitor<Expression> {
   }
 
   /**
-   * {@inheritDoc}
-   *
-   * <p>
-   * The default implementation returns the result of calling
-   * {@link #visitChildren} on {@code ctx}.
-   * </p>
+   * visits the grammar rule
+   * num_const: PI
+   * 
+   * @return Expression representing a the Pi constant number
    */
   @Override
   public Expression visitPi(PiContext ctx) {
@@ -664,12 +669,10 @@ public class ParserVisitor extends calculatorBaseVisitor<Expression> {
   }
 
   /**
-   * {@inheritDoc}
-   *
-   * <p>
-   * The default implementation returns the result of calling
-   * {@link #visitChildren} on {@code ctx}.
-   * </p>
+   * visits the grammar rule
+   * num_const: EULER
+   * 
+   * @return Expression representing a the 'e' constant number
    */
   @Override
   public Expression visitEulerNumber(EulerNumberContext ctx) {
@@ -677,12 +680,10 @@ public class ParserVisitor extends calculatorBaseVisitor<Expression> {
   }
 
   /**
-   * {@inheritDoc}
-   *
-   * <p>
-   * The default implementation returns the result of calling
-   * {@link #visitChildren} on {@code ctx}.
-   * </p>
+   * visits the grammar rule
+   * num_const: PHI
+   * 
+   * @return Expression representing a the Phi constant number
    */
   @Override
   public Expression visitPhi(PhiContext ctx) {
@@ -690,122 +691,13 @@ public class ParserVisitor extends calculatorBaseVisitor<Expression> {
   }
 
   /**
-   * {@inheritDoc}
-   *
-   * <p>
-   * The default implementation returns the result of calling
-   * {@link #visitChildren} on {@code ctx}.
-   * </p>
+   * create an operation using a list of args and the String representation of an
+   * operation sign
+   * 
+   * @param sign Operation to apply
+   * @param args List of arguments
+   * @return Expression resoving from the operation and the arguments
    */
-  @Override
-  public Expression visitFctCos(FctCosContext ctx) {
-    return new RealNumber(1);
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   * <p>
-   * The default implementation returns the result of calling
-   * {@link #visitChildren} on {@code ctx}.
-   * </p>
-   */
-  @Override
-  public Expression visitFctTan(FctTanContext ctx) {
-    return new RealNumber(1);
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   * <p>
-   * The default implementation returns the result of calling
-   * {@link #visitChildren} on {@code ctx}.
-   * </p>
-   */
-  @Override
-  public Expression visitFctSin(FctSinContext ctx) {
-    return new RealNumber(1);
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   * <p>
-   * The default implementation returns the result of calling
-   * {@link #visitChildren} on {@code ctx}.
-   * </p>
-   */
-  @Override
-  public Expression visitFctAcos(FctAcosContext ctx) {
-    return new RealNumber(1);
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   * <p>
-   * The default implementation returns the result of calling
-   * {@link #visitChildren} on {@code ctx}.
-   * </p>
-   */
-  @Override
-  public Expression visitFctAtan(FctAtanContext ctx) {
-    return new RealNumber(1);
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   * <p>
-   * The default implementation returns the result of calling
-   * {@link #visitChildren} on {@code ctx}.
-   * </p>
-   */
-  @Override
-  public Expression visitFctAsin(FctAsinContext ctx) {
-    return new RealNumber(1);
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   * <p>
-   * The default implementation returns the result of calling
-   * {@link #visitChildren} on {@code ctx}.
-   * </p>
-   */
-  @Override
-  public Expression visitFctLn(FctLnContext ctx) {
-    return new RealNumber(1);
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   * <p>
-   * The default implementation returns the result of calling
-   * {@link #visitChildren} on {@code ctx}.
-   * </p>
-   */
-  @Override
-  public Expression visitFctSqrt(FctSqrtContext ctx) {
-    return new RealNumber(1);
-  }
-
-  /**
-   * {@inheritDoc}
-   *
-   * <p>
-   * The default implementation returns the result of calling
-   * {@link #visitChildren} on {@code ctx}.
-   * </p>
-   */
-  @Override
-  public Expression visitFctLog(FctLogContext ctx) {
-    return new RealNumber(1);
-  }
-
   public Expression createOp(String sign, List<Expression> args) {
     Operation op;
     try {
@@ -837,6 +729,13 @@ public class ParserVisitor extends calculatorBaseVisitor<Expression> {
     }
   }
 
+  /**
+   * create an global operation using a list of operation signs and a list of args
+   * 
+   * @param sign List of operation to apply
+   * @param args List of arguments
+   * @return Expression resulting from the operations and the arguments
+   */
   public Expression createGlobalOp(List<Expression> args, List<String> operands) {
 
     Expression operation = createOp(operands.get(0), args.subList(0, 2));
