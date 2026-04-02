@@ -142,8 +142,8 @@ class TestPlus {
 
   @Test
   void testComplexAddition() {
-    ComplexNumber left = new ComplexNumber(1.1, 6.8);
-    ComplexNumber right = new ComplexNumber(8.9, 4);
+    ComplexNumber left = new ComplexNumber("1.1", "6.8");
+    ComplexNumber right = new ComplexNumber("8.9", "4");
 
     ArrayList<Expression> p = new ArrayList<>(
         Arrays.asList(left, right));
@@ -153,7 +153,7 @@ class TestPlus {
       t.accept(v);
       ComplexNumber result = (ComplexNumber) v.getResult();
 
-      assertEquals(result, new ComplexNumber(10, 10.8));
+      assertEquals(result, new ComplexNumber("10", "10.8"));
     } catch (IllegalConstruction _) {
       fail();
     }

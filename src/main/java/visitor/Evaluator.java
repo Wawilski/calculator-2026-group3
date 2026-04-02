@@ -79,6 +79,8 @@ public class Evaluator extends Visitor {
 
       BaseNumber rightHand = evaluatedArgs.get(counter);
 
+      rightHand.accept(comparator);
+
       TypeCaster caster = new TypeCaster(comparator.getCastType());
 
       temp.accept(caster);
@@ -88,6 +90,7 @@ public class Evaluator extends Visitor {
       rightHand = caster.getResult();
 
       temp = temp.op(o, rightHand);
+      temp.accept(comparator);
     }
     // store the accumulated result
     computedValue = temp;
