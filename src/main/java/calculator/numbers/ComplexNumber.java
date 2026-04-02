@@ -3,6 +3,7 @@ package calculator.numbers;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.math.RoundingMode;
 
 import calculator.Operation;
 import calculator.numbers.visitor.TypeVisitor;
@@ -38,8 +39,8 @@ public class ComplexNumber implements BaseNumber {
    * @param imaginary the BigDecimal representing the imaginary part
    */
   public /* constructor */ ComplexNumber(BigDecimal real, BigDecimal imaginary) {
-    this.real = real;
-    this.imaginary = imaginary;
+    this.real = real.setScale(RealNumber.scale, RoundingMode.CEILING);
+    this.imaginary = imaginary.setScale(RealNumber.scale, RoundingMode.CEILING);
     this.isNaN = false;
   }
 
@@ -50,8 +51,8 @@ public class ComplexNumber implements BaseNumber {
    * @param imaginary the integer representing the imaginary part
    */
   public /* constructor */ ComplexNumber(int real, int imaginary) {
-    this.real = new BigDecimal(real, MathContext.DECIMAL32);
-    this.imaginary = new BigDecimal(imaginary, MathContext.DECIMAL32);
+    this.real = new BigDecimal(real, MathContext.UNLIMITED).setScale(RealNumber.scale, RoundingMode.CEILING);
+    this.imaginary = new BigDecimal(imaginary, MathContext.UNLIMITED).setScale(RealNumber.scale, RoundingMode.CEILING);
     this.isNaN = false;
   }
 
@@ -62,8 +63,14 @@ public class ComplexNumber implements BaseNumber {
    * @param imaginary the double representing the imaginary part
    */
   public /* constructor */ ComplexNumber(double real, double imaginary) {
-    this.real = new BigDecimal(real, MathContext.DECIMAL32);
-    this.imaginary = new BigDecimal(imaginary, MathContext.DECIMAL32);
+    this.real = new BigDecimal(real, MathContext.UNLIMITED).setScale(RealNumber.scale, RoundingMode.CEILING);
+    this.imaginary = new BigDecimal(imaginary, MathContext.UNLIMITED).setScale(RealNumber.scale, RoundingMode.CEILING);
+    this.isNaN = false;
+  }
+
+  public /* constructor */ ComplexNumber(String real, String imaginary) {
+    this.real = new BigDecimal(real, MathContext.UNLIMITED).setScale(RealNumber.scale, RoundingMode.CEILING);
+    this.imaginary = new BigDecimal(imaginary, MathContext.UNLIMITED).setScale(RealNumber.scale, RoundingMode.CEILING);
     this.isNaN = false;
   }
 
@@ -140,12 +147,10 @@ public class ComplexNumber implements BaseNumber {
   public BaseNumber negate() {
     ComplexNumber result;
 
-    System.out.println(this);
     if (this.isNaN) {
       result = new ComplexNumber();
     } else {
       result = new ComplexNumber(this.real.negate(), this.imaginary.negate());
-      System.out.println(result);
     }
     return result;
   }

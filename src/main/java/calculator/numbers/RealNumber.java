@@ -1,11 +1,12 @@
 package calculator.numbers;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 
 import calculator.Operation;
 import visitor.Visitor;
 import calculator.numbers.visitor.*;
-import calculator.numbers.SpecialNumber;
 
 /**
  * This class represents the real numbers.
@@ -33,6 +34,8 @@ public class RealNumber implements BaseNumber {
    */
   private SpecialNumber specialValue;
 
+  public static int scale = 16;
+
   /**
    * class constructor which specify the value of the real number as a BigDecimal
    *
@@ -40,7 +43,7 @@ public class RealNumber implements BaseNumber {
    * @param value the BigDecimal value representing the real number
    */
   public /* constructor */ RealNumber(BigDecimal value) {
-    this.value = value;
+    this.value = value.setScale(scale, RoundingMode.CEILING);
     this.special = false;
     this.specialValue = null;
   }
@@ -52,7 +55,7 @@ public class RealNumber implements BaseNumber {
    * @param value the integer value representing the real number
    */
   public /* constructor */ RealNumber(int value) {
-    this.value = new BigDecimal(value);
+    this.value = (new BigDecimal(value, MathContext.UNLIMITED)).setScale(scale, RoundingMode.CEILING);
     this.special = false;
     this.specialValue = null;
   }
@@ -64,7 +67,13 @@ public class RealNumber implements BaseNumber {
    * @param value the double value representing the real number
    */
   public /* constructor */ RealNumber(double value) {
-    this.value = new BigDecimal(value);
+    this.value = (new BigDecimal(value, MathContext.UNLIMITED)).setScale(scale, RoundingMode.CEILING);
+    this.special = false;
+    this.specialValue = null;
+  }
+
+  public /* constructor */ RealNumber(String value) {
+    this.value = (new BigDecimal(value, MathContext.UNLIMITED)).setScale(scale, RoundingMode.CEILING);
     this.special = false;
     this.specialValue = null;
   }
@@ -167,6 +176,10 @@ public class RealNumber implements BaseNumber {
     }
 
     return sign;
+  }
+
+  public static void setScale(int scale) {
+    RealNumber.scale = scale;
   }
 
   @Override

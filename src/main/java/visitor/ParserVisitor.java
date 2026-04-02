@@ -186,24 +186,35 @@ public class ParserVisitor extends calculatorBaseVisitor<Expression> {
     return operation;
   }
 
+  @Override
+  public Expression visitInNegation(InNegationContext ctx) {
+    Expression factor = visit(ctx.factor());
+    if (factor instanceof BaseNumber) {
+      factor = ((BaseNumber) factor).negate();
+    } else {
+      ArrayList<Expression> args = new ArrayList<>();
+      args.add(new IntegerNumber(0));
+      args.add(factor);
+      factor = createOp("-", args);
+    }
+    return factor;
+  }
+
   /**
    * visits the grammar rule
-   * factor : (sign)? (num_const)* atom (num_const)*
+   * factor : (num_const)? (atom num_const)* atom (num_const)?
    * 
    * @return Expression representing an expression between parenthesis
    */
   @Override
   public Expression visitInAtom(InAtomContext ctx) {
-    BaseNumber atom = (BaseNumber) visit(ctx.atom());
-    if (ctx.MINUS() != null) {
-      atom = atom.negate();
-    }
     ArrayList<Expression> args = new ArrayList<>();
     for (Num_constContext num_const : ctx.num_const()) {
       args.add(visit(num_const));
     }
-    args.add(atom);
-
+    for (AtomContext atom : ctx.atom()) {
+      args.add(visit(atom));
+    }
     return createOp("*", args);
   }
 
@@ -665,7 +676,8 @@ public class ParserVisitor extends calculatorBaseVisitor<Expression> {
    */
   @Override
   public Expression visitPi(PiContext ctx) {
-    return new RealNumber(Math.PI);
+    String pi = Double.toString(Math.PI);
+    return new RealNumber(pi);
   }
 
   /**

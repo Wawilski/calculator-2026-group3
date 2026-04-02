@@ -121,8 +121,8 @@ class TestTimes {
 
   @Test
   void testComplexMultiplication() {
-    ComplexNumber left = new ComplexNumber(1, 6.00);
-    ComplexNumber right = new ComplexNumber(8.00, 4);
+    ComplexNumber left = new ComplexNumber("1", "6.00");
+    ComplexNumber right = new ComplexNumber("8.00", "4");
 
     ArrayList<Expression> p = new ArrayList<>(
         Arrays.asList(left, right));
@@ -132,7 +132,7 @@ class TestTimes {
       t.accept(v);
       ComplexNumber result = (ComplexNumber) v.getResult();
 
-      assertEquals(result, new ComplexNumber(-16, 52));
+      assertEquals(result, new ComplexNumber("-16", "52"));
     } catch (IllegalConstruction _) {
       fail();
     }
@@ -140,7 +140,7 @@ class TestTimes {
 
   @Test
   void testComplexNaNMultiplication() {
-    ComplexNumber left = new ComplexNumber(1, 6);
+    ComplexNumber left = new ComplexNumber("1", "6");
     ComplexNumber right = new ComplexNumber();
 
     ArrayList<Expression> p = new ArrayList<>(

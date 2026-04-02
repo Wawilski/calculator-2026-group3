@@ -202,8 +202,8 @@ class TestDivides {
 
   @Test
   void testComplexDivision() {
-    ComplexNumber left = new ComplexNumber(1, 6.00);
-    ComplexNumber right = new ComplexNumber(8.00, 4);
+    ComplexNumber left = new ComplexNumber("1", "6.00");
+    ComplexNumber right = new ComplexNumber("8.00", "4");
 
     ArrayList<Expression> p = new ArrayList<>(
         Arrays.asList(left, right));
@@ -213,7 +213,7 @@ class TestDivides {
       t.accept(v);
       ComplexNumber result = (ComplexNumber) v.getResult();
 
-      ComplexNumber test = new ComplexNumber(0.05555556, 0.07638889);
+      ComplexNumber test = new ComplexNumber("0.05555556", "0.07638889");
       // To compare solution and result we need to scale the result to the solution
       BigDecimal real = result.getReal().setScale(8, RoundingMode.CEILING);
       BigDecimal im = result.getImaginary().setScale(8, RoundingMode.CEILING);
@@ -225,7 +225,7 @@ class TestDivides {
 
   @Test
   void testComplexNaNDivision() {
-    ComplexNumber left = new ComplexNumber(1, 6);
+    ComplexNumber left = new ComplexNumber("1", "6");
     ComplexNumber right = new ComplexNumber();
 
     ArrayList<Expression> p = new ArrayList<>(
@@ -244,8 +244,8 @@ class TestDivides {
 
   @Test
   void testComplexDivisionByZero() {
-    ComplexNumber left = new ComplexNumber(1, 6);
-    ComplexNumber right = new ComplexNumber(0, 0);
+    ComplexNumber left = new ComplexNumber("1", "6");
+    ComplexNumber right = new ComplexNumber("0", "0");
 
     ArrayList<Expression> p = new ArrayList<>(
         Arrays.asList(left, right));

@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
+import calculator.numbers.BaseNumber;
 import calculator.numbers.ComplexNumber;
 import calculator.numbers.IntegerNumber;
 import calculator.numbers.RationalNumber;

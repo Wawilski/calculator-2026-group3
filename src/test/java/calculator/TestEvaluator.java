@@ -25,8 +25,8 @@ class TestEvaluator {
     calc = new Calculator();
     value1 = 8;
     value2 = 6;
-    value3 = new BigDecimal(4.5);
-    value4 = new BigDecimal(1.2);
+    value3 = new BigDecimal("4.5");
+    value4 = new BigDecimal("1.2");
 
   }
 
@@ -63,13 +63,14 @@ class TestEvaluator {
       // of the parameterised test
       switch (symbol) {
         case "+" ->
-          assertEquals(new RealNumber(value3.add(value4, MathContext.DECIMAL32)), calc.eval(new Plus(params)));
+          assertEquals(new RealNumber(value3.add(value4, MathContext.UNLIMITED)), calc.eval(new Plus(params)));
         case "-" ->
-          assertEquals(new RealNumber(value3.subtract(value4, MathContext.DECIMAL32)), calc.eval(new Minus(params)));
+          assertEquals(new RealNumber(value3.subtract(value4, MathContext.UNLIMITED)), calc.eval(new Minus(params)));
         case "*" ->
-          assertEquals(new RealNumber(value3.multiply(value4, MathContext.DECIMAL32)), calc.eval(new Times(params)));
+          assertEquals(new RealNumber(value3.multiply(value4, MathContext.UNLIMITED)), calc.eval(new Times(params)));
         case "/" ->
-          assertEquals(new RealNumber(value3.divide(value4, 16, RoundingMode.CEILING)), calc.eval(new Divides(params)));
+          assertEquals(new RealNumber(value3.divide(value4, RealNumber.scale, RoundingMode.CEILING)),
+              calc.eval(new Divides(params)));
         default -> fail();
       }
     } catch (IllegalConstruction _) {
@@ -110,10 +111,10 @@ class TestEvaluator {
   @ParameterizedTest
   @ValueSource(strings = { "*", "+", "/", "-" })
   void testEvaluateComplexOperations(String symbol) {
-    BigDecimal realLeft = new BigDecimal(4);
-    BigDecimal imLeft = new BigDecimal(5);
-    BigDecimal realRight = new BigDecimal(6);
-    BigDecimal imRight = new BigDecimal(7);
+    BigDecimal realLeft = new BigDecimal("4");
+    BigDecimal imLeft = new BigDecimal("5");
+    BigDecimal realRight = new BigDecimal("6");
+    BigDecimal imRight = new BigDecimal("7");
     List<Expression> params = Arrays.asList(new ComplexNumber(realLeft, imLeft),
         new ComplexNumber(realRight, imRight));
 
@@ -126,8 +127,8 @@ class TestEvaluator {
     BigDecimal realPartDiv = realLeft.multiply(realRight).add(imLeft.multiply(imRight));
     BigDecimal imPartDiv = realRight.multiply(imLeft).subtract(realLeft.multiply(imRight));
 
-    ComplexNumber div = new ComplexNumber(realPartDiv.divide(mod, 16, RoundingMode.CEILING),
-        imPartDiv.divide(mod, 16, RoundingMode.CEILING));
+    ComplexNumber div = new ComplexNumber(realPartDiv.divide(mod, RealNumber.scale, RoundingMode.CEILING),
+        imPartDiv.divide(mod, RealNumber.scale, RoundingMode.CEILING));
 
     try {
       // construct another type of operation depending on the input value

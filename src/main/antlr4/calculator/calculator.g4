@@ -18,7 +18,8 @@ pow_infix : factor (pow factor)* #InPow;
 
 factor : fct LPAREN infix (COMMAT infix)* RPAREN    #InFct
        | LPAREN infix RPAREN (LPAREN infix RPAREN)* #InParenthesis
-       | (MINUS)? (num_const)* atom (num_const)*     #InAtom
+       | MINUS factor                               #InNegation
+       | (num_const)? (atom num_const)* atom (num_const)? #InAtom
        ;
 
 // Prefix Calculator

@@ -94,7 +94,7 @@ public final class Divides extends Operation {
     } else {
       BigDecimal lValue = l.getValue();
       BigDecimal rValue = r.getValue();
-      BigDecimal value = lValue.divide(rValue, 16, RoundingMode.CEILING);
+      BigDecimal value = lValue.divide(rValue, RealNumber.scale, RoundingMode.CEILING);
       result = new RealNumber(value);
     }
     return result;
@@ -150,8 +150,8 @@ public final class Divides extends Operation {
       BigDecimal realPart = lReal.multiply(rReal).add(lImaginary.multiply(rImaginary));
       BigDecimal imPart = rReal.multiply(lImaginary).subtract(lReal.multiply(rImaginary));
 
-      result = new ComplexNumber(realPart.divide(mod, 16, RoundingMode.CEILING),
-          imPart.divide(mod, 16, RoundingMode.CEILING));
+      result = new ComplexNumber(realPart.divide(mod, RealNumber.scale, RoundingMode.CEILING),
+          imPart.divide(mod, RealNumber.scale, RoundingMode.CEILING));
     }
     return result;
   }
