@@ -10,41 +10,40 @@ import calculator.numbers.RealNumber;
 import calculator.numbers.SpecialNumber;
 
 /** Cosine function: cos(x). */
-public final class Cos extends Function {
+public final class Cos extends UnaryFunction {
 
   public Cos(List<Expression> elist) throws IllegalConstruction {
     super(elist);
     symbol = "cos";
     neutral = 1;
-    arity = 1;
   }
 
   @Override
-  public int function(int l, int r) {
-    return (int) Math.cos(l);
+  public int function(int value) {
+    return (int) Math.cos(value);
   }
 
   @Override
-  public BaseNumber function(IntegerNumber l, IntegerNumber r) {
-    return new RealNumber(Math.cos(l.getValue()));
+  public BaseNumber function(IntegerNumber value) {
+    return new RealNumber(Math.cos(value.getValue()));
   }
 
   @Override
-  public BaseNumber function(RationalNumber l, RationalNumber r) {
-    double value = ((double) l.getNumerator()) / l.getDenominator();
-    return new RealNumber(Math.cos(value));
+  public BaseNumber function(RationalNumber value) {
+    double ratio = ((double) value.getNumerator()) / value.getDenominator();
+    return new RealNumber(Math.cos(ratio));
   }
 
   @Override
-  public BaseNumber function(RealNumber l, RealNumber r) {
-    if (l.isSpecial()) {
+  public BaseNumber function(RealNumber value) {
+    if (value.isSpecial()) {
       return new RealNumber(SpecialNumber.NaN);
     }
-    return new RealNumber(Math.cos(l.getValue().doubleValue()));
+    return new RealNumber(Math.cos(value.getValue().doubleValue()));
   }
 
   @Override
-  public BaseNumber function(ComplexNumber l, ComplexNumber r) {
+  public BaseNumber function(ComplexNumber value) {
     return new ComplexNumber();
   }
 }

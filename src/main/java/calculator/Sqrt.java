@@ -11,53 +11,52 @@ import calculator.numbers.RealNumber;
 import calculator.numbers.SpecialNumber;
 
 /** Square root function: sqrt(x). */
-public final class Sqrt extends Function {
+public final class Sqrt extends UnaryFunction {
 
   public Sqrt(List<Expression> elist) throws IllegalConstruction {
     super(elist);
     symbol = "sqrt";
     neutral = 1;
-    arity = 1;
   }
 
   @Override
-  public int function(int l, int r) {
-    return (int) Math.sqrt(l);
+  public int function(int value) {
+    return (int) Math.sqrt(value);
   }
 
   @Override
-  public BaseNumber function(IntegerNumber l, IntegerNumber r) {
-    if (l.getValue() < 0) {
+  public BaseNumber function(IntegerNumber value) {
+    if (value.getValue() < 0) {
       return new RealNumber(SpecialNumber.NaN);
     }
-    return new RealNumber(Math.sqrt(l.getValue()));
+    return new RealNumber(Math.sqrt(value.getValue()));
   }
 
   @Override
-  public BaseNumber function(RationalNumber l, RationalNumber r) {
-    double value = ((double) l.getNumerator()) / l.getDenominator();
-    if (value < 0.0) {
+  public BaseNumber function(RationalNumber value) {
+    double ratio = ((double) value.getNumerator()) / value.getDenominator();
+    if (ratio < 0.0) {
       return new RealNumber(SpecialNumber.NaN);
     }
-    return new RealNumber(Math.sqrt(value));
+    return new RealNumber(Math.sqrt(ratio));
   }
 
   @Override
-  public BaseNumber function(RealNumber l, RealNumber r) {
-    if (l.isSpecial()) {
-      if (l.getSpecialValue() == SpecialNumber.PositiveInfinity) {
+  public BaseNumber function(RealNumber value) {
+    if (value.isSpecial()) {
+      if (value.getSpecialValue() == SpecialNumber.PositiveInfinity) {
         return new RealNumber(SpecialNumber.PositiveInfinity);
       }
       return new RealNumber(SpecialNumber.NaN);
     }
-    if (l.getValue().compareTo(BigDecimal.ZERO) < 0) {
+    if (value.getValue().compareTo(BigDecimal.ZERO) < 0) {
       return new RealNumber(SpecialNumber.NaN);
     }
-    return new RealNumber(Math.sqrt(l.getValue().doubleValue()));
+    return new RealNumber(Math.sqrt(value.getValue().doubleValue()));
   }
 
   @Override
-  public BaseNumber function(ComplexNumber l, ComplexNumber r) {
+  public BaseNumber function(ComplexNumber value) {
     return new ComplexNumber();
   }
 }

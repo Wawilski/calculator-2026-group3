@@ -5,10 +5,6 @@ import java.util.Collections;
 import java.util.List;
 
 import calculator.numbers.BaseNumber;
-import calculator.numbers.ComplexNumber;
-import calculator.numbers.IntegerNumber;
-import calculator.numbers.RationalNumber;
-import calculator.numbers.RealNumber;
 import visitor.StringifyVisitor;
 import visitor.Visitor;
 
@@ -39,7 +35,7 @@ public abstract class Function implements Expression {
   /**
    * Number of arguments expected by the function (1 for unary, 2 for binary).
    */
-  protected int arity;
+  private final int arity;
 
   /**
    * Construct a function from a list of arguments.
@@ -47,11 +43,18 @@ public abstract class Function implements Expression {
    * @param elist list of arguments
    * @throws IllegalConstruction if the argument list is null
    */
-  protected Function(List<Expression> elist) throws IllegalConstruction {
+  protected Function(List<Expression> elist, int expectedArity) throws IllegalConstruction {
     if (elist == null) {
       throw new IllegalConstruction();
     }
+    if (expectedArity < 1) {
+      throw new IllegalConstruction();
+    }
+    if (!elist.isEmpty() && elist.size() != expectedArity) {
+      throw new IllegalConstruction();
+    }
     args = new ArrayList<>(elist);
+    arity = expectedArity;
   }
 
   /**
@@ -81,31 +84,6 @@ public abstract class Function implements Expression {
   public int getArity() {
     return arity;
   }
-
-  /**
-   * Concrete computation for primitive integers.
-   */
-  public abstract int function(int l, int r);
-
-  /**
-   * Concrete computation for IntegerNumber.
-   */
-  public abstract BaseNumber function(IntegerNumber l, IntegerNumber r);
-
-  /**
-   * Concrete computation for RationalNumber.
-   */
-  public abstract BaseNumber function(RationalNumber l, RationalNumber r);
-
-  /**
-   * Concrete computation for RealNumber.
-   */
-  public abstract BaseNumber function(RealNumber l, RealNumber r);
-
-  /**
-   * Concrete computation for ComplexNumber.
-   */
-  public abstract BaseNumber function(ComplexNumber l, ComplexNumber r);
 
   @Override
   public void accept(Visitor v) {

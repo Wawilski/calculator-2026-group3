@@ -11,63 +11,62 @@ import calculator.numbers.RealNumber;
 import calculator.numbers.SpecialNumber;
 
 /** Natural logarithm function: ln(x). */
-public final class Ln extends Function {
+public final class Ln extends UnaryFunction {
 
   public Ln(List<Expression> elist) throws IllegalConstruction {
     super(elist);
     symbol = "ln";
     neutral = 0;
-    arity = 1;
   }
 
   @Override
-  public int function(int l, int r) {
-    return (int) Math.log(l);
+  public int function(int value) {
+    return (int) Math.log(value);
   }
 
   @Override
-  public BaseNumber function(IntegerNumber l, IntegerNumber r) {
-    if (l.getValue() == 0) {
+  public BaseNumber function(IntegerNumber value) {
+    if (value.getValue() == 0) {
       return new RealNumber(SpecialNumber.NegativeInfinity);
     }
-    if (l.getValue() < 0) {
+    if (value.getValue() < 0) {
       return new RealNumber(SpecialNumber.NaN);
     }
-    return new RealNumber(Math.log(l.getValue()));
+    return new RealNumber(Math.log(value.getValue()));
   }
 
   @Override
-  public BaseNumber function(RationalNumber l, RationalNumber r) {
-    double value = ((double) l.getNumerator()) / l.getDenominator();
-    if (value == 0.0) {
+  public BaseNumber function(RationalNumber value) {
+    double ratio = ((double) value.getNumerator()) / value.getDenominator();
+    if (ratio == 0.0) {
       return new RealNumber(SpecialNumber.NegativeInfinity);
     }
-    if (value < 0.0) {
+    if (ratio < 0.0) {
       return new RealNumber(SpecialNumber.NaN);
     }
-    return new RealNumber(Math.log(value));
+    return new RealNumber(Math.log(ratio));
   }
 
   @Override
-  public BaseNumber function(RealNumber l, RealNumber r) {
-    if (l.isSpecial()) {
-      if (l.getSpecialValue() == SpecialNumber.PositiveInfinity) {
+  public BaseNumber function(RealNumber value) {
+    if (value.isSpecial()) {
+      if (value.getSpecialValue() == SpecialNumber.PositiveInfinity) {
         return new RealNumber(SpecialNumber.PositiveInfinity);
       }
       return new RealNumber(SpecialNumber.NaN);
     }
-    int cmp = l.getValue().compareTo(BigDecimal.ZERO);
+    int cmp = value.getValue().compareTo(BigDecimal.ZERO);
     if (cmp == 0) {
       return new RealNumber(SpecialNumber.NegativeInfinity);
     }
     if (cmp < 0) {
       return new RealNumber(SpecialNumber.NaN);
     }
-    return new RealNumber(Math.log(l.getValue().doubleValue()));
+    return new RealNumber(Math.log(value.getValue().doubleValue()));
   }
 
   @Override
-  public BaseNumber function(ComplexNumber l, ComplexNumber r) {
+  public BaseNumber function(ComplexNumber value) {
     return new ComplexNumber();
   }
 }

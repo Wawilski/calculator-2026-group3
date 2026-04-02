@@ -10,60 +10,75 @@ import calculator.numbers.RationalNumber;
 import calculator.numbers.RealNumber;
 import calculator.numbers.SpecialNumber;
 
-/** Base-10 logarithm function: log(x). */
-public final class Log extends Function {
+/** General logarithm function: log(value, base). */
+public final class Log extends BinaryFunction {
 
   public Log(List<Expression> elist) throws IllegalConstruction {
     super(elist);
     symbol = "log";
     neutral = 0;
-    arity = 1;
   }
 
   @Override
-  public int function(int l, int r) {
-    return (int) Math.log10(l);
+  public int function(int value, int base) {
+    return (int) (Math.log(value) / Math.log(base));
   }
 
   @Override
-  public BaseNumber function(IntegerNumber l, IntegerNumber r) {
-    if (l.getValue() == 0) {
-      return new RealNumber(SpecialNumber.NegativeInfinity);
-    }
-    if (l.getValue() < 0) {
+  public BaseNumber function(IntegerNumber value, IntegerNumber base) {
+    if (base.getValue() <= 0 || base.getValue() == 1) {
       return new RealNumber(SpecialNumber.NaN);
     }
-    return new RealNumber(Math.log10(l.getValue()));
-  }
-
-  @Override
-  public BaseNumber function(RationalNumber l, RationalNumber r) {
-    double value = ((double) l.getNumerator()) / l.getDenominator();
-    if (value == 0.0) {
+    if (value.getValue() == 0) {
       return new RealNumber(SpecialNumber.NegativeInfinity);
     }
-    if (value < 0.0) {
+    if (value.getValue() < 0) {
       return new RealNumber(SpecialNumber.NaN);
     }
-    return new RealNumber(Math.log10(value));
+    return new RealNumber(Math.log(value.getValue()) / Math.log(base.getValue()));
   }
 
   @Override
-  public BaseNumber function(RealNumber l, RealNumber r) {
-    if (l.isSpecial()) {
-      if (l.getSpecialValue() == SpecialNumber.PositiveInfinity) {
+  public BaseNumber function(RationalNumber value, RationalNumber base) {
+    double baseValue = ((double) base.getNumerator()) / base.getDenominator();
+    double valueValue = ((double) value.getNumerator()) / value.getDenominator();
+    if (baseValue <= 0.0 || baseValue == 1.0) {
+      return new RealNumber(SpecialNumber.NaN);
+    }
+    if (valueValue == 0.0) {
+      return new RealNumber(SpecialNumber.NegativeInfinity);
+    }
+    if (valueValue < 0.0) {
+      return new RealNumber(SpecialNumber.NaN);
+    }
+    return new RealNumber(Math.log(valueValue) / Math.log(baseValue));
+  }
+
+  @Override
+  public BaseNumber function(RealNumber value, RealNumber base) {
+    if (value.isSpecial() || base.isSpecial()) {
+      if (value.isSpecial() && value.getSpecialValue() == SpecialNumber.PositiveInfinity
+          && !base.isSpecial()
+          && base.getValue().compareTo(BigDecimal.ZERO) > 0
+          && base.getValue().compareTo(BigDecimal.ONE) != 0) {
         return new RealNumber(SpecialNumber.PositiveInfinity);
       }
       return new RealNumber(SpecialNumber.NaN);
     }
-    int cmp = l.getValue().compareTo(BigDecimal.ZERO);
-    if (cmp == 0) {
-      return new RealNumber(SpecialNumber.NegativeInfinity);
-    }
-    if (cmp < 0) {
+
+    int baseCmpZero = base.getValue().compareTo(BigDecimal.ZERO);
+    if (baseCmpZero <= 0 || base.getValue().compareTo(BigDecimal.ONE) == 0) {
       return new RealNumber(SpecialNumber.NaN);
     }
-    return new RealNumber(Math.log10(l.getValue().doubleValue()));
+
+    int valueCmpZero = value.getValue().compareTo(BigDecimal.ZERO);
+    if (valueCmpZero == 0) {
+      return new RealNumber(SpecialNumber.NegativeInfinity);
+    }
+    if (valueCmpZero < 0) {
+      return new RealNumber(SpecialNumber.NaN);
+    }
+    return new RealNumber(Math.log(value.getValue().doubleValue()) / Math.log(base.getValue().doubleValue()));
   }
 
   @Override

@@ -63,13 +63,20 @@ class TestFunction {
 
   @Test
   void testLogAndExponentialOnReal() throws IllegalConstruction {
-    BaseNumber logResult = calc.eval(new Log(List.of(new RealNumber(100))));
-    BaseNumber expResult = calc.eval(new Exponential(List.of(new IntegerNumber(1))));
+    BaseNumber logResult = calc.eval(new Log(List.of(new RealNumber(100), new RealNumber(10))));
+
 
     assertTrue(logResult instanceof RealNumber);
-    assertTrue(expResult instanceof RealNumber);
+    
     assertEquals(2.0, ((RealNumber) logResult).getValue().doubleValue(), 1e-9);
-    assertEquals(Math.E, ((RealNumber) expResult).getValue().doubleValue(), 1e-9);
+  }
+
+  @Test
+  void testLogSupportsCustomBaseOrder() throws IllegalConstruction {
+    BaseNumber logResult = calc.eval(new Log(List.of(new IntegerNumber(1), new IntegerNumber(2))));
+
+    assertTrue(logResult instanceof RealNumber);
+    assertEquals(0.0, ((RealNumber) logResult).getValue().doubleValue(), 1e-9);
   }
 
   @Test

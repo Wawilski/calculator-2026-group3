@@ -2,9 +2,11 @@ package visitor;
 
 import java.util.ArrayList;
 
+import calculator.BinaryFunction;
 import calculator.Expression;
 import calculator.Function;
 import calculator.Operation;
+import calculator.UnaryFunction;
 import calculator.numbers.BaseNumber;
 import calculator.numbers.ComplexNumber;
 import calculator.numbers.IntegerNumber;
@@ -109,9 +111,13 @@ public class Evaluator extends Visitor {
 
     BaseNumber temp = evaluatedArgs.get(0);
 
-    if (f.getArity() == 1) {
+    if (f instanceof UnaryFunction) {
       computedValue = temp.function(f);
       return;
+    }
+
+    if (!(f instanceof BinaryFunction)) {
+      throw new IllegalArgumentException("Unsupported function type.");
     }
 
     int max = evaluatedArgs.size();

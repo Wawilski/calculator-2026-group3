@@ -10,41 +10,40 @@ import calculator.numbers.RealNumber;
 import calculator.numbers.SpecialNumber;
 
 /** Tangent function: tan(x). */
-public final class Tan extends Function {
+public final class Tan extends UnaryFunction {
 
   public Tan(List<Expression> elist) throws IllegalConstruction {
     super(elist);
     symbol = "tan";
     neutral = 0;
-    arity = 1;
   }
 
   @Override
-  public int function(int l, int r) {
-    return (int) Math.tan(l);
+  public int function(int value) {
+    return (int) Math.tan(value);
   }
 
   @Override
-  public BaseNumber function(IntegerNumber l, IntegerNumber r) {
-    return new RealNumber(Math.tan(l.getValue()));
+  public BaseNumber function(IntegerNumber value) {
+    return new RealNumber(Math.tan(value.getValue()));
   }
 
   @Override
-  public BaseNumber function(RationalNumber l, RationalNumber r) {
-    double value = ((double) l.getNumerator()) / l.getDenominator();
-    return new RealNumber(Math.tan(value));
+  public BaseNumber function(RationalNumber value) {
+    double ratio = ((double) value.getNumerator()) / value.getDenominator();
+    return new RealNumber(Math.tan(ratio));
   }
 
   @Override
-  public BaseNumber function(RealNumber l, RealNumber r) {
-    if (l.isSpecial()) {
+  public BaseNumber function(RealNumber value) {
+    if (value.isSpecial()) {
       return new RealNumber(SpecialNumber.NaN);
     }
-    return new RealNumber(Math.tan(l.getValue().doubleValue()));
+    return new RealNumber(Math.tan(value.getValue().doubleValue()));
   }
 
   @Override
-  public BaseNumber function(ComplexNumber l, ComplexNumber r) {
+  public BaseNumber function(ComplexNumber value) {
     return new ComplexNumber();
   }
 }

@@ -12,47 +12,46 @@ import calculator.numbers.RealNumber;
 import calculator.numbers.SpecialNumber;
 
 /** Absolute value function: abs(x). */
-public final class Abs extends Function {
+public final class Abs extends UnaryFunction {
 
   public Abs(List<Expression> elist) throws IllegalConstruction {
     super(elist);
     symbol = "abs";
     neutral = 0;
-    arity = 1;
   }
 
   @Override
-  public int function(int l, int r) {
-    return Math.abs(l);
+  public int function(int value) {
+    return Math.abs(value);
   }
 
   @Override
-  public BaseNumber function(IntegerNumber l, IntegerNumber r) {
-    return new IntegerNumber(Math.abs(l.getValue()));
+  public BaseNumber function(IntegerNumber value) {
+    return new IntegerNumber(Math.abs(value.getValue()));
   }
 
   @Override
-  public BaseNumber function(RationalNumber l, RationalNumber r) {
-    return new RationalNumber(Math.abs(l.getNumerator()), Math.abs(l.getDenominator()));
+  public BaseNumber function(RationalNumber value) {
+    return new RationalNumber(Math.abs(value.getNumerator()), Math.abs(value.getDenominator()));
   }
 
   @Override
-  public BaseNumber function(RealNumber l, RealNumber r) {
-    if (l.isSpecial()) {
-      if (l.getSpecialValue() == SpecialNumber.NaN) {
+  public BaseNumber function(RealNumber value) {
+    if (value.isSpecial()) {
+      if (value.getSpecialValue() == SpecialNumber.NaN) {
         return new RealNumber(SpecialNumber.NaN);
       }
       return new RealNumber(SpecialNumber.PositiveInfinity);
     }
-    return new RealNumber(l.getValue().abs(MathContext.DECIMAL32));
+    return new RealNumber(value.getValue().abs(MathContext.DECIMAL32));
   }
 
   @Override
-  public BaseNumber function(ComplexNumber l, ComplexNumber r) {
-    if (l.isNaN()) {
+  public BaseNumber function(ComplexNumber value) {
+    if (value.isNaN()) {
       return new RealNumber(SpecialNumber.NaN);
     }
-    BigDecimal modSquared = l.getReal().pow(2).add(l.getImaginary().pow(2));
+    BigDecimal modSquared = value.getReal().pow(2).add(value.getImaginary().pow(2));
     return new RealNumber(Math.sqrt(modSquared.doubleValue()));
   }
 }

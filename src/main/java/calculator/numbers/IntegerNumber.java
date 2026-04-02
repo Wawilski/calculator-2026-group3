@@ -1,8 +1,10 @@
 
 package calculator.numbers;
 
+import calculator.BinaryFunction;
 import calculator.Function;
 import calculator.Operation;
+import calculator.UnaryFunction;
 import calculator.numbers.visitor.TypeVisitor;
 import visitor.Visitor;
 
@@ -78,12 +80,18 @@ public class IntegerNumber implements BaseNumber {
 
   @Override
   public BaseNumber function(Function f) {
-    return f.function(this, null);
+    if (!(f instanceof UnaryFunction)) {
+      throw new IllegalArgumentException("Expected a unary function.");
+    }
+    return ((UnaryFunction) f).function(this);
   }
 
   @Override
   public BaseNumber function(Function f, BaseNumber rightHand) {
-    return f.function(this, (IntegerNumber) rightHand);
+    if (!(f instanceof BinaryFunction)) {
+      throw new IllegalArgumentException("Expected a binary function.");
+    }
+    return ((BinaryFunction) f).function(this, (IntegerNumber) rightHand);
   }
 
   /**
