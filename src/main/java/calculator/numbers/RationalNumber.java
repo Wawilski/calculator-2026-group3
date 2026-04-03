@@ -142,18 +142,6 @@ public class RationalNumber implements BaseNumber {
       return true;
     }
 
-    // If the value of the Integer number is equal to the numerator and the
-    // denominator is equal to 1 than the two objects are equal
-    if (o instanceof IntegerNumber) {
-      return this.denominator == 1 && this.numerator == ((IntegerNumber) o).getValue();
-    }
-
-    // If the value of the Real number is equal to the devision between the
-    // numerator and the denominator than two objects are equal
-    if (o instanceof RealNumber) {
-      return ((RealNumber) o).equals(new RealNumber(this.numerator / this.denominator));
-    }
-
     if (!(o instanceof RationalNumber)) {
       return false;
     }

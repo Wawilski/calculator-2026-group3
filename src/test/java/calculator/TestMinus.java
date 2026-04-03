@@ -135,6 +135,28 @@ class TestMinus {
   }
 
   @Test
+  void testDifferentInfinityMinus() {
+    RealNumber plusInf = new RealNumber(SpecialNumber.PositiveInfinity);
+    RealNumber minusInf = new RealNumber(SpecialNumber.NegativeInfinity);
+    List<Expression> param1 = Arrays.asList(plusInf, minusInf);
+    List<Expression> param2 = Arrays.asList(minusInf, plusInf);
+    try {
+      Minus op = new Minus(param1);
+      Evaluator e = new Evaluator();
+      op.accept(e);
+      RealNumber result = (RealNumber) e.getResult();
+      assertEquals(plusInf, result);
+
+      op = new Minus(param2);
+      op.accept(e);
+      result = (RealNumber) e.getResult();
+      assertEquals(minusInf, result);
+    } catch (IllegalConstruction _) {
+      fail();
+    }
+  }
+
+  @Test
   void testRationalSubtraction() {
     RationalNumber left = new RationalNumber(1, 2);
     RationalNumber right = new RationalNumber(3, 2);

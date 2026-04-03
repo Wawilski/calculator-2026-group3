@@ -19,6 +19,7 @@ class TestDivides {
   private final int value2 = 6;
   private Divides op;
   private List<Expression> params;
+  private List<Expression> params1;
 
   @BeforeEach
   void setUp() {
@@ -150,6 +151,87 @@ class TestDivides {
     try {
 
       op = new Divides(params);
+      Evaluator e = new Evaluator();
+      op.accept(e);
+      RealNumber result = (RealNumber) e.getResult();
+      assertEquals(result.getSpecialValue(), SpecialNumber.NaN);
+
+    } catch (IllegalConstruction e) {
+      fail();
+    }
+  }
+
+  @Test
+  void TestDivisionByInfinityReal() {
+    RealNumber plusInf = new RealNumber(SpecialNumber.PositiveInfinity);
+
+    RealNumber real = new RealNumber("1");
+    RealNumber zero = new RealNumber("0");
+
+    params1 = Arrays.asList(real, plusInf);
+
+    try {
+
+      op = new Divides(params1);
+      Evaluator e = new Evaluator();
+      op.accept(e);
+      RealNumber result = (RealNumber) e.getResult();
+      assertEquals(zero, result);
+
+    } catch (IllegalConstruction e) {
+      fail();
+    }
+  }
+
+  @Test
+  void TestDivisionInfinityByReal() {
+    RealNumber plusInf = new RealNumber(SpecialNumber.PositiveInfinity);
+    RealNumber minusInf = new RealNumber(SpecialNumber.NegativeInfinity);
+
+    RealNumber plusReal = new RealNumber("1");
+    RealNumber minusReal = new RealNumber("-1");
+
+    List<Expression> params1 = Arrays.asList(plusInf, plusReal);
+    List<Expression> params2 = Arrays.asList(minusInf, plusReal);
+    List<Expression> params3 = Arrays.asList(plusInf, minusReal);
+    List<Expression> params4 = Arrays.asList(minusInf, minusReal);
+    try {
+      op = new Divides(params1);
+      Evaluator e = new Evaluator();
+      op.accept(e);
+      RealNumber result = (RealNumber) e.getResult();
+      assertEquals(new RealNumber(SpecialNumber.PositiveInfinity), result);
+
+      op = new Divides(params2);
+      op.accept(e);
+      result = (RealNumber) e.getResult();
+      assertEquals(new RealNumber(SpecialNumber.NegativeInfinity), result);
+
+      op = new Divides(params3);
+      op.accept(e);
+      result = (RealNumber) e.getResult();
+      assertEquals(new RealNumber(SpecialNumber.NegativeInfinity), result);
+
+      op = new Divides(params4);
+      op.accept(e);
+      result = (RealNumber) e.getResult();
+      assertEquals(new RealNumber(SpecialNumber.PositiveInfinity), result);
+
+    } catch (IllegalConstruction e) {
+      fail();
+    }
+  }
+
+  @Test
+  void TestDivisionInfByInfReal() {
+
+    RealNumber plusInf = new RealNumber(SpecialNumber.PositiveInfinity);
+    RealNumber minusInf = new RealNumber(SpecialNumber.NegativeInfinity);
+
+    params1 = Arrays.asList(plusInf, minusInf);
+    try {
+
+      op = new Divides(params1);
       Evaluator e = new Evaluator();
       op.accept(e);
       RealNumber result = (RealNumber) e.getResult();

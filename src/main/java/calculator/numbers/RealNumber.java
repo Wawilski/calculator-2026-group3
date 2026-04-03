@@ -266,7 +266,7 @@ public class RealNumber implements BaseNumber {
    */
   @Override
   public int hashCode() {
-    return this.value.intValue();
+    return this.value.hashCode();
   }
 
   @Override

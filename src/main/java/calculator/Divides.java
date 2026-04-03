@@ -121,13 +121,12 @@ public final class Divides extends Operation {
         || (l.isSpecial() && r.isSpecial())
         || (l.sign() == 0 && r.sign() == 0)) {
       result = new RealNumber(SpecialNumber.NaN);
+    } else if (r.isSpecial()) {
+      result = new RealNumber(new BigDecimal(0));
     } else if ((lSign > 0 && rSign >= 0) || (lSign < 0 && rSign < 0)) {
       result = new RealNumber(SpecialNumber.PositiveInfinity);
-    } else if ((lSign < 0 && rSign >= 0) || (lSign > 0 && rSign < 0)) {
-      result = new RealNumber(SpecialNumber.NegativeInfinity);
     } else {
-      result = new RealNumber(new BigDecimal(0));
-
+      result = new RealNumber(SpecialNumber.NegativeInfinity);
     }
     return result;
 

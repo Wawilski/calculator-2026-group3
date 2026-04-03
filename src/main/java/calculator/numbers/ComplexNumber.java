@@ -182,13 +182,6 @@ public class ComplexNumber implements BaseNumber {
     if (o == this) {
       return true;
     }
-    if (o instanceof RealNumber) {
-      return this.real.equals(((RealNumber) o).getValue());
-    }
-
-    if (o instanceof IntegerNumber) {
-      return this.real.compareTo(new BigDecimal(((IntegerNumber) o).getValue())) == 0;
-    }
 
     // If the object is of another type then return false
     if (!(o instanceof ComplexNumber)) {
@@ -212,7 +205,7 @@ public class ComplexNumber implements BaseNumber {
    */
   @Override
   public int hashCode() {
-    return this.real.intValue() * this.imaginary.intValue();
+    return this.real.hashCode() + this.imaginary.hashCode();
   }
 
   @Override
@@ -221,9 +214,12 @@ public class ComplexNumber implements BaseNumber {
     if (isNaN) {
       s = "NaN";
     } else {
-      String realPart = (this.real.equals(BigDecimal.ZERO)) ? "" : this.real.toString();
-      String imPart = (this.imaginary.equals(BigDecimal.ZERO)) ? "" : this.imaginary.toString() + " i";
-      String sign = (realPart == "" || imPart == "") ? "" : "+";
+      String realPart = (this.real.equals(new BigDecimal(0).setScale(RealNumber.getScale(), RoundingMode.CEILING))) ? ""
+          : this.real.toString();
+      String imPart = (this.imaginary.equals(new BigDecimal(0).setScale(RealNumber.getScale(), RoundingMode.CEILING)))
+          ? ""
+          : this.imaginary.toString() + "i";
+      String sign = (realPart == "" || imPart == "") ? "" : " + ";
 
       s = realPart + sign + imPart;
 
