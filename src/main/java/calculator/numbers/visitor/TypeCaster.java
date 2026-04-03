@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 import calculator.numbers.*;
+import lombok.Getter;
 
 /**
  * TypeCaster is a concrete visitor that serves to
@@ -15,7 +16,13 @@ public class TypeCaster extends TypeVisitor {
   /** Type to cast to */
   private NumberType type;
 
-  /** Cast result */
+  /** Cast result
+   * -- GETTER --
+   *  getter method to obtain the cast result
+   *
+   * @return The BaseNumber object contained in result
+   */
+  @Getter
   private BaseNumber result;
 
   /**
@@ -27,16 +34,7 @@ public class TypeCaster extends TypeVisitor {
     this.type = type;
   }
 
-  /**
-   * getter method to obtain the cast result
-   *
-   * @return The BaseNumber object contained in result
-   */
-  public BaseNumber getResult() {
-    return result;
-  }
-
-  /**
+    /**
    * Visiting an IntegerNumber to cast it to the specified type of the visitor
    *
    * @param i The visited IntegerNumber to be cast
