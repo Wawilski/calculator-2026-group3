@@ -3,6 +3,7 @@ package visitor;
 import java.util.ArrayList;
 import java.util.List;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 import calculator.Divides;
 import calculator.Expression;
@@ -622,7 +623,7 @@ public class ParserVisitor extends calculatorBaseVisitor<Expression> {
    */
   @Override
   public Expression visitBaseScientificNumber(BaseScientificNumberContext ctx) {
-    return new RealNumber(Double.parseDouble(ctx.getText()));
+    return new RealNumber(ctx.getText());
   }
 
   /**
@@ -633,10 +634,9 @@ public class ParserVisitor extends calculatorBaseVisitor<Expression> {
    */
   @Override
   public Expression visitBaseNumber(BaseNumberContext ctx) {
-    String s = ctx.getText();
     BaseNumber result;
     if (ctx.children.size() == 1) {
-      result = new IntegerNumber(Integer.parseInt(s));
+      result = new IntegerNumber(ctx.getText());
     } else {
       result = new RealNumber(ctx.getText());
     }
@@ -661,7 +661,9 @@ public class ParserVisitor extends calculatorBaseVisitor<Expression> {
     } else if (e instanceof RealNumber && !((RealNumber) e).isSpecial()) {
       result = new ComplexNumber(new BigDecimal(0), ((RealNumber) e).getValue());
     } else if (e instanceof RationalNumber) {
-      result = new ComplexNumber(0, ((RationalNumber) e).getNumerator() / ((RationalNumber) e).getDenominator());
+      BigDecimal num = new BigDecimal(((RationalNumber) e).getNumerator());
+      BigDecimal den = new BigDecimal(((RationalNumber) e).getDenominator());
+      result = new ComplexNumber(new BigDecimal(0), num.divide(den, RealNumber.getScale(), RoundingMode.CEILING));
     } else {
       result = new ComplexNumber();
     }

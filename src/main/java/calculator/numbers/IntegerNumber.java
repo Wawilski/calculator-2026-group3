@@ -37,6 +37,15 @@ public class IntegerNumber implements BaseNumber {
   }
 
   /**
+   * Constructor method with value specified as a String
+   *
+   * @param v The value to be contained in the object as a String
+   */
+  public /* constructor */ IntegerNumber(String v) {
+    this.value = Integer.valueOf(v);
+  }
+
+  /**
    * accept method to implement the visitor design pattern to traverse arithmetic
    * expressions.
    * Each number will pass itself to the visitor object to get processed by the
