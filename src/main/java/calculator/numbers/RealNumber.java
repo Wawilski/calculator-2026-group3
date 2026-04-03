@@ -1,6 +1,8 @@
 package calculator.numbers;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 
 import calculator.Operation;
 import visitor.Visitor;
@@ -33,13 +35,19 @@ public class RealNumber implements BaseNumber {
   private SpecialNumber specialValue;
 
   /**
-   * class constructor which specify the value of the real number as a BigDecimal
+   * The scale of all the BigDecimal concerning the real and complex numbers
+   */
+  private static int scale = 16;
+
+  /**
+   * class constructor which specify the value of the real number as a
+   * BigDecimal
    *
    *
    * @param value the BigDecimal value representing the real number
    */
   public /* constructor */ RealNumber(BigDecimal value) {
-    this.value = value;
+    this.value = value.setScale(scale, RoundingMode.CEILING);
     this.special = false;
     this.specialValue = null;
   }
@@ -51,7 +59,7 @@ public class RealNumber implements BaseNumber {
    * @param value the integer value representing the real number
    */
   public /* constructor */ RealNumber(int value) {
-    this.value = new BigDecimal(value);
+    this.value = (new BigDecimal(value, MathContext.UNLIMITED)).setScale(scale, RoundingMode.CEILING);
     this.special = false;
     this.specialValue = null;
   }
@@ -63,7 +71,19 @@ public class RealNumber implements BaseNumber {
    * @param value the double value representing the real number
    */
   public /* constructor */ RealNumber(double value) {
-    this.value = new BigDecimal(value);
+    this.value = (new BigDecimal(value, MathContext.UNLIMITED)).setScale(scale, RoundingMode.CEILING);
+    this.special = false;
+    this.specialValue = null;
+  }
+
+  /**
+   * class constructor which specify the value of the real number with a String
+   *
+   *
+   * @param value the String value representing the real number
+   */
+  public /* constructor */ RealNumber(String value) {
+    this.value = (new BigDecimal(value, MathContext.UNLIMITED)).setScale(scale, RoundingMode.CEILING);
     this.special = false;
     this.specialValue = null;
   }
@@ -105,6 +125,15 @@ public class RealNumber implements BaseNumber {
    */
   public boolean isSpecial() {
     return special;
+  }
+
+  /**
+   * getter method to obtain the scale of the BigDecimal values
+   * 
+   * @return The class attribute scale
+   */
+  public static int getScale() {
+    return scale;
   }
 
   /**
