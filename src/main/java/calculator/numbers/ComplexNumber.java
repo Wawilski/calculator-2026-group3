@@ -39,8 +39,8 @@ public class ComplexNumber implements BaseNumber {
    * @param imaginary the BigDecimal representing the imaginary part
    */
   public /* constructor */ ComplexNumber(BigDecimal real, BigDecimal imaginary) {
-    this.real = real.setScale(RealNumber.scale, RoundingMode.CEILING);
-    this.imaginary = imaginary.setScale(RealNumber.scale, RoundingMode.CEILING);
+    this.real = real.setScale(RealNumber.getScale(), RoundingMode.CEILING);
+    this.imaginary = imaginary.setScale(RealNumber.getScale(), RoundingMode.CEILING);
     this.isNaN = false;
   }
 
@@ -51,8 +51,9 @@ public class ComplexNumber implements BaseNumber {
    * @param imaginary the integer representing the imaginary part
    */
   public /* constructor */ ComplexNumber(int real, int imaginary) {
-    this.real = new BigDecimal(real, MathContext.UNLIMITED).setScale(RealNumber.scale, RoundingMode.CEILING);
-    this.imaginary = new BigDecimal(imaginary, MathContext.UNLIMITED).setScale(RealNumber.scale, RoundingMode.CEILING);
+    this.real = new BigDecimal(real, MathContext.UNLIMITED).setScale(RealNumber.getScale(), RoundingMode.CEILING);
+    this.imaginary = new BigDecimal(imaginary, MathContext.UNLIMITED).setScale(RealNumber.getScale(),
+        RoundingMode.CEILING);
     this.isNaN = false;
   }
 
@@ -63,14 +64,23 @@ public class ComplexNumber implements BaseNumber {
    * @param imaginary the double representing the imaginary part
    */
   public /* constructor */ ComplexNumber(double real, double imaginary) {
-    this.real = new BigDecimal(real, MathContext.UNLIMITED).setScale(RealNumber.scale, RoundingMode.CEILING);
-    this.imaginary = new BigDecimal(imaginary, MathContext.UNLIMITED).setScale(RealNumber.scale, RoundingMode.CEILING);
+    this.real = new BigDecimal(real, MathContext.UNLIMITED).setScale(RealNumber.getScale(), RoundingMode.CEILING);
+    this.imaginary = new BigDecimal(imaginary, MathContext.UNLIMITED).setScale(RealNumber.getScale(),
+        RoundingMode.CEILING);
     this.isNaN = false;
   }
 
+  /**
+   * class constructor which specify the real and imaginary part with
+   * Strings
+   *
+   * @param real      the String representing the real part
+   * @param imaginary the String representing the imaginary part
+   */
   public /* constructor */ ComplexNumber(String real, String imaginary) {
-    this.real = new BigDecimal(real, MathContext.UNLIMITED).setScale(RealNumber.scale, RoundingMode.CEILING);
-    this.imaginary = new BigDecimal(imaginary, MathContext.UNLIMITED).setScale(RealNumber.scale, RoundingMode.CEILING);
+    this.real = new BigDecimal(real, MathContext.UNLIMITED).setScale(RealNumber.getScale(), RoundingMode.CEILING);
+    this.imaginary = new BigDecimal(imaginary, MathContext.UNLIMITED).setScale(RealNumber.getScale(),
+        RoundingMode.CEILING);
     this.isNaN = false;
   }
 

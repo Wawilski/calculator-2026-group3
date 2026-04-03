@@ -34,10 +34,14 @@ public class RealNumber implements BaseNumber {
    */
   private SpecialNumber specialValue;
 
-  public static int scale = 16;
+  /**
+   * The scale of all the BigDecimal concerning the real and complex numbers
+   */
+  private static int scale = 16;
 
   /**
-   * class constructor which specify the value of the real number as a BigDecimal
+   * class constructor which specify the value of the real number as a
+   * BigDecimal
    *
    *
    * @param value the BigDecimal value representing the real number
@@ -71,6 +75,13 @@ public class RealNumber implements BaseNumber {
     this.special = false;
     this.specialValue = null;
   }
+
+  /**
+   * class constructor which specify the value of the real number with a String
+   *
+   *
+   * @param value the String value representing the real number
+   */
 
   public /* constructor */ RealNumber(String value) {
     this.value = (new BigDecimal(value, MathContext.UNLIMITED)).setScale(scale, RoundingMode.CEILING);
@@ -115,6 +126,15 @@ public class RealNumber implements BaseNumber {
    */
   public boolean isSpecial() {
     return special;
+  }
+
+  /**
+   * getter method to obtain the scale of the BigDecimal values
+   * 
+   * @return The class attribute scale
+   */
+  public static int getScale() {
+    return scale;
   }
 
   /**

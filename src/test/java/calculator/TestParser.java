@@ -135,12 +135,18 @@ public class TestParser {
     e = parser.parse("(4, 2) *");
     assertEquals(new IntegerNumber(8), c.eval(e));
 
+    e = parser.parse("(4, 2)");
+    assertEquals(new IntegerNumber(8), c.eval(e));
+
     e = parser.parse(" (1, ( 3, 2, i ) *) +");
     assertEquals(new ComplexNumber(new BigDecimal(1), new BigDecimal(6)),
         c.eval(e));
 
     e = parser.parse("(1, ( (-2), 3 ,i) *) +");
     assertEquals(new ComplexNumber(new BigDecimal(1), new BigDecimal(-6)), c.eval(e));
+
+    e = parser.parse("(1, ( (-2), 3 ,i) *) **");
+    assertEquals(new ComplexNumber("0", "-6"), c.eval(e));
   }
 
   @Test
@@ -148,12 +154,21 @@ public class TestParser {
     e = parser.parse("1+2(3+5)i+ 9 * 5 - 4 + (-5 + 2)(2)");
     assertEquals(new ComplexNumber(new BigDecimal(36), new BigDecimal(16)), c.eval(e));
 
+    // Temporary wainting for power
+    e = parser.parse("5 ** 5");
+    assertEquals(new IntegerNumber(25), c.eval(e));
+
   }
 
   @Test
-  void testAtom() {
+  void testFactor() {
     e = parser.parse("1");
     assertEquals(new IntegerNumber(1), c.eval(e));
+
+    e = parser.parse("(1+1)");
+    assertEquals(new IntegerNumber(2), c.eval(e));
+    e = parser.parse("(1.0+1)");
+    assertEquals(new RealNumber(2), c.eval(e));
 
     e = parser.parse("-1");
     assertEquals(new IntegerNumber(-1), c.eval(e));

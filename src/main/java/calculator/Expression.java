@@ -4,8 +4,8 @@ import calculator.numbers.BaseNumber;
 import visitor.Visitor;
 
 /**
- * Expression is an interface that represents arithmetic expressions.
- * It has two concrete subclasses Operation and MyNumber.
+ * Expression is an inteface that represents arithmetic expressions.
+ * It has two concrete subclasses Operation and BaseNumber.
  *
  * @see Operation
  * @see BaseNumber

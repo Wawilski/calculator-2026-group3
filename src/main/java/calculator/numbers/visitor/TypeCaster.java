@@ -2,6 +2,8 @@
 package calculator.numbers.visitor;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 import calculator.numbers.*;
 
 /**
@@ -66,15 +68,21 @@ public class TypeCaster extends TypeVisitor {
    */
   @Override
   public void visit(RationalNumber r) {
+    BigDecimal numerator = new BigDecimal(Integer.toString(r.getNumerator())).setScale(RealNumber.getScale(),
+        RoundingMode.CEILING);
+    BigDecimal denominator = new BigDecimal(Integer.toString(r.getDenominator())).setScale(RealNumber.getScale(),
+        RoundingMode.CEILING);
+
+    BigDecimal realValue = numerator.divide(denominator, RealNumber.getScale(), RoundingMode.CEILING);
     switch (type) {
       case REAL:
-        result = new RealNumber(r.getNumerator() / r.getDenominator());
+        result = new RealNumber(realValue);
         break;
       case RATIONAL:
         result = r;
         break;
       case COMPLEX:
-        result = new ComplexNumber(r.getNumerator() / r.getDenominator(), 0);
+        result = new ComplexNumber(realValue, new BigDecimal("0"));
         break;
       default:
         throw new IllegalCast();

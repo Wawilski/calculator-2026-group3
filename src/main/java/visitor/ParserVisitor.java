@@ -258,7 +258,8 @@ public class ParserVisitor extends calculatorBaseVisitor<Expression> {
     if (ctx.fct() != null) {
       operation = new RealNumber(1);
     } else {
-      operation = createOp(ctx.operator().getText(), args);
+      String operator = (ctx.operator() == null) ? "" : ctx.operator().getText();
+      operation = createOp(operator, args);
     }
     return operation;
 
@@ -498,7 +499,8 @@ public class ParserVisitor extends calculatorBaseVisitor<Expression> {
       args.add(visit(postFix));
     }
 
-    return createOp(ctx.operator().getText(), args);
+    String operator = (ctx.operator() == null) ? "" : ctx.operator().getText();
+    return createOp(operator, args);
 
   }
 
@@ -636,7 +638,7 @@ public class ParserVisitor extends calculatorBaseVisitor<Expression> {
     if (ctx.children.size() == 1) {
       result = new IntegerNumber(Integer.parseInt(s));
     } else {
-      result = new RealNumber(new BigDecimal(ctx.getText()));
+      result = new RealNumber(ctx.getText());
     }
     return result;
   }
@@ -731,8 +733,9 @@ public class ParserVisitor extends calculatorBaseVisitor<Expression> {
           break;
         case "":
           op = new Times(args);
+          break;
         default:
-          throw new IllegalArgumentException();
+          throw new IllegalArgumentException("Can't resolve '" + sign + "'");
       }
 
       return op;

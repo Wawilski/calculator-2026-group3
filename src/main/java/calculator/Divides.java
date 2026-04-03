@@ -53,13 +53,13 @@ public final class Divides extends Operation {
    * 
    * @param l The first IntegerNumber
    * @param r The second IntegerNumber that should be divided to the first
-   * @return The IntegerNumber that is the result of the division
+   * @return The RationalNumber representing the division
    */
-  public IntegerNumber op(IntegerNumber l, IntegerNumber r) {
+  public RationalNumber op(IntegerNumber l, IntegerNumber r) {
     int rightHand = r.getValue();
     if (rightHand == 0)
       throw new ArithmeticException("Division by zero is not allowed.");
-    return new IntegerNumber(l.getValue() / rightHand);
+    return new RationalNumber(l.getValue(), rightHand);
   }
 
   /**
@@ -94,7 +94,7 @@ public final class Divides extends Operation {
     } else {
       BigDecimal lValue = l.getValue();
       BigDecimal rValue = r.getValue();
-      BigDecimal value = lValue.divide(rValue, RealNumber.scale, RoundingMode.CEILING);
+      BigDecimal value = lValue.divide(rValue, RealNumber.getScale(), RoundingMode.CEILING);
       result = new RealNumber(value);
     }
     return result;
@@ -150,8 +150,8 @@ public final class Divides extends Operation {
       BigDecimal realPart = lReal.multiply(rReal).add(lImaginary.multiply(rImaginary));
       BigDecimal imPart = rReal.multiply(lImaginary).subtract(lReal.multiply(rImaginary));
 
-      result = new ComplexNumber(realPart.divide(mod, RealNumber.scale, RoundingMode.CEILING),
-          imPart.divide(mod, RealNumber.scale, RoundingMode.CEILING));
+      result = new ComplexNumber(realPart.divide(mod, RealNumber.getScale(), RoundingMode.CEILING),
+          imPart.divide(mod, RealNumber.getScale(), RoundingMode.CEILING));
     }
     return result;
   }

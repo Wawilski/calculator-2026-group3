@@ -46,7 +46,7 @@ class TestEvaluator {
         case "+" -> assertEquals(new IntegerNumber(value1 + value2), calc.eval(new Plus(params)));
         case "-" -> assertEquals(new IntegerNumber(value1 - value2), calc.eval(new Minus(params)));
         case "*" -> assertEquals(new IntegerNumber(value1 * value2), calc.eval(new Times(params)));
-        case "/" -> assertEquals(new IntegerNumber(value1 / value2), calc.eval(new Divides(params)));
+        case "/" -> assertEquals(new RationalNumber(value1, value2), calc.eval(new Divides(params)));
         default -> fail();
       }
     } catch (IllegalConstruction _) {
@@ -69,12 +69,13 @@ class TestEvaluator {
         case "*" ->
           assertEquals(new RealNumber(value3.multiply(value4, MathContext.UNLIMITED)), calc.eval(new Times(params)));
         case "/" ->
-          assertEquals(new RealNumber(value3.divide(value4, RealNumber.scale, RoundingMode.CEILING)),
+          assertEquals(new RealNumber(value3.divide(value4, RealNumber.getScale(), RoundingMode.CEILING)),
               calc.eval(new Divides(params)));
         default -> fail();
       }
     } catch (IllegalConstruction _) {
       fail();
+
     }
   }
 
@@ -123,12 +124,12 @@ class TestEvaluator {
 
     ComplexNumber times = new ComplexNumber(realPartTimes, imPartTimes);
 
-    BigDecimal mod = (imLeft.pow(2)).multiply(imRight.pow(2));
-    BigDecimal realPartDiv = realLeft.multiply(realRight).add(imLeft.multiply(imRight));
-    BigDecimal imPartDiv = realRight.multiply(imLeft).subtract(realLeft.multiply(imRight));
+    BigDecimal mod = (imLeft.pow(2)).multiply(imRight.pow(2), MathContext.UNLIMITED);
+    BigDecimal realPartDiv = realLeft.multiply(realRight, MathContext.UNLIMITED).add(imLeft.multiply(imRight));
+    BigDecimal imPartDiv = realRight.multiply(imLeft, MathContext.UNLIMITED).subtract(realLeft.multiply(imRight));
 
-    ComplexNumber div = new ComplexNumber(realPartDiv.divide(mod, RealNumber.scale, RoundingMode.CEILING),
-        imPartDiv.divide(mod, RealNumber.scale, RoundingMode.CEILING));
+    ComplexNumber div = new ComplexNumber(realPartDiv.divide(mod, RealNumber.getScale(), RoundingMode.CEILING),
+        imPartDiv.divide(mod, RealNumber.getScale(), RoundingMode.CEILING));
 
     try {
       // construct another type of operation depending on the input value
