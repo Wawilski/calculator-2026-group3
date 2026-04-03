@@ -645,6 +645,17 @@ public class ParserVisitor extends calculatorBaseVisitor<Expression> {
 
   /**
    * visits the grammar rule
+   * rational : INT DIV INT
+   * 
+   * @return Expression representing a concrete real number
+   */
+  @Override
+  public Expression visitBaseRationalNumber(BaseRationalNumberContext ctx) {
+    return new RationalNumber(ctx.getChild(0).getText(), ctx.getChild(2).getText());
+  }
+
+  /**
+   * visits the grammar rule
    * complex: (number)? I
    * 
    * @return Expression representing a concrete complex number

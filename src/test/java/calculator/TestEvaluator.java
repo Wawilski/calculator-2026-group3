@@ -112,10 +112,10 @@ class TestEvaluator {
   @ParameterizedTest
   @ValueSource(strings = { "*", "+", "/", "-" })
   void testEvaluateComplexOperations(String symbol) {
-    BigDecimal realLeft = new BigDecimal("4");
-    BigDecimal imLeft = new BigDecimal("5");
-    BigDecimal realRight = new BigDecimal("6");
-    BigDecimal imRight = new BigDecimal("7");
+    BigDecimal realLeft = new BigDecimal("1");
+    BigDecimal imLeft = new BigDecimal("6");
+    BigDecimal realRight = new BigDecimal("8");
+    BigDecimal imRight = new BigDecimal("4");
     List<Expression> params = Arrays.asList(new ComplexNumber(realLeft, imLeft),
         new ComplexNumber(realRight, imRight));
 
@@ -123,13 +123,6 @@ class TestEvaluator {
     BigDecimal imPartTimes = realLeft.multiply(imRight).add(realRight.multiply(imLeft));
 
     ComplexNumber times = new ComplexNumber(realPartTimes, imPartTimes);
-
-    BigDecimal mod = (imLeft.pow(2)).multiply(imRight.pow(2), MathContext.UNLIMITED);
-    BigDecimal realPartDiv = realLeft.multiply(realRight, MathContext.UNLIMITED).add(imLeft.multiply(imRight));
-    BigDecimal imPartDiv = realRight.multiply(imLeft, MathContext.UNLIMITED).subtract(realLeft.multiply(imRight));
-
-    ComplexNumber div = new ComplexNumber(realPartDiv.divide(mod, RealNumber.getScale(), RoundingMode.CEILING),
-        imPartDiv.divide(mod, RealNumber.getScale(), RoundingMode.CEILING));
 
     try {
       // construct another type of operation depending on the input value
@@ -145,7 +138,7 @@ class TestEvaluator {
         case "*" ->
           assertEquals(times, calc.eval(new Times(params)));
         case "/" ->
-          assertEquals(div, calc.eval(new Divides(params)));
+          assertEquals(new ComplexNumber("0.4", "0.55"), calc.eval(new Divides(params)));
         default -> fail();
       }
     } catch (IllegalConstruction _) {

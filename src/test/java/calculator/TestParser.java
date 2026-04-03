@@ -10,6 +10,7 @@ import org.junit.jupiter.api.*;
 
 import calculator.numbers.ComplexNumber;
 import calculator.numbers.IntegerNumber;
+import calculator.numbers.RationalNumber;
 import calculator.numbers.RealNumber;
 
 /**
@@ -175,6 +176,21 @@ public class TestParser {
 
     e = parser.parse("2E16");
     assertEquals(new RealNumber(new BigDecimal(2E16)), c.eval(e));
+
+    e = parser.parse("-2");
+    assertEquals(new IntegerNumber(-(2)), c.eval(e));
+
+    e = parser.parse("1.0i");
+    assertEquals(new ComplexNumber("0", "1"), c.eval(e));
+
+    e = parser.parse("1/(2i)");
+    assertEquals(new ComplexNumber("0", "-0.5"), c.eval(e));
+
+    e = parser.parse("1/2i");
+    assertEquals(new ComplexNumber("0", "0.5"), c.eval(e));
+
+    e = parser.parse("1/2");
+    assertEquals(new RationalNumber(1, 2), c.eval(e));
 
     e = parser.parse("2pii");
 

@@ -41,6 +41,26 @@ public class RationalNumber implements BaseNumber {
   }
 
   /**
+   * class constructor which specify the numerator and denominator of the rational
+   * number as String
+   *
+   * @throws IllegalNumberConstruction the denominator can't be 0
+   *
+   * @param numerator   the String representing the numerator
+   * @param denominator the String representing the denominator
+   */
+  public /* constructor */ RationalNumber(String numerator, String denominator) {
+    int num = Integer.valueOf(numerator);
+    int den = Integer.valueOf(denominator);
+    if (den == 0) {
+      throw new IllegalNumberConstruction();
+    }
+    this.numerator = num;
+    this.denominator = den;
+    this.simplify();
+  }
+
+  /**
    * getter method to obtain the numerator of the rational number
    *
    * @return the numerator of the rational number

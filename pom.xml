@@ -145,7 +145,7 @@
                     <properties>
                         <configurationParameters>
                             cucumber.junit-platform.naming-strategy=long
-                        </configurationParameters>
+                          </configurationParameters> 
                     </properties>
                 </configuration>
             </plugin>
@@ -188,6 +188,8 @@
                 <configuration>
                     <excludes>
                         <exclude>calculator/Main.class</exclude>
+                        <exclude>calculator/calculatorParser*.class</exclude>
+                        <exclude>calculator/calculatorBaseVisitor.class</exclude>
                     </excludes>
                 </configuration>
             </plugin>
