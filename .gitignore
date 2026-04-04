@@ -7,6 +7,4 @@
 .classpath
 .project
 .settings/
-target/*
-!target/site/
-!target/surefire-reports/
+target/
