@@ -11,7 +11,7 @@ import org.junit.platform.suite.api.Suite;
 
 @Suite
 @IncludeEngines("cucumber")
-@SelectClasspathResource("calculator")
+@SelectClasspathResource("calculator/calculator.feature")
 @ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "calculator")
 @ConfigurationParameter(key = PLUGIN_PROPERTY_NAME, value = "html:target/cucumber-reports.html")
 public class CucumberTest {

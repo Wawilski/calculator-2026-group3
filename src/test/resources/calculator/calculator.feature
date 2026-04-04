@@ -12,6 +12,12 @@ Feature: Integer Arithmetic Expressions
   # provided that each of the steps (Given, When, And and Then) are
   # implemented in a Java mapping file (CalculatorSteps.Java)
 
+  Scenario: Dividing by zero
+    Given an integer operation '/'
+    When I provide a first number 8
+    And I provide a second number 0
+    Then a division by zero error is raised
+
   Scenario: Adding two integer numbers
     Given an integer operation '+'
     When I provide a first number 4
@@ -34,13 +40,22 @@ Feature: Integer Arithmetic Expressions
     Given an integer operation '/'
     When I provide a first number 7
     And I provide a second number 5
-    Then the operation evaluates to 1
+    Then the operation evaluates to 7 / 5
 
   Scenario: Printing the sum of two integer numbers
     Given the sum of two numbers 8 and 6
     Then its INFIX notation is ( 8 + 6 )
     And its PREFIX notation is + (8, 6)
     And its POSTFIX notation is (8, 6) +
+
+  Scenario: Counting components of the sum of two integer numbers
+    Given the sum of two numbers 8 and 6
+    Then it has depth 1, 1 operations and 2 numbers
+
+  Scenario: Pretty printing a nested expression
+    Given the nested expression (3 + 4) * (5 - 2)
+    Then its pretty notation is "(3 + 4) * (5 - 2)"
+    And it has depth 2, 3 operations and 4 numbers
 
   # This is an example of a scenario in which we provide a list of numbers as input.
   # (In fact, this is not entirely true, since what is given as input is a table of
@@ -51,7 +66,7 @@ Feature: Integer Arithmetic Expressions
     Then the sum is 12
     And the product is 32
     And the difference is 4
-    And the quotient is 2
+    And the quotient is 2 / 1
 
   # A scenario outline (or template) is a scenario that is parameterised
   # with different values. The outline comes with a set of examples.
@@ -75,9 +90,9 @@ Feature: Integer Arithmetic Expressions
 
     Examples:
       |n1|n2|result|
-      |35|5|7|
-      |7|5|1|
-      |5|7|0|
+      |35|5|7 / 1|
+      |7|5|7 / 5|
+      |5|7|5 / 7|
 
   Scenario Outline: Evaluating arithmetic operations with two integer parameters
     Given an integer operation <op>
@@ -90,4 +105,4 @@ Feature: Integer Arithmetic Expressions
       | "+" | 4| 5|     9|
       | "-" | 8| 5|     3|
       | "*" | 7| 2|    14|
-      | "/" | 6| 2|     3|
+      | "/" | 6| 2|     3 / 1|
