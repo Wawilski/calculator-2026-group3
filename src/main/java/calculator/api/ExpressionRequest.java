@@ -5,6 +5,8 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 import java.util.Locale;
@@ -20,6 +22,8 @@ import java.util.Locale;
  *
  * @author oussama hakik
  */
+@Setter
+@Getter
 @JsonIgnoreProperties(ignoreUnknown = false)
 public class ExpressionRequest {
 
@@ -44,30 +48,6 @@ public class ExpressionRequest {
     public ExpressionRequest(String type, Integer value, List<ExpressionRequest> args) {
         this.type = type;
         this.value = value;
-        this.args = args;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public Integer getValue() {
-        return value;
-    }
-
-    public void setValue(Integer value) {
-        this.value = value;
-    }
-
-    public List<ExpressionRequest> getArgs() {
-        return args;
-    }
-
-    public void setArgs(List<ExpressionRequest> args) {
         this.args = args;
     }
 

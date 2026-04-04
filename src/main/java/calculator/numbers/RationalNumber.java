@@ -2,6 +2,7 @@ package calculator.numbers;
 
 import calculator.Operation;
 import calculator.numbers.visitor.TypeVisitor;
+import lombok.Getter;
 import visitor.Visitor;
 
 /**
@@ -13,12 +14,25 @@ import visitor.Visitor;
  * @see RealNumber
  * @see ComplexNumber
  */
+@Getter
 public class RationalNumber implements BaseNumber {
 
-  // Numerator of the rational number
+    /**
+     * -- GETTER --
+     *  getter method to obtain the numerator of the rational number
+     *
+     * @return the numerator of the rational number
+     */
+    // Numerator of the rational number
   private int numerator;
 
-  // Denominator of the rational number
+    /**
+     * -- GETTER --
+     *  getter method to obtain the denominator of the rational number
+     *
+     * @return the denominator of the rational number
+     */
+    // Denominator of the rational number
   private int denominator;
 
   /**
@@ -40,25 +54,7 @@ public class RationalNumber implements BaseNumber {
     this.simplify();
   }
 
-  /**
-   * getter method to obtain the numerator of the rational number
-   *
-   * @return the numerator of the rational number
-   */
-  public int getNumerator() {
-    return numerator;
-  }
-
-  /**
-   * getter method to obtain the denominator of the rational number
-   *
-   * @return the denominator of the rational number
-   */
-  public int getDenominator() {
-    return denominator;
-  }
-
-  /**
+    /**
    * accept method to implement the visitor design pattern to traverse arithmetic
    * expressions.
    * Each number will pass itself to the visitor object to get processed by the
