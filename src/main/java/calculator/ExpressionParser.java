@@ -4,7 +4,6 @@ package calculator;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 
-import calculator.numbers.RealNumber;
 import visitor.ParserVisitor;
 
 import org.antlr.v4.runtime.CharStream;
@@ -19,15 +18,31 @@ public class ExpressionParser {
 
     CharStream input = CharStreams.fromString(s);
 
+    SyntaxErrorDetector listener = new SyntaxErrorDetector();
     calculatorLexer lexer = new calculatorLexer(input);
+
+    lexer.removeErrorListeners();
+    lexer.addErrorListener(listener);
+
     CommonTokenStream tokens = new CommonTokenStream(lexer);
 
     calculatorParser parser = new calculatorParser(tokens);
+
+    parser.removeErrorListeners();
+    parser.addErrorListener(listener);
+
     ParseTree tree = parser.equation();
 
     ParserVisitor visitor = new ParserVisitor();
+    Expression e;
 
-    return visitor.visit(tree);
+    if (listener.getErrors() > 0) {
+      e = visitor.visit(tree);
+    } else {
+      throw new InvalidTokenException("Invalid mathematical expression");
+    }
+
+    return e;
 
   }
 }

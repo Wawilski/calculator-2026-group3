@@ -7,4 +7,8 @@ package calculator.numbers;
  */
 public class IllegalNumberConstruction extends RuntimeException {
 
+  public IllegalNumberConstruction(String message) {
+    super(message);
+  }
+
 }

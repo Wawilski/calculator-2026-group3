@@ -21,7 +21,7 @@ import calculator.numbers.RationalNumber;
 import calculator.numbers.RealNumber;
 
 /**
- * EquationListener
+ * ParserVisitor
  */
 
 public class ParserVisitor extends calculatorBaseVisitor<Expression> {

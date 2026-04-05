@@ -24,10 +24,10 @@ public class RealNumber implements BaseNumber {
   /**
    * The value of the real number
    * -- GETTER --
-   *  getter method to obtain the value contained in the object
+   * getter method to obtain the value contained in the object
    *
    * @return The BigDecimal contained in the object
-
+   * 
    */
   private BigDecimal value;
 
@@ -35,29 +35,29 @@ public class RealNumber implements BaseNumber {
    * A flag to determine if the number is a real number or a special value
    * (+INFINITY, -INFINITY, NaN)
    * -- GETTER --
-   *  getter method to obtain the special flag value
+   * getter method to obtain the special flag value
    *
    * @return If the real is a Special one
-
+   * 
    */
   private boolean special;
   /**
    * The special value of the number (+INFINITY,-INFINITY,NaN)
    * -- GETTER --
-   *  getter method to obtain the special value contained in the object
+   * getter method to obtain the special value contained in the object
    *
    * @return The BigDecimal contained in the object
-
+   * 
    */
   private SpecialNumber specialValue;
 
   /**
    * The scale of all the BigDecimal concerning the real and complex numbers
    * -- GETTER --
-   *  getter method to obtain the scale of the BigDecimal values
+   * getter method to obtain the scale of the BigDecimal values
    *
    * @return The class attribute scale
-
+   * 
    */
   @Getter
   private static int scale = 16;
@@ -124,7 +124,7 @@ public class RealNumber implements BaseNumber {
     this.specialValue = specialValue;
   }
 
-    /**
+  /**
    * accept method to implement the visitor design pattern to traverse arithmetic
    * expressions.
    * Each number will pass itself to the visitor object to get processed by the
@@ -258,7 +258,7 @@ public class RealNumber implements BaseNumber {
 
   @Override
   public String toString() {
-    String s = (!isSpecial()) ? value.toString() : specialValue.toString();
+    String s = (!isSpecial()) ? value.stripTrailingZeros().toString() : specialValue.toString();
     return s;
   }
 

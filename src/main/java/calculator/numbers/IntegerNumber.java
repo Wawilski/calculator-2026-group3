@@ -18,15 +18,15 @@ import calculator.numbers.visitor.*;
 @Getter
 public class IntegerNumber implements BaseNumber {
 
-    /**
-     * -- GETTER --
-     *  getter method to obtain the value contained in the object
-     *
-     * @return The integer number contained in the object
-     */
-    private int value;
+  /**
+   * -- GETTER --
+   * getter method to obtain the value contained in the object
+   *
+   * @return The integer number contained in the object
+   */
+  private int value;
 
-    /**
+  /**
    * Constructor method
    *
    * @param v The integer value to be contained in the object

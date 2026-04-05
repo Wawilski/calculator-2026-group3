@@ -17,22 +17,22 @@ import visitor.Visitor;
 @Getter
 public class RationalNumber implements BaseNumber {
 
-    /**
-     * -- GETTER --
-     *  getter method to obtain the numerator of the rational number
-     *
-     * @return the numerator of the rational number
-     */
-    // Numerator of the rational number
+  /**
+   * -- GETTER --
+   * getter method to obtain the numerator of the rational number
+   *
+   * @return the numerator of the rational number
+   */
+  // Numerator of the rational number
   private int numerator;
 
-    /**
-     * -- GETTER --
-     *  getter method to obtain the denominator of the rational number
-     *
-     * @return the denominator of the rational number
-     */
-    // Denominator of the rational number
+  /**
+   * -- GETTER --
+   * getter method to obtain the denominator of the rational number
+   *
+   * @return the denominator of the rational number
+   */
+  // Denominator of the rational number
   private int denominator;
 
   /**
@@ -47,7 +47,7 @@ public class RationalNumber implements BaseNumber {
   public /* constructor */ RationalNumber(int numerator, int denominator) throws IllegalNumberConstruction {
 
     if (denominator == 0) {
-      throw new IllegalNumberConstruction();
+      throw new IllegalNumberConstruction("Division by zero is not allowed.");
     }
     this.numerator = numerator;
     this.denominator = denominator;
@@ -67,7 +67,7 @@ public class RationalNumber implements BaseNumber {
     int num = Integer.valueOf(numerator);
     int den = Integer.valueOf(denominator);
     if (den == 0) {
-      throw new IllegalNumberConstruction();
+      throw new IllegalNumberConstruction("Division by zero is not allowed for integer numbers");
     }
     this.numerator = num;
     this.denominator = den;

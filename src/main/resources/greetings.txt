@@ -1,0 +1,15 @@
+
+================================================================
+|                                                              | 
+|                 Welcome to Calculator CLI                    |
+|                                                              |
+================================================================
+
+Useful commands :
+
+- help : to display commands and their actions
+
+- exit : to quit the CLI
+
+- demo : to show a little demonstration 
+
