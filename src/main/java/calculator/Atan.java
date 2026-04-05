@@ -36,7 +36,7 @@ public final class Atan extends UnaryFunction {
 
   @Override
   public BaseNumber function(RationalNumber value) {
-    double ratio = RationalMath.toDouble(value);
+    double ratio = new RationalMath().toDouble(value);
     return new RealNumber(Math.atan(ratio));
   }
 

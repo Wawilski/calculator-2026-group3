@@ -43,8 +43,8 @@ public final class Power extends Operation {
    */
   @Override
   public BaseNumber op(RationalNumber l, RationalNumber r) {
-    double base = RationalMath.toDouble(l);
-    double exponent = RationalMath.toDouble(r);
+    double base = new RationalMath().toDouble(l);
+    double exponent = new RationalMath().toDouble(r);
     return new RealNumber(Math.pow(base, exponent));
   }
 

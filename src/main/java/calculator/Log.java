@@ -56,8 +56,8 @@ public final class Log extends BinaryFunction {
    */
   @Override
   public BaseNumber function(RationalNumber value, RationalNumber base) {
-    double baseValue = RationalMath.toDouble(base);
-    double valueValue = RationalMath.toDouble(value);
+    double baseValue = new RationalMath().toDouble(base);
+    double valueValue = new RationalMath().toDouble(value);
     if (baseValue <= 0.0 || baseValue == 1.0) {
       return new RealNumber(SpecialNumber.NaN);
     }

@@ -6,10 +6,11 @@ import java.math.MathContext;
 import calculator.numbers.RationalNumber;
 
 /** Utility methods for rational-number conversions. */
-final class RationalMath {
+public final class RationalMath {
 
-  /** Utility class; no instances. */
-  private RationalMath() {
+  /** Utility class constructor. */
+  public RationalMath() {
+    // Intentionally empty.
   }
 
   /**
@@ -21,7 +22,7 @@ final class RationalMath {
    * @param value rational number to convert
    * @return decimal approximation as double
    */
-  static double toDouble(RationalNumber value) {
+  public double toDouble(RationalNumber value) {
     BigDecimal numerator = BigDecimal.valueOf(value.getNumerator());
     BigDecimal denominator = BigDecimal.valueOf(value.getDenominator());
     return numerator.divide(denominator, MathContext.DECIMAL64).doubleValue();

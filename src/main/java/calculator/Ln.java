@@ -43,7 +43,7 @@ public final class Ln extends UnaryFunction {
 
   @Override
   public BaseNumber function(RationalNumber value) {
-    double ratio = RationalMath.toDouble(value);
+    double ratio = new RationalMath().toDouble(value);
     if (ratio == 0.0) {
       return new RealNumber(SpecialNumber.NegativeInfinity);
     }
