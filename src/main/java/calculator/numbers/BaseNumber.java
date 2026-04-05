@@ -1,7 +1,7 @@
 package calculator.numbers;
 
 import calculator.Expression;
-import calculator.Function;
+import calculator.functions.Function;
 import calculator.Operation;
 import calculator.numbers.visitor.TypeVisitor;
 

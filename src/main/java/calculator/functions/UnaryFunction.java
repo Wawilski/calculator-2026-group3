@@ -1,7 +1,9 @@
-package calculator;
+package calculator.functions;
 
 import java.util.List;
 
+import calculator.Expression;
+import calculator.IllegalConstruction;
 import calculator.numbers.BaseNumber;
 import calculator.numbers.ComplexNumber;
 import calculator.numbers.IntegerNumber;
@@ -11,7 +13,8 @@ import calculator.numbers.RealNumber;
 /**
  * Unary mathematical function.
  *
- * <p>This class defines the contract for one-argument functions and
+ * <p>
+ * This class defines the contract for one-argument functions and
  * type-specific evaluation entry points.
  */
 public abstract class UnaryFunction extends Function {

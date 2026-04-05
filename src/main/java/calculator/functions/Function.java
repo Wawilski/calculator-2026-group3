@@ -1,16 +1,20 @@
-package calculator;
+package calculator.functions;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import calculator.Expression;
+import calculator.IllegalConstruction;
+import calculator.Notation;
 import calculator.numbers.BaseNumber;
 import visitor.StringifyVisitor;
 import visitor.Visitor;
 
 /**
  * Function is an abstract class that represents mathematical functions,
- * which are a special kind of Expressions, just like operations and numbers are.
+ * which are a special kind of Expressions, just like operations and numbers
+ * are.
  *
  * @see Expression
  * @see Operation

@@ -1,9 +1,9 @@
 package calculator.numbers;
 
 import calculator.Operation;
-import calculator.BinaryFunction;
-import calculator.Function;
-import calculator.UnaryFunction;
+import calculator.functions.BinaryFunction;
+import calculator.functions.Function;
+import calculator.functions.UnaryFunction;
 import calculator.numbers.visitor.TypeVisitor;
 import lombok.Getter;
 import visitor.Visitor;

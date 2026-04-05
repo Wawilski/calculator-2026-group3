@@ -1,8 +1,9 @@
-package calculator;
+package calculator.functions;
 
-import java.math.BigDecimal;
 import java.util.List;
 
+import calculator.Expression;
+import calculator.IllegalConstruction;
 import calculator.numbers.BaseNumber;
 import calculator.numbers.ComplexNumber;
 import calculator.numbers.IntegerNumber;
@@ -12,29 +13,29 @@ import calculator.numbers.RealNumber;
 import calculator.numbers.SpecialNumber;
 import calculator.numbers.visitor.TypeCaster;
 
-/** Arc cosine function: acos(x). */
-public final class Acos extends UnaryFunction {
+/** Sine function: sin(x). */
+public final class Sin extends UnaryFunction {
 
   /**
-   * Build an arc-cosine function with one argument.
+   * Build a sine function.
    *
    * @param elist function argument list
    * @throws IllegalConstruction if the argument list is invalid
    */
-  public Acos(List<Expression> elist) throws IllegalConstruction {
+  public Sin(List<Expression> elist) throws IllegalConstruction {
     super(elist);
-    symbol = "acos";
+    symbol = "sin";
     neutral = 0;
   }
 
   @Override
   public int function(int value) {
-    return (int) Math.acos(value);
+    return (int) Math.sin(value);
   }
 
   @Override
   public BaseNumber function(IntegerNumber value) {
-    return new RealNumber(Math.acos(value.getValue()));
+    return new RealNumber(Math.sin(value.getValue()));
   }
 
   @Override
@@ -45,26 +46,21 @@ public final class Acos extends UnaryFunction {
   }
 
   /**
-   * Compute acos(x) for real numbers.
+   * Compute sin(x) for real values.
    *
-   * <p>Returns NaN for special values and for out-of-domain values |x| &gt; 1.
+   * <p>
+   * Special values are mapped to NaN.
    */
   @Override
   public BaseNumber function(RealNumber value) {
     if (value.isSpecial()) {
       return new RealNumber(SpecialNumber.NaN);
     }
-
-    BigDecimal realValue = value.getValue();
-    if (realValue.abs().compareTo(BigDecimal.ONE) > 0) {
-      return new RealNumber(SpecialNumber.NaN);
-    }
-
-    return new RealNumber(Math.acos(realValue.doubleValue()));
+    return new RealNumber(Math.sin(value.getValue().doubleValue()));
   }
 
   @Override
   public BaseNumber function(ComplexNumber value) {
-    return new ComplexMath().acos(value);
+    return new ComplexMath().sin(value);
   }
 }

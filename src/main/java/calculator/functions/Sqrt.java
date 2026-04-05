@@ -1,8 +1,10 @@
-package calculator;
+package calculator.functions;
 
 import java.math.BigDecimal;
 import java.util.List;
 
+import calculator.Expression;
+import calculator.IllegalConstruction;
 import calculator.numbers.BaseNumber;
 import calculator.numbers.ComplexNumber;
 import calculator.numbers.IntegerNumber;
@@ -12,31 +14,46 @@ import calculator.numbers.RealNumber;
 import calculator.numbers.SpecialNumber;
 import calculator.numbers.visitor.TypeCaster;
 
-/** Arc sine function: asin(x). */
-public final class Asin extends UnaryFunction {
+/** Square root function: sqrt(x). */
+public final class Sqrt extends UnaryFunction {
 
   /**
-   * Build an arc-sine function with one argument.
+   * Build a square-root.
    *
    * @param elist function argument list
    * @throws IllegalConstruction if the argument list is invalid
    */
-  public Asin(List<Expression> elist) throws IllegalConstruction {
+  public Sqrt(List<Expression> elist) throws IllegalConstruction {
     super(elist);
-    symbol = "asin";
-    neutral = 0;
+    symbol = "sqrt";
+    neutral = 1;
   }
 
   @Override
   public int function(int value) {
-    return (int) Math.asin(value);
+    return (int) Math.sqrt(value);
   }
 
+  /**
+   * Compute sqrt(x) for integer inputs.
+   *
+   * <p>
+   * Negative inputs return NaN.
+   */
   @Override
   public BaseNumber function(IntegerNumber value) {
-    return new RealNumber(Math.asin(value.getValue()));
+    if (value.getValue() < 0) {
+      return new RealNumber(SpecialNumber.NaN);
+    }
+    return new RealNumber(Math.sqrt(value.getValue()));
   }
 
+  /**
+   * Compute sqrt(x) for rational inputs.
+   *
+   * <p>
+   * Negative inputs return NaN.
+   */
   @Override
   public BaseNumber function(RationalNumber value) {
     TypeCaster caster = new TypeCaster(NumberType.REAL);
@@ -45,26 +62,24 @@ public final class Asin extends UnaryFunction {
   }
 
   /**
-   * Compute asin(x) for real numbers.
-   *
-   * <p>Returns NaN for special values and for out-of-domain values |x| &gt; 1.
+   * Compute sqrt(x) for real inputs with special-value handling.
    */
   @Override
   public BaseNumber function(RealNumber value) {
     if (value.isSpecial()) {
+      if (value.getSpecialValue() == SpecialNumber.PositiveInfinity) {
+        return new RealNumber(SpecialNumber.PositiveInfinity);
+      }
       return new RealNumber(SpecialNumber.NaN);
     }
-
-    BigDecimal realValue = value.getValue();
-    if (realValue.abs().compareTo(BigDecimal.ONE) > 0) {
+    if (value.getValue().compareTo(BigDecimal.ZERO) < 0) {
       return new RealNumber(SpecialNumber.NaN);
     }
-
-    return new RealNumber(Math.asin(realValue.doubleValue()));
+    return new RealNumber(Math.sqrt(value.getValue().doubleValue()));
   }
 
   @Override
   public BaseNumber function(ComplexNumber value) {
-    return new ComplexMath().asin(value);
+    return new ComplexNumber();
   }
 }

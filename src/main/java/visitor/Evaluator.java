@@ -2,16 +2,16 @@ package visitor;
 
 import java.util.ArrayList;
 
-import calculator.BinaryFunction;
 import calculator.Expression;
-import calculator.Function;
 import calculator.Operation;
-import calculator.UnaryFunction;
 import calculator.numbers.BaseNumber;
 import calculator.numbers.ComplexNumber;
 import calculator.numbers.IntegerNumber;
 import calculator.numbers.RationalNumber;
 import calculator.numbers.RealNumber;
+import calculator.functions.Function;
+import calculator.functions.BinaryFunction;
+import calculator.functions.UnaryFunction;
 import calculator.numbers.visitor.TypeCaster;
 import calculator.numbers.visitor.TypeComparator;
 

@@ -1,7 +1,9 @@
-package calculator;
+package calculator.functions;
 
 import java.util.List;
 
+import calculator.Expression;
+import calculator.IllegalConstruction;
 import calculator.numbers.BaseNumber;
 import calculator.numbers.ComplexNumber;
 import calculator.numbers.IntegerNumber;
@@ -11,29 +13,29 @@ import calculator.numbers.RealNumber;
 import calculator.numbers.SpecialNumber;
 import calculator.numbers.visitor.TypeCaster;
 
-/** Tangent function: tan(x). */
-public final class Tan extends UnaryFunction {
+/** Cosine function: cos(x). */
+public final class Cos extends UnaryFunction {
 
   /**
-   * Build a tangent.
+   * Build a cosine.
    *
    * @param elist function argument list
    * @throws IllegalConstruction if the argument list is invalid
    */
-  public Tan(List<Expression> elist) throws IllegalConstruction {
+  public Cos(List<Expression> elist) throws IllegalConstruction {
     super(elist);
-    symbol = "tan";
-    neutral = 0;
+    symbol = "cos";
+    neutral = 1;
   }
 
   @Override
   public int function(int value) {
-    return (int) Math.tan(value);
+    return (int) Math.cos(value);
   }
 
   @Override
   public BaseNumber function(IntegerNumber value) {
-    return new RealNumber(Math.tan(value.getValue()));
+    return new RealNumber(Math.cos(value.getValue()));
   }
 
   @Override
@@ -44,20 +46,21 @@ public final class Tan extends UnaryFunction {
   }
 
   /**
-   * Compute tan(x) for real values.
+   * Compute cos(x) for real values.
    *
-   * <p>Special values are mapped to NaN.
+   * <p>
+   * Special values are mapped to NaN.
    */
   @Override
   public BaseNumber function(RealNumber value) {
     if (value.isSpecial()) {
       return new RealNumber(SpecialNumber.NaN);
     }
-    return new RealNumber(Math.tan(value.getValue().doubleValue()));
+    return new RealNumber(Math.cos(value.getValue().doubleValue()));
   }
 
   @Override
   public BaseNumber function(ComplexNumber value) {
-    return new ComplexMath().tan(value);
+    return new ComplexMath().cos(value);
   }
 }

@@ -4,7 +4,6 @@ package calculator;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 
-import calculator.numbers.RealNumber;
 import visitor.ParserVisitor;
 
 import org.antlr.v4.runtime.CharStream;

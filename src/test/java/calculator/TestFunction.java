@@ -15,6 +15,7 @@ import calculator.numbers.ComplexNumber;
 import calculator.numbers.IntegerNumber;
 import calculator.numbers.RealNumber;
 import calculator.numbers.SpecialNumber;
+import calculator.functions.*;
 import visitor.CountingVisitor;
 
 class TestFunction {
@@ -48,7 +49,6 @@ class TestFunction {
     assertEquals("2 ** 5", calc.prettyFormat(new Power(args)));
   }
 
-
   @Test
   void testLnSpecialCases() throws IllegalConstruction {
     BaseNumber lnZero = calc.eval(new Ln(List.of(new IntegerNumber(0))));
@@ -62,9 +62,8 @@ class TestFunction {
   void testLogAndExponentialOnReal() throws IllegalConstruction {
     BaseNumber logResult = calc.eval(new Log(List.of(new RealNumber(100), new RealNumber(10))));
 
-
     assertTrue(logResult instanceof RealNumber);
-    
+
     assertEquals(2.0, ((RealNumber) logResult).getValue().doubleValue(), 1e-9);
   }
 

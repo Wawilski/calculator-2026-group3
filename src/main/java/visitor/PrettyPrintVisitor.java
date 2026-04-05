@@ -7,7 +7,7 @@ import java.util.Deque;
 import java.util.List;
 
 import calculator.Expression;
-import calculator.Function;
+import calculator.functions.Function;
 import calculator.Operation;
 import calculator.numbers.ComplexNumber;
 import calculator.numbers.IntegerNumber;

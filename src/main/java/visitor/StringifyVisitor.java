@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.Deque;
 import java.util.List;
 
-import calculator.Function;
+import calculator.functions.Function;
 import calculator.Notation;
 import calculator.Operation;
 import calculator.numbers.ComplexNumber;

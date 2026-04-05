@@ -5,10 +5,10 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
 
-import calculator.BinaryFunction;
-import calculator.Function;
+import calculator.functions.BinaryFunction;
+import calculator.functions.Function;
 import calculator.Operation;
-import calculator.UnaryFunction;
+import calculator.functions.UnaryFunction;
 import calculator.numbers.visitor.TypeVisitor;
 import lombok.Getter;
 import visitor.Visitor;

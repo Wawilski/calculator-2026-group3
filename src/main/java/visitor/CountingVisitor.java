@@ -3,7 +3,7 @@ package visitor;
 import java.util.ArrayDeque;
 import java.util.Deque;
 
-import calculator.Function;
+import calculator.functions.Function;
 import calculator.Operation;
 import calculator.numbers.ComplexNumber;
 import calculator.numbers.IntegerNumber;

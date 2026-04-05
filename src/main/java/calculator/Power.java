@@ -41,7 +41,8 @@ public final class Power extends Operation {
   /**
    * Compute x ** y for rational operands.
    *
-   * <p>Rational operands are cast to real values and delegated to the real overload.
+   * <p>
+   * Rational operands are cast to real values and delegated to the real overload.
    */
   @Override
   public BaseNumber op(RationalNumber l, RationalNumber r) {
@@ -74,30 +75,39 @@ public final class Power extends Operation {
           ? new RealNumber(SpecialNumber.PositiveInfinity)
           : new RealNumber(SpecialNumber.NegativeInfinity);
     }
-    return new RealNumber(new BigDecimal(Double.toString(value), MathContext.DECIMAL32));
+    return new RealNumber(Double.toString(value));
   }
 
   /**
    * Compute x ** y for complex operands.
-   *
-   * <p>Current implementation handles only purely real complex values; otherwise
-   * it returns NaN complex.
+   * Use exponential to compute it
+   * l**r = e**(l*ln(r))
    */
   @Override
   public BaseNumber op(ComplexNumber l, ComplexNumber r) {
-    if (l.isNaN() || r.isNaN()) {
+    // is not defined if l == 0
+    if (l.isNaN() || r.isNaN() ||
+        (l.getReal().compareTo(BigDecimal.ZERO) == 0 && l.getReal().compareTo(BigDecimal.ZERO) == 0)) {
       return new ComplexNumber();
     }
+    double a = l.getReal().doubleValue();
+    double b = l.getImaginary().doubleValue();
+    double c = r.getReal().doubleValue();
+    double d = r.getImaginary().doubleValue();
 
-    if (r.getImaginary().compareTo(BigDecimal.ZERO) != 0 || l.getImaginary().compareTo(BigDecimal.ZERO) != 0) {
-      return new ComplexNumber();
-    }
+    double modulus = Math.sqrt(a * a + b * b);
+    double arg = Math.atan2(b, a);
+    double lnZ_re = Math.log(modulus);
+    double lnZ_im = arg;
 
-    double value = Math.pow(l.getReal().doubleValue(), r.getReal().doubleValue());
-    if (Double.isNaN(value) || Double.isInfinite(value)) {
-      return new ComplexNumber();
-    }
-    return new ComplexNumber(new BigDecimal(Double.toString(value), MathContext.DECIMAL32), BigDecimal.ZERO);
+    double v_re = c * lnZ_re - d * lnZ_im;
+    double v_im = c * lnZ_im + d * lnZ_re;
+
+    double expX = Math.exp(v_re);
+    BigDecimal finalRe = BigDecimal.valueOf(expX * Math.cos(v_im));
+    BigDecimal finalIm = BigDecimal.valueOf(expX * Math.sin(v_im));
+
+    return new ComplexNumber(finalRe, finalIm);
   }
 
   /**

@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
-import java.math.RoundingMode;
 
 import org.junit.jupiter.api.*;
 
@@ -21,6 +20,7 @@ public class TestParser {
   private final ExpressionParser parser = new ExpressionParser();
   private final Calculator c = new Calculator();
   private Expression e;
+  private final double epsilon = 1E-12;
 
   @Test
   void testSpacePrefixWrappedOp() {
@@ -146,8 +146,6 @@ public class TestParser {
     e = parser.parse("(1, ( (-2), 3 ,i) *) +");
     assertEquals(new ComplexNumber(new BigDecimal(1), new BigDecimal(-6)), c.eval(e));
 
-    e = parser.parse("(1, ( (-2), 3 ,i) *) **");
-    assertEquals(new ComplexNumber("0", "-6"), c.eval(e));
   }
 
   @Test
@@ -155,9 +153,14 @@ public class TestParser {
     e = parser.parse("1+2(3+5)i+ 9 * 5 - 4 + (-5 + 2)(2)");
     assertEquals(new ComplexNumber(new BigDecimal(36), new BigDecimal(16)), c.eval(e));
 
-    // Temporary wainting for power
     e = parser.parse("5 ** 5");
-    assertEquals(new IntegerNumber(25), c.eval(e));
+    assertEquals(new IntegerNumber(3125), c.eval(e));
+
+    // As functions are approximation we can't be precise so an epsilon is set
+    e = parser.parse("(1+2i)**2");
+    ComplexNumber sol = (ComplexNumber) c.eval(e);
+    assertEquals(true, epsilon > Math.abs(-3 - sol.getReal().doubleValue()));
+    assertEquals(true, epsilon > Math.abs(4 - sol.getImaginary().doubleValue()));
 
   }
 
