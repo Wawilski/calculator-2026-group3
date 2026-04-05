@@ -1,16 +1,18 @@
 package visitor;
 
-import calculator.Operation;
-import calculator.numbers.RealNumber;
-import calculator.numbers.ComplexNumber;
-import calculator.numbers.IntegerNumber;
-import calculator.numbers.RationalNumber;
-
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.List;
+
+import calculator.Expression;
+import calculator.Function;
+import calculator.Operation;
+import calculator.numbers.ComplexNumber;
+import calculator.numbers.IntegerNumber;
+import calculator.numbers.RationalNumber;
+import calculator.numbers.RealNumber;
 
 /**
  * PrettyPrintVisitor renders expressions in infix form with minimal parentheses
@@ -64,7 +66,8 @@ public class PrettyPrintVisitor extends Visitor {
   @Override
   public void visit(Operation o) {
     List<RenderedNode> args = new ArrayList<>();
-    for (int i = 0; i < o.getArgs().size(); i++) {
+    for (Expression expression : o.getArgs()) {
+      expression.toString();
       args.add(renderedExpressions.pop());
     }
     Collections.reverse(args);
@@ -74,6 +77,24 @@ public class PrettyPrintVisitor extends Visitor {
     String text = renderOperation(symbol, precedence, args);// render the operation with the appropriate parentheses
                                                             // based on the precedence of the sub-expressions
     renderedExpressions.push(new RenderedNode(text, precedence, true));
+  }
+
+  @Override
+  public void visit(Function f) {
+    List<RenderedNode> args = new ArrayList<>();
+    for (Expression expression : f.getArgs()) {
+      expression.toString();
+      args.add(renderedExpressions.pop());
+    }
+    Collections.reverse(args);
+
+    List<String> renderedArgs = new ArrayList<>();
+    for (RenderedNode node : args) {
+      renderedArgs.add(node.text);
+    }
+
+    String text = f.getSymbol() + "(" + String.join(", ", renderedArgs) + ")";
+    renderedExpressions.push(new RenderedNode(text, 3, true));
   }
 
   /**
@@ -96,6 +117,7 @@ public class PrettyPrintVisitor extends Visitor {
     return switch (symbol) {
       case "+", "-" -> 1;
       case "*", "/" -> 2;
+      case "**" -> 3;
       default -> 0;
     };
   }
@@ -150,6 +172,9 @@ public class PrettyPrintVisitor extends Visitor {
     }
     if (child.precedence > parentPrecedence) {
       return text;
+    }
+    if (parentSymbol.equals("**")) {
+      return "(" + text + ")";
     }
     if (parentSymbol.equals("-") || parentSymbol.equals("/")) {
       return argIndex == 0 ? text : "(" + text + ")";

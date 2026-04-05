@@ -1,6 +1,9 @@
 package calculator.numbers;
 
 import calculator.Operation;
+import calculator.BinaryFunction;
+import calculator.Function;
+import calculator.UnaryFunction;
 import calculator.numbers.visitor.TypeVisitor;
 import lombok.Getter;
 import visitor.Visitor;
@@ -17,22 +20,22 @@ import visitor.Visitor;
 @Getter
 public class RationalNumber implements BaseNumber {
 
-    /**
-     * -- GETTER --
-     *  getter method to obtain the numerator of the rational number
-     *
-     * @return the numerator of the rational number
-     */
-    // Numerator of the rational number
+  /**
+   * -- GETTER --
+   * getter method to obtain the numerator of the rational number
+   *
+   * @return the numerator of the rational number
+   */
+  // Numerator of the rational number
   private int numerator;
 
-    /**
-     * -- GETTER --
-     *  getter method to obtain the denominator of the rational number
-     *
-     * @return the denominator of the rational number
-     */
-    // Denominator of the rational number
+  /**
+   * -- GETTER --
+   * getter method to obtain the denominator of the rational number
+   *
+   * @return the denominator of the rational number
+   */
+  // Denominator of the rational number
   private int denominator;
 
   /**
@@ -72,24 +75,6 @@ public class RationalNumber implements BaseNumber {
     this.numerator = num;
     this.denominator = den;
     this.simplify();
-  }
-
-  /**
-   * getter method to obtain the numerator of the rational number
-   *
-   * @return the numerator of the rational number
-   */
-  public int getNumerator() {
-    return numerator;
-  }
-
-  /**
-   * getter method to obtain the denominator of the rational number
-   *
-   * @return the denominator of the rational number
-   */
-  public int getDenominator() {
-    return denominator;
   }
 
   /**
@@ -155,7 +140,22 @@ public class RationalNumber implements BaseNumber {
 
   @Override
   public BaseNumber negate() {
-    return new RationalNumber(-this.numerator, -this.denominator);
+    return new RationalNumber(-this.numerator, this.denominator);
+  }
+
+  public BaseNumber function(Function f) {
+    if (!(f instanceof UnaryFunction)) {
+      throw new IllegalArgumentException("Expected a unary function.");
+    }
+    return ((UnaryFunction) f).function(this);
+  }
+
+  @Override
+  public BaseNumber function(Function f, BaseNumber rightHand) {
+    if (!(f instanceof BinaryFunction)) {
+      throw new IllegalArgumentException("Expected a binary function.");
+    }
+    return ((BinaryFunction) f).function(this, (RationalNumber) rightHand);
   }
 
   /**

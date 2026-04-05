@@ -1,17 +1,18 @@
 package visitor;
 
-import calculator.Notation;
-import calculator.Operation;
-import calculator.numbers.RealNumber;
-import calculator.numbers.ComplexNumber;
-import calculator.numbers.IntegerNumber;
-import calculator.numbers.RationalNumber;
-
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.List;
+
+import calculator.Function;
+import calculator.Notation;
+import calculator.Operation;
+import calculator.numbers.ComplexNumber;
+import calculator.numbers.IntegerNumber;
+import calculator.numbers.RationalNumber;
+import calculator.numbers.RealNumber;
 
 /**
  * StringifyVisitor renders arithmetic expressions in prefix, infix or postfix
@@ -106,6 +107,27 @@ public class StringifyVisitor extends Visitor {
     };
     renderedExpressions.push(rendered); // push the rendered expression back on the stack for further processing by the
                                         // parent operation
+  }
+
+  @Override
+  public void visit(Function f) {
+    List<String> args = new ArrayList<>();
+    for (int i = 0; i < f.getArgs().size(); i++) {
+      args.add(renderedExpressions.pop());
+    }
+    Collections.reverse(args);
+
+    if (args.isEmpty()) {
+      renderedExpressions.push(f.getSymbol() + "()");
+      return;
+    }
+
+    String joined = String.join(", ", args);
+    String rendered = switch (notation) {
+      case INFIX, PREFIX -> f.getSymbol() + "(" + joined + ")";
+      case POSTFIX -> "(" + joined + ") " + f.getSymbol();
+    };
+    renderedExpressions.push(rendered);
   }
 
   /**

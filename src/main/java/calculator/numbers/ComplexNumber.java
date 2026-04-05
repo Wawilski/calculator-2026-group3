@@ -5,7 +5,10 @@ import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
 
+import calculator.BinaryFunction;
+import calculator.Function;
 import calculator.Operation;
+import calculator.UnaryFunction;
 import calculator.numbers.visitor.TypeVisitor;
 import lombok.Getter;
 import visitor.Visitor;
@@ -19,36 +22,35 @@ import visitor.Visitor;
  * @see RationalNumber
  * @see RealNumber
  */
-
 @Getter
 public class ComplexNumber implements BaseNumber {
 
   // Real part of the complex number
 
-    /**
-     * -- GETTER --
-     *  getter method to return the real part of the complex number
-     *
-     * @return The real part of the complex number
-     */
-    private BigDecimal real;
+  /**
+   * -- GETTER --
+   * getter method to return the real part of the complex number
+   *
+   * @return The real part of the complex number
+   */
+  private BigDecimal real;
 
-    /**
-     * -- GETTER --
-     *  getter method to return the imaginary part of the complex number
-     *
-     * @return The imaginary part of the complex number
-     */
-    // Imaginary part of the complex number
+  /**
+   * -- GETTER --
+   * getter method to return the imaginary part of the complex number
+   *
+   * @return The imaginary part of the complex number
+   */
+  // Imaginary part of the complex number
   private BigDecimal imaginary;
 
-    /**
-     * -- GETTER --
-     *  method to tell if the complex number is a NaN
-     *
-     * @return if the complex number is a NaN
-     */
-    // Is true if the complex number is a NaN
+  /**
+   * -- GETTER --
+   * method to tell if the complex number is a NaN
+   *
+   * @return if the complex number is a NaN
+   */
+  // Is true if the complex number is a NaN
   // (e.g. if it should represent an infinite value in complex)
   private boolean isNaN;
 
@@ -113,7 +115,7 @@ public class ComplexNumber implements BaseNumber {
     this.isNaN = true;
   }
 
-    /**
+  /**
    * Accept method to implement the visitor design pattern to numbers.
    * Each operation will delegate the visitor to each of its arguments
    * expressions,
@@ -156,6 +158,21 @@ public class ComplexNumber implements BaseNumber {
       result = new ComplexNumber(this.real.negate(), this.imaginary.negate());
     }
     return result;
+  }
+
+  public BaseNumber function(Function f) {
+    if (!(f instanceof UnaryFunction)) {
+      throw new IllegalArgumentException("Expected a unary function.");
+    }
+    return ((UnaryFunction) f).function(this);
+  }
+
+  @Override
+  public BaseNumber function(Function f, BaseNumber rightHand) {
+    if (!(f instanceof BinaryFunction)) {
+      throw new IllegalArgumentException("Expected a binary function.");
+    }
+    return ((BinaryFunction) f).function(this, (ComplexNumber) rightHand);
   }
 
   /**

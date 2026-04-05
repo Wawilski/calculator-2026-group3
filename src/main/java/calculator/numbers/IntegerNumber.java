@@ -1,10 +1,13 @@
 
 package calculator.numbers;
 
+import calculator.BinaryFunction;
+import calculator.Function;
 import calculator.Operation;
+import calculator.UnaryFunction;
+import calculator.numbers.visitor.TypeVisitor;
 import lombok.Getter;
 import visitor.Visitor;
-import calculator.numbers.visitor.*;
 
 /**
  * This class represents the integer numbers.
@@ -18,15 +21,15 @@ import calculator.numbers.visitor.*;
 @Getter
 public class IntegerNumber implements BaseNumber {
 
-    /**
-     * -- GETTER --
-     *  getter method to obtain the value contained in the object
-     *
-     * @return The integer number contained in the object
-     */
-    private int value;
+  /**
+   * -- GETTER --
+   * getter method to obtain the value contained in the object
+   *
+   * @return The integer number contained in the object
+   */
+  private int value;
 
-    /**
+  /**
    * Constructor method
    *
    * @param v The integer value to be contained in the object
@@ -85,6 +88,22 @@ public class IntegerNumber implements BaseNumber {
 
   public BaseNumber negate() {
     return new IntegerNumber(-this.value);
+  }
+
+  @Override
+  public BaseNumber function(Function f) {
+    if (!(f instanceof UnaryFunction)) {
+      throw new IllegalArgumentException("Expected a unary function.");
+    }
+    return ((UnaryFunction) f).function(this);
+  }
+
+  @Override
+  public BaseNumber function(Function f, BaseNumber rightHand) {
+    if (!(f instanceof BinaryFunction)) {
+      throw new IllegalArgumentException("Expected a binary function.");
+    }
+    return ((BinaryFunction) f).function(this, (IntegerNumber) rightHand);
   }
 
   /**
