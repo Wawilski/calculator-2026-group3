@@ -87,7 +87,6 @@ public final class Times extends Operation {
 
       BigDecimal lValue = l.getValue();
       BigDecimal rValue = r.getValue();
-
       BigDecimal value = lValue.multiply(rValue, MathContext.UNLIMITED);
       result = new RealNumber(value);
     }
@@ -136,8 +135,10 @@ public final class Times extends Operation {
       BigDecimal lImaginary = l.getImaginary();
       BigDecimal rImaginary = r.getImaginary();
 
-      BigDecimal realPart = lReal.multiply(rReal, MathContext.UNLIMITED).subtract(lImaginary.multiply(rImaginary));
-      BigDecimal imPart = lReal.multiply(rImaginary, MathContext.UNLIMITED).add(rReal.multiply(lImaginary));
+      BigDecimal realPart = lReal.multiply(rReal, MathContext.UNLIMITED)
+          .subtract(lImaginary.multiply(rImaginary, MathContext.UNLIMITED));
+      BigDecimal imPart = lReal.multiply(rImaginary, MathContext.UNLIMITED)
+          .add(rReal.multiply(lImaginary, MathContext.UNLIMITED));
 
       result = new ComplexNumber(realPart, imPart);
     }

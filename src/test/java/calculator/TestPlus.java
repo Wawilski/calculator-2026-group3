@@ -177,7 +177,7 @@ class TestPlus {
 
   @Test
   void testComplexNaNAddition() {
-    ComplexNumber left = new ComplexNumber(1, 6);
+    ComplexNumber left = new ComplexNumber("1", "6");
     ComplexNumber right = new ComplexNumber();
 
     ArrayList<Expression> p = new ArrayList<>(

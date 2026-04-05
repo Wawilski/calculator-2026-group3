@@ -144,7 +144,7 @@ public final class Divides extends Operation {
       BigDecimal lImaginary = l.getImaginary();
       BigDecimal rImaginary = r.getImaginary();
 
-      BigDecimal mod = (lImaginary.pow(2)).multiply(rImaginary.pow(2));
+      BigDecimal mod = (rReal.pow(2)).add(rImaginary.pow(2));
 
       BigDecimal realPart = lReal.multiply(rReal).add(lImaginary.multiply(rImaginary));
       BigDecimal imPart = rReal.multiply(lImaginary).subtract(lReal.multiply(rImaginary));

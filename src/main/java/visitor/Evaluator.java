@@ -81,6 +81,7 @@ public class Evaluator extends Visitor {
     for (int counter = 1; counter < max; counter++) {
 
       BaseNumber rightHand = evaluatedArgs.get(counter);
+      rightHand.accept(comparator);
 
       rightHand.accept(comparator);
 

@@ -21,6 +21,7 @@
         <spring-boot.version>4.0.3</spring-boot.version>
         <jacoco.version>0.8.14</jacoco.version>
         <javadoc.version>3.12.0</javadoc.version>
+        <antlr.version>4.13.2</antlr.version>
         <sonar.organization>tommens</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
 
@@ -84,6 +85,17 @@
             <version>${spring-boot.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+          <groupId>org.antlr</groupId>
+          <artifactId>antlr4</artifactId>
+          <version>${antlr.version}</version>
+        </dependency>
+        <dependency>
+			      <groupId>org.antlr</groupId>
+			      <artifactId>antlr4-runtime</artifactId>
+            <version>${antlr.version}</version>
+			      <scope>compile</scope>
+		    </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webmvc-test</artifactId>
@@ -164,6 +176,8 @@
                 <configuration>
                     <excludes>
                         <exclude>calculator/Main.class</exclude>
+                        <exclude>calculator/calculatorParser*.class</exclude>
+                        <exclude>calculator/calculatorBaseVisitor.class</exclude>
                     </excludes>
                 </configuration>
             </plugin>
@@ -215,6 +229,41 @@
                         </goals>
                     </execution>
                 </executions>
+                </plugin> 
+                <plugin>
+              <groupId>org.codehaus.mojo</groupId>
+              <artifactId>build-helper-maven-plugin</artifactId>
+              <version>3.5.0</version>
+              <executions>
+                  <execution>
+                      <id>add-source</id>
+                      <phase>generate-sources</phase>
+                      <goals>
+                          <goal>add-source</goal>
+                      </goals>
+                      <configuration>
+                          <sources>
+                              <source>${project.build.directory}/generated-sources/antlr4</source>
+                          </sources>
+                      </configuration>
+                  </execution>
+              </executions>
+          </plugin>
+        <plugin>
+              <groupId>org.antlr</groupId>
+              <artifactId>antlr4-maven-plugin</artifactId>
+              <version>${antlr.version}</version>
+              <configuration>
+                <visitor>true</visitor>
+                <listener>false</listener>
+              </configuration>
+              <executions>
+                <execution>
+                  <goals>
+                    <goal>antlr4</goal>
+                  </goals>
+                </execution>
+              </executions>
             </plugin>
 
             <plugin>

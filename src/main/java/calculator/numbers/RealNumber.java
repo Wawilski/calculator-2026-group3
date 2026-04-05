@@ -108,6 +108,7 @@ public class RealNumber implements BaseNumber {
    *
    * @param value the String value representing the real number
    */
+
   public /* constructor */ RealNumber(String value) {
     this.value = (new BigDecimal(value, MathContext.UNLIMITED)).setScale(scale, RoundingMode.CEILING);
     this.special = false;
@@ -190,7 +191,7 @@ public class RealNumber implements BaseNumber {
    */
   public int sign() {
     int sign;
-    if (!this.isSpecial()) {
+    if (!this.special) {
       sign = this.value.compareTo(BigDecimal.ZERO);
     } else if (this.specialValue == SpecialNumber.PositiveInfinity) {
       sign = 1;
@@ -201,6 +202,33 @@ public class RealNumber implements BaseNumber {
     }
 
     return sign;
+  }
+
+  public static void setScale(int scale) {
+    RealNumber.scale = scale;
+  }
+
+  @Override
+  public BaseNumber negate() {
+    RealNumber result;
+    if (this.special) {
+      result = negateSpecial();
+    } else {
+      result = new RealNumber(this.value.negate());
+    }
+    return result;
+  }
+
+  public RealNumber negateSpecial() {
+    RealNumber result;
+    if (this.specialValue == SpecialNumber.PositiveInfinity) {
+      result = new RealNumber(SpecialNumber.NegativeInfinity);
+    } else if (this.specialValue == SpecialNumber.NegativeInfinity) {
+      result = new RealNumber(SpecialNumber.PositiveInfinity);
+    } else {
+      result = new RealNumber(SpecialNumber.NaN);
+    }
+    return result;
   }
 
   /**

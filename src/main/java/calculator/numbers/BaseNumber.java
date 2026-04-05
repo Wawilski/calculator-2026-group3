@@ -32,6 +32,13 @@ public interface BaseNumber extends Expression {
   public BaseNumber op(Operation o, BaseNumber rightHand);
 
   /**
+   * negate is a method needed to get the negation of a number
+   * 
+   * @return BaseNumber negation
+   */
+  public BaseNumber negate();
+
+  /**
    * Apply a unary function to this number.
    *
    * @param f The function to apply

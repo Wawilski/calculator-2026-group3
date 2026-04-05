@@ -21,21 +21,30 @@ import visitor.Visitor;
 @Getter
 public class IntegerNumber implements BaseNumber {
 
-    /**
-     * -- GETTER --
-     *  getter method to obtain the value contained in the object
-     *
-     * @return The integer number contained in the object
-     */
-    private int value;
+  /**
+   * -- GETTER --
+   * getter method to obtain the value contained in the object
+   *
+   * @return The integer number contained in the object
+   */
+  private int value;
 
-    /**
+  /**
    * Constructor method
    *
    * @param v The integer value to be contained in the object
    */
   public /* constructor */ IntegerNumber(int v) {
     this.value = v;
+  }
+
+  /**
+   * Constructor method with value specified as a String
+   *
+   * @param v The value to be contained in the object as a String
+   */
+  public /* constructor */ IntegerNumber(String v) {
+    this.value = Integer.valueOf(v);
   }
 
   /**
@@ -75,6 +84,10 @@ public class IntegerNumber implements BaseNumber {
    */
   public BaseNumber op(Operation o, BaseNumber rightHand) {
     return o.op(this, (IntegerNumber) rightHand);
+  }
+
+  public BaseNumber negate() {
+    return new IntegerNumber(-this.value);
   }
 
   @Override

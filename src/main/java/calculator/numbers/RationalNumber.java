@@ -20,22 +20,22 @@ import visitor.Visitor;
 @Getter
 public class RationalNumber implements BaseNumber {
 
-    /**
-     * -- GETTER --
-     *  getter method to obtain the numerator of the rational number
-     *
-     * @return the numerator of the rational number
-     */
-    // Numerator of the rational number
+  /**
+   * -- GETTER --
+   * getter method to obtain the numerator of the rational number
+   *
+   * @return the numerator of the rational number
+   */
+  // Numerator of the rational number
   private int numerator;
 
-    /**
-     * -- GETTER --
-     *  getter method to obtain the denominator of the rational number
-     *
-     * @return the denominator of the rational number
-     */
-    // Denominator of the rational number
+  /**
+   * -- GETTER --
+   * getter method to obtain the denominator of the rational number
+   *
+   * @return the denominator of the rational number
+   */
+  // Denominator of the rational number
   private int denominator;
 
   /**
@@ -57,7 +57,27 @@ public class RationalNumber implements BaseNumber {
     this.simplify();
   }
 
-    /**
+  /**
+   * class constructor which specify the numerator and denominator of the rational
+   * number as String
+   *
+   * @throws IllegalNumberConstruction the denominator can't be 0
+   *
+   * @param numerator   the String representing the numerator
+   * @param denominator the String representing the denominator
+   */
+  public /* constructor */ RationalNumber(String numerator, String denominator) {
+    int num = Integer.valueOf(numerator);
+    int den = Integer.valueOf(denominator);
+    if (den == 0) {
+      throw new IllegalNumberConstruction();
+    }
+    this.numerator = num;
+    this.denominator = den;
+    this.simplify();
+  }
+
+  /**
    * accept method to implement the visitor design pattern to traverse arithmetic
    * expressions.
    * Each number will pass itself to the visitor object to get processed by the
@@ -119,6 +139,10 @@ public class RationalNumber implements BaseNumber {
   }
 
   @Override
+  public BaseNumber negate() {
+    return new RationalNumber(-this.numerator, this.denominator);
+  }
+
   public BaseNumber function(Function f) {
     if (!(f instanceof UnaryFunction)) {
       throw new IllegalArgumentException("Expected a unary function.");

@@ -295,11 +295,9 @@ class TestDivides {
       t.accept(v);
       ComplexNumber result = (ComplexNumber) v.getResult();
 
-      ComplexNumber test = new ComplexNumber("0.05555556", "0.07638889");
+      ComplexNumber test = new ComplexNumber("0.4", "0.55");
       // To compare solution and result we need to scale the result to the solution
-      BigDecimal real = result.getReal().setScale(8, RoundingMode.CEILING);
-      BigDecimal im = result.getImaginary().setScale(8, RoundingMode.CEILING);
-      assertEquals(test, new ComplexNumber(real, im));
+      assertEquals(test, result);
     } catch (IllegalConstruction _) {
       fail();
     }
@@ -326,8 +324,8 @@ class TestDivides {
 
   @Test
   void testComplexDivisionByZero() {
-    ComplexNumber left = new ComplexNumber(1, 6);
-    ComplexNumber right = new ComplexNumber(0, 0);
+    ComplexNumber left = new ComplexNumber("1", "6");
+    ComplexNumber right = new ComplexNumber("0", "0");
 
     ArrayList<Expression> p = new ArrayList<>(
         Arrays.asList(left, right));
