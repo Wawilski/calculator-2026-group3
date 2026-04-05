@@ -13,6 +13,12 @@ import calculator.numbers.SpecialNumber;
 /** Square root function: sqrt(x). */
 public final class Sqrt extends UnaryFunction {
 
+  /**
+   * Build a square-root.
+   *
+   * @param elist function argument list
+   * @throws IllegalConstruction if the argument list is invalid
+   */
   public Sqrt(List<Expression> elist) throws IllegalConstruction {
     super(elist);
     symbol = "sqrt";
@@ -24,6 +30,11 @@ public final class Sqrt extends UnaryFunction {
     return (int) Math.sqrt(value);
   }
 
+  /**
+   * Compute sqrt(x) for integer inputs.
+   *
+   * <p>Negative inputs return NaN.
+   */
   @Override
   public BaseNumber function(IntegerNumber value) {
     if (value.getValue() < 0) {
@@ -32,15 +43,23 @@ public final class Sqrt extends UnaryFunction {
     return new RealNumber(Math.sqrt(value.getValue()));
   }
 
+  /**
+   * Compute sqrt(x) for rational inputs.
+   *
+   * <p>Negative inputs return NaN.
+   */
   @Override
   public BaseNumber function(RationalNumber value) {
-    double ratio = ((double) value.getNumerator()) / value.getDenominator();
+    double ratio = RationalMath.toDouble(value);
     if (ratio < 0.0) {
       return new RealNumber(SpecialNumber.NaN);
     }
     return new RealNumber(Math.sqrt(ratio));
   }
 
+  /**
+   * Compute sqrt(x) for real inputs with special-value handling.
+   */
   @Override
   public BaseNumber function(RealNumber value) {
     if (value.isSpecial()) {

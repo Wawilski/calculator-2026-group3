@@ -14,6 +14,12 @@ import calculator.numbers.SpecialNumber;
 /** Absolute value function: abs(x). */
 public final class Abs extends UnaryFunction {
 
+  /**
+   * Build an absolute-value.
+   *
+   * @param elist function argument list
+   * @throws IllegalConstruction if the argument list is invalid
+   */
   public Abs(List<Expression> elist) throws IllegalConstruction {
     super(elist);
     symbol = "abs";
@@ -35,6 +41,12 @@ public final class Abs extends UnaryFunction {
     return new RationalNumber(Math.abs(value.getNumerator()), Math.abs(value.getDenominator()));
   }
 
+  /**
+   * Compute abs(x) for real values.
+   *
+   * <p>Special handling:
+   * NaN -&gt; NaN, +/-inf -&gt; +inf.
+   */
   @Override
   public BaseNumber function(RealNumber value) {
     if (value.isSpecial()) {
@@ -46,6 +58,12 @@ public final class Abs extends UnaryFunction {
     return new RealNumber(value.getValue().abs(MathContext.DECIMAL32));
   }
 
+  /**
+   * Compute the modulus for complex values: |a + bi| = sqrt(a^2 + b^2).
+   *
+   * @param value complex input value
+   * @return real modulus, or NaN for NaN complex input
+   */
   @Override
   public BaseNumber function(ComplexNumber value) {
     if (value.isNaN()) {

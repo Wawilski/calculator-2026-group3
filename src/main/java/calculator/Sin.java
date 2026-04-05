@@ -12,6 +12,12 @@ import calculator.numbers.SpecialNumber;
 /** Sine function: sin(x). */
 public final class Sin extends UnaryFunction {
 
+  /**
+   * Build a sine function.
+   *
+   * @param elist function argument list
+   * @throws IllegalConstruction if the argument list is invalid
+   */
   public Sin(List<Expression> elist) throws IllegalConstruction {
     super(elist);
     symbol = "sin";
@@ -30,10 +36,15 @@ public final class Sin extends UnaryFunction {
 
   @Override
   public BaseNumber function(RationalNumber value) {
-    double ratio = ((double) value.getNumerator()) / value.getDenominator();
+    double ratio = RationalMath.toDouble(value);
     return new RealNumber(Math.sin(ratio));
   }
 
+  /**
+   * Compute sin(x) for real values.
+   *
+   * <p>Special values are mapped to NaN.
+   */
   @Override
   public BaseNumber function(RealNumber value) {
     if (value.isSpecial()) {
@@ -44,6 +55,6 @@ public final class Sin extends UnaryFunction {
 
   @Override
   public BaseNumber function(ComplexNumber value) {
-    return new ComplexNumber();
+    return ComplexMath.sin(value);
   }
 }

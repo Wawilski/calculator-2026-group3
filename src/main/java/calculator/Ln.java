@@ -13,6 +13,12 @@ import calculator.numbers.SpecialNumber;
 /** Natural logarithm function: ln(x). */
 public final class Ln extends UnaryFunction {
 
+  /**
+   * Build a logarithm.
+   *
+   * @param elist function argument list
+   * @throws IllegalConstruction if the argument list is invalid
+   */
   public Ln(List<Expression> elist) throws IllegalConstruction {
     super(elist);
     symbol = "ln";
@@ -37,7 +43,7 @@ public final class Ln extends UnaryFunction {
 
   @Override
   public BaseNumber function(RationalNumber value) {
-    double ratio = ((double) value.getNumerator()) / value.getDenominator();
+    double ratio = RationalMath.toDouble(value);
     if (ratio == 0.0) {
       return new RealNumber(SpecialNumber.NegativeInfinity);
     }
@@ -47,6 +53,12 @@ public final class Ln extends UnaryFunction {
     return new RealNumber(Math.log(ratio));
   }
 
+  /**
+   * Compute ln(x) for real values.
+   *
+   * <p>Special handling:
+   * +inf -&gt; +inf, 0 -&gt; -inf, negatives and NaN-like values -&gt; NaN.
+   */
   @Override
   public BaseNumber function(RealNumber value) {
     if (value.isSpecial()) {

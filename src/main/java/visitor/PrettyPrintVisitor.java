@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.Deque;
 import java.util.List;
 
+import calculator.Expression;
 import calculator.Function;
 import calculator.Operation;
 import calculator.numbers.ComplexNumber;
@@ -65,7 +66,8 @@ public class PrettyPrintVisitor extends Visitor {
   @Override
   public void visit(Operation o) {
     List<RenderedNode> args = new ArrayList<>();
-    for (int i = 0; i < o.getArgs().size(); i++) {
+    for (Expression expression : o.getArgs()) {
+      expression.toString();
       args.add(renderedExpressions.pop());
     }
     Collections.reverse(args);
@@ -80,7 +82,8 @@ public class PrettyPrintVisitor extends Visitor {
   @Override
   public void visit(Function f) {
     List<RenderedNode> args = new ArrayList<>();
-    for (int i = 0; i < f.getArgs().size(); i++) {
+    for (Expression expression : f.getArgs()) {
+      expression.toString();
       args.add(renderedExpressions.pop());
     }
     Collections.reverse(args);
@@ -114,6 +117,7 @@ public class PrettyPrintVisitor extends Visitor {
     return switch (symbol) {
       case "+", "-" -> 1;
       case "*", "/" -> 2;
+      case "**" -> 3;
       default -> 0;
     };
   }
@@ -168,6 +172,9 @@ public class PrettyPrintVisitor extends Visitor {
     }
     if (child.precedence > parentPrecedence) {
       return text;
+    }
+    if (parentSymbol.equals("**")) {
+      return "(" + text + ")";
     }
     if (parentSymbol.equals("-") || parentSymbol.equals("/")) {
       return argIndex == 0 ? text : "(" + text + ")";

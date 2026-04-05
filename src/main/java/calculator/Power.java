@@ -11,36 +11,50 @@ import calculator.numbers.RationalNumber;
 import calculator.numbers.RealNumber;
 import calculator.numbers.SpecialNumber;
 
-/** Power function: x^y. */
-public final class Power extends BinaryFunction {
+/** Power operation: x ** y. */
+public final class Power extends Operation {
 
+  /**
+   * Build a power operation.
+   *
+   * @param elist operation argument list
+   * @throws IllegalConstruction if the argument list is invalid
+   */
   public Power(List<Expression> elist) throws IllegalConstruction {
     super(elist);
-    symbol = "^";
+    symbol = "**";
     neutral = 1;
   }
 
   @Override
-  public int function(int l, int r) {
+  public int op(int l, int r) {
     return (int) Math.pow(l, r);
   }
 
   @Override
-  public BaseNumber function(IntegerNumber l, IntegerNumber r) {
+  public BaseNumber op(IntegerNumber l, IntegerNumber r) {
     return new IntegerNumber((int) Math.pow(l.getValue(), r.getValue()));
   }
 
+  /**
+   * Compute x ** y for rational operands.
+   *
+   * <p>Rational values are converted through {@link RationalMath#toDouble(RationalNumber)}.
+   */
   @Override
-  public BaseNumber function(RationalNumber l, RationalNumber r) {
-    double base = ((double) l.getNumerator()) / l.getDenominator();
-    double exponent = ((double) r.getNumerator()) / r.getDenominator();
+  public BaseNumber op(RationalNumber l, RationalNumber r) {
+    double base = RationalMath.toDouble(l);
+    double exponent = RationalMath.toDouble(r);
     return new RealNumber(Math.pow(base, exponent));
   }
 
+  /**
+   * Compute x ** y for real operands with special-value handling.
+   */
   @Override
-  public BaseNumber function(RealNumber l, RealNumber r) {
+  public BaseNumber op(RealNumber l, RealNumber r) {
     if (l.isSpecial() || r.isSpecial()) {
-      return specialFunction(l, r);
+      return specialOp(l, r);
     }
 
     double base = l.getValue().doubleValue();
@@ -55,11 +69,17 @@ public final class Power extends BinaryFunction {
           ? new RealNumber(SpecialNumber.PositiveInfinity)
           : new RealNumber(SpecialNumber.NegativeInfinity);
     }
-    return new RealNumber(new BigDecimal(value, MathContext.DECIMAL32));
+    return new RealNumber(new BigDecimal(Double.toString(value), MathContext.DECIMAL32));
   }
 
+  /**
+   * Compute x ** y for complex operands.
+   *
+   * <p>Current implementation handles only purely real complex values; otherwise
+   * it returns NaN complex.
+   */
   @Override
-  public BaseNumber function(ComplexNumber l, ComplexNumber r) {
+  public BaseNumber op(ComplexNumber l, ComplexNumber r) {
     if (l.isNaN() || r.isNaN()) {
       return new ComplexNumber();
     }
@@ -72,10 +92,16 @@ public final class Power extends BinaryFunction {
     if (Double.isNaN(value) || Double.isInfinite(value)) {
       return new ComplexNumber();
     }
-    return new ComplexNumber(new BigDecimal(value, MathContext.DECIMAL32), BigDecimal.ZERO);
+    return new ComplexNumber(new BigDecimal(Double.toString(value), MathContext.DECIMAL32), BigDecimal.ZERO);
   }
 
-  private BaseNumber specialFunction(RealNumber l, RealNumber r) {
+  /**
+   * Handle special real values for power.
+   *
+   * @return evaluated special real result
+   */
+  @Override
+  public RealNumber specialOp(RealNumber l, RealNumber r) {
     if (l.isSpecial() && l.getSpecialValue() == SpecialNumber.NaN) {
       return new RealNumber(SpecialNumber.NaN);
     }

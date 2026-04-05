@@ -1,5 +1,6 @@
 package calculator;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import calculator.numbers.BaseNumber;
@@ -9,52 +10,58 @@ import calculator.numbers.RationalNumber;
 import calculator.numbers.RealNumber;
 import calculator.numbers.SpecialNumber;
 
-/** Tangent function: tan(x). */
-public final class Tan extends UnaryFunction {
+/** Arc cosine function: acos(x). */
+public final class Acos extends UnaryFunction {
 
   /**
-   * Build a tangent.
+   * Build an arc-cosine function with one argument.
    *
    * @param elist function argument list
    * @throws IllegalConstruction if the argument list is invalid
    */
-  public Tan(List<Expression> elist) throws IllegalConstruction {
+  public Acos(List<Expression> elist) throws IllegalConstruction {
     super(elist);
-    symbol = "tan";
+    symbol = "acos";
     neutral = 0;
   }
 
   @Override
   public int function(int value) {
-    return (int) Math.tan(value);
+    return (int) Math.acos(value);
   }
 
   @Override
   public BaseNumber function(IntegerNumber value) {
-    return new RealNumber(Math.tan(value.getValue()));
+    return new RealNumber(Math.acos(value.getValue()));
   }
 
   @Override
   public BaseNumber function(RationalNumber value) {
     double ratio = RationalMath.toDouble(value);
-    return new RealNumber(Math.tan(ratio));
+    return new RealNumber(Math.acos(ratio));
   }
 
   /**
-   * Compute tan(x) for real values.
+   * Compute acos(x) for real numbers.
    *
-   * <p>Special values are mapped to NaN.
+   * <p>Returns NaN for special values and for out-of-domain values |x| &gt; 1.
    */
   @Override
   public BaseNumber function(RealNumber value) {
     if (value.isSpecial()) {
       return new RealNumber(SpecialNumber.NaN);
     }
-    return new RealNumber(Math.tan(value.getValue().doubleValue()));
+
+    BigDecimal realValue = value.getValue();
+    if (realValue.abs().compareTo(BigDecimal.ONE) > 0) {
+      return new RealNumber(SpecialNumber.NaN);
+    }
+
+    return new RealNumber(Math.acos(realValue.doubleValue()));
   }
 
   @Override
   public BaseNumber function(ComplexNumber value) {
-    return ComplexMath.tan(value);
+    return ComplexMath.acos(value);
   }
 }

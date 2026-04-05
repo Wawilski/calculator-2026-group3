@@ -12,6 +12,12 @@ import calculator.numbers.SpecialNumber;
 /** Cosine function: cos(x). */
 public final class Cos extends UnaryFunction {
 
+  /**
+   * Build a cosine.
+   *
+   * @param elist function argument list
+   * @throws IllegalConstruction if the argument list is invalid
+   */
   public Cos(List<Expression> elist) throws IllegalConstruction {
     super(elist);
     symbol = "cos";
@@ -30,10 +36,15 @@ public final class Cos extends UnaryFunction {
 
   @Override
   public BaseNumber function(RationalNumber value) {
-    double ratio = ((double) value.getNumerator()) / value.getDenominator();
+    double ratio = RationalMath.toDouble(value);
     return new RealNumber(Math.cos(ratio));
   }
 
+  /**
+   * Compute cos(x) for real values.
+   *
+   * <p>Special values are mapped to NaN.
+   */
   @Override
   public BaseNumber function(RealNumber value) {
     if (value.isSpecial()) {
@@ -44,6 +55,6 @@ public final class Cos extends UnaryFunction {
 
   @Override
   public BaseNumber function(ComplexNumber value) {
-    return new ComplexNumber();
+    return ComplexMath.cos(value);
   }
 }

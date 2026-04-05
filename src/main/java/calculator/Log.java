@@ -13,6 +13,12 @@ import calculator.numbers.SpecialNumber;
 /** General logarithm function: log(value, base). */
 public final class Log extends BinaryFunction {
 
+  /**
+   * Build a logarithm with: value and base.
+   *
+   * @param elist function argument list
+   * @throws IllegalConstruction if the argument list is invalid
+   */
   public Log(List<Expression> elist) throws IllegalConstruction {
     super(elist);
     symbol = "log";
@@ -24,6 +30,11 @@ public final class Log extends BinaryFunction {
     return (int) (Math.log(value) / Math.log(base));
   }
 
+  /**
+   * Compute log(value, base) for integer inputs.
+   *
+   * <p>Domain checks are applied on base/value before evaluating.
+   */
   @Override
   public BaseNumber function(IntegerNumber value, IntegerNumber base) {
     if (base.getValue() <= 0 || base.getValue() == 1) {
@@ -38,10 +49,15 @@ public final class Log extends BinaryFunction {
     return new RealNumber(Math.log(value.getValue()) / Math.log(base.getValue()));
   }
 
+  /**
+   * Compute log(value, base) for rational inputs.
+   *
+   * <p>Rationals are converted through {@link RationalMath#toDouble(RationalNumber)}.
+   */
   @Override
   public BaseNumber function(RationalNumber value, RationalNumber base) {
-    double baseValue = ((double) base.getNumerator()) / base.getDenominator();
-    double valueValue = ((double) value.getNumerator()) / value.getDenominator();
+    double baseValue = RationalMath.toDouble(base);
+    double valueValue = RationalMath.toDouble(value);
     if (baseValue <= 0.0 || baseValue == 1.0) {
       return new RealNumber(SpecialNumber.NaN);
     }
@@ -54,6 +70,9 @@ public final class Log extends BinaryFunction {
     return new RealNumber(Math.log(valueValue) / Math.log(baseValue));
   }
 
+  /**
+   * Compute log(value, base) for real inputs with special-value handling.
+   */
   @Override
   public BaseNumber function(RealNumber value, RealNumber base) {
     if (value.isSpecial() || base.isSpecial()) {
