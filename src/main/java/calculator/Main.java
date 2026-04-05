@@ -1,5 +1,7 @@
 package calculator;
 
+import calculator.cli.CalculatorCli;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,6 +31,11 @@ public class Main {
    * @param args Command-line parameters are not used in this version
    */
   public static void main(String[] args) {
+
+    if (args.length > 0 && "--cli".equals(args[0])) {
+      new CalculatorCli().run();
+      return;
+    }
 
     Expression e;
     Calculator c = new Calculator();
