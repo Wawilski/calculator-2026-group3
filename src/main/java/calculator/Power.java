@@ -7,9 +7,11 @@ import java.util.List;
 import calculator.numbers.BaseNumber;
 import calculator.numbers.ComplexNumber;
 import calculator.numbers.IntegerNumber;
+import calculator.numbers.NumberType;
 import calculator.numbers.RationalNumber;
 import calculator.numbers.RealNumber;
 import calculator.numbers.SpecialNumber;
+import calculator.numbers.visitor.TypeCaster;
 
 /** Power operation: x ** y. */
 public final class Power extends Operation {
@@ -39,13 +41,16 @@ public final class Power extends Operation {
   /**
    * Compute x ** y for rational operands.
    *
-   * <p>Rational values are converted through {@link RationalMath#toDouble(RationalNumber)}.
+   * <p>Rational operands are cast to real values and delegated to the real overload.
    */
   @Override
   public BaseNumber op(RationalNumber l, RationalNumber r) {
-    double base = new RationalMath().toDouble(l);
-    double exponent = new RationalMath().toDouble(r);
-    return new RealNumber(Math.pow(base, exponent));
+    TypeCaster caster = new TypeCaster(NumberType.REAL);
+    l.accept(caster);
+    RealNumber left = (RealNumber) caster.getResult();
+    r.accept(caster);
+    RealNumber right = (RealNumber) caster.getResult();
+    return op(left, right);
   }
 
   /**
