@@ -29,17 +29,21 @@
           <p class="science-title">Scientific</p>
           <section class="science-actions">
             <button type="button" class="science" @click="appendScientificToken('sqrt(')">√x</button>
-            <button type="button" class="science" @click="appendScientificToken('sin(')">sin</button>
-            <button type="button" class="science" @click="appendScientificToken('tan(')">tan</button>
-            <button type="button" class="science" @click="appendScientificToken('cos(')">cos</button>
             <button type="button" class="science" @click="appendScientificToken('ln(')">ln</button>
             <button type="button" class="science" @click="appendScientificToken('log(')">log</button>
+            <button type="button" class="science" @click="appendScientificToken('sin(')">sin</button>
+            <button type="button" class="science" @click="appendScientificToken('cos(')">cos</button>
+            <button type="button" class="science" @click="appendScientificToken('tan(')">tan</button>
+            <button type="button" class="science" @click="appendScientificToken('asin(')">sin<sup>-1</sup></button>
+            <button type="button" class="science" @click="appendScientificToken('acos(')">cos<sup>-1</sup></button>
+            <button type="button" class="science" @click="appendScientificToken('atan(')">tan<sup>-1</sup></button>
             <button type="button" class="science" @click="appendScientificToken('1/(')">1/x</button>
             <button type="button" class="science" @click="appendScientificToken('e^(')">eˣ</button>
             <button type="button" class="science" @click="appendScientificToken('^2')">x²</button>
             <button type="button" class="science" @click="appendScientificToken('^')">x^y</button>
             <button type="button" class="science" @click="appendScientificToken('abs(')">|x|</button>
             <button type="button" class="science" @click="appendScientificToken('pi')">pi</button>
+            <button type="button" class="science" @click="appendScientificToken('deg(')">Deg</button>
           </section>
         </aside>
 
