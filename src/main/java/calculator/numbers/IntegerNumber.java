@@ -6,6 +6,7 @@ import calculator.Function;
 import calculator.Operation;
 import calculator.UnaryFunction;
 import calculator.numbers.visitor.TypeVisitor;
+import lombok.Getter;
 import visitor.Visitor;
 
 /**
@@ -17,20 +18,18 @@ import visitor.Visitor;
  * @see RealNumber
  * @see ComplexNumber
  */
+@Getter
 public class IntegerNumber implements BaseNumber {
 
-  private int value;
+    /**
+     * -- GETTER --
+     *  getter method to obtain the value contained in the object
+     *
+     * @return The integer number contained in the object
+     */
+    private int value;
 
-  /**
-   * getter method to obtain the value contained in the object
-   *
-   * @return The integer number contained in the object
-   */
-  public int getValue() {
-    return value;
-  }
-
-  /**
+    /**
    * Constructor method
    *
    * @param v The integer value to be contained in the object

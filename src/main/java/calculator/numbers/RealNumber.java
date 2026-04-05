@@ -1,12 +1,15 @@
 package calculator.numbers;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
 
 import calculator.BinaryFunction;
 import calculator.Function;
 import calculator.Operation;
 import calculator.UnaryFunction;
 import calculator.numbers.visitor.TypeVisitor;
+import lombok.Getter;
 import visitor.Visitor;
 
 /**
@@ -18,31 +21,59 @@ import visitor.Visitor;
  * @see RationalNumber
  * @see ComplexNumber
  */
+@Getter
 public class RealNumber implements BaseNumber {
 
   /**
    * The value of the real number
+   * -- GETTER --
+   *  getter method to obtain the value contained in the object
+   *
+   * @return The BigDecimal contained in the object
+
    */
   private BigDecimal value;
 
   /**
    * A flag to determine if the number is a real number or a special value
    * (+INFINITY, -INFINITY, NaN)
+   * -- GETTER --
+   *  getter method to obtain the special flag value
+   *
+   * @return If the real is a Special one
+
    */
   private boolean special;
   /**
    * The special value of the number (+INFINITY,-INFINITY,NaN)
+   * -- GETTER --
+   *  getter method to obtain the special value contained in the object
+   *
+   * @return The BigDecimal contained in the object
+
    */
   private SpecialNumber specialValue;
 
   /**
-   * class constructor which specify the value of the real number as a BigDecimal
+   * The scale of all the BigDecimal concerning the real and complex numbers
+   * -- GETTER --
+   *  getter method to obtain the scale of the BigDecimal values
+   *
+   * @return The class attribute scale
+
+   */
+  @Getter
+  private static int scale = 16;
+
+  /**
+   * class constructor which specify the value of the real number as a
+   * BigDecimal
    *
    *
    * @param value the BigDecimal value representing the real number
    */
   public /* constructor */ RealNumber(BigDecimal value) {
-    this.value = value;
+    this.value = value.setScale(scale, RoundingMode.CEILING);
     this.special = false;
     this.specialValue = null;
   }
@@ -54,7 +85,7 @@ public class RealNumber implements BaseNumber {
    * @param value the integer value representing the real number
    */
   public /* constructor */ RealNumber(int value) {
-    this.value = new BigDecimal(value);
+    this.value = (new BigDecimal(value, MathContext.UNLIMITED)).setScale(scale, RoundingMode.CEILING);
     this.special = false;
     this.specialValue = null;
   }
@@ -66,7 +97,19 @@ public class RealNumber implements BaseNumber {
    * @param value the double value representing the real number
    */
   public /* constructor */ RealNumber(double value) {
-    this.value = new BigDecimal(value);
+    this.value = (new BigDecimal(value, MathContext.UNLIMITED)).setScale(scale, RoundingMode.CEILING);
+    this.special = false;
+    this.specialValue = null;
+  }
+
+  /**
+   * class constructor which specify the value of the real number with a String
+   *
+   *
+   * @param value the String value representing the real number
+   */
+  public /* constructor */ RealNumber(String value) {
+    this.value = (new BigDecimal(value, MathContext.UNLIMITED)).setScale(scale, RoundingMode.CEILING);
     this.special = false;
     this.specialValue = null;
   }
@@ -83,34 +126,7 @@ public class RealNumber implements BaseNumber {
     this.specialValue = specialValue;
   }
 
-  /**
-   * getter method to obtain the value contained in the object
-   *
-   * @return The BigDecimal contained in the object
-   */
-  public BigDecimal getValue() {
-    return value;
-  }
-
-  /**
-   * getter method to obtain the special value contained in the object
-   *
-   * @return The BigDecimal contained in the object
-   */
-  public SpecialNumber getSpecialValue() {
-    return specialValue;
-  }
-
-  /**
-   * getter method to obtain the special flag value
-   *
-   * @return If the real is a Special one
-   */
-  public boolean isSpecial() {
-    return special;
-  }
-
-  /**
+    /**
    * accept method to implement the visitor design pattern to traverse arithmetic
    * expressions.
    * Each number will pass itself to the visitor object to get processed by the
@@ -228,7 +244,7 @@ public class RealNumber implements BaseNumber {
    */
   @Override
   public int hashCode() {
-    return this.value.intValue();
+    return this.value.hashCode();
   }
 
   @Override

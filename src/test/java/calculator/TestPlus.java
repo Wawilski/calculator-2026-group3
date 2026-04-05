@@ -104,6 +104,22 @@ class TestPlus {
   }
 
   @Test
+  void testNaNPlus() {
+
+    List<Expression> params = Arrays.asList(new RealNumber(SpecialNumber.NaN), new RealNumber(1));
+    try {
+      Plus e = new Plus(params);
+      Evaluator v = new Evaluator();
+      e.accept(v);
+      RealNumber result = (RealNumber) v.getResult();
+      assertEquals(new RealNumber(SpecialNumber.NaN), result);
+    } catch (IllegalConstruction _) {
+      fail();
+    }
+
+  }
+
+  @Test
   // Add 2 Infinity of opposite signs should return a NaN
   void testOppositeInfinityPlus() {
     ArrayList<Expression> p = new ArrayList<>(
@@ -142,8 +158,8 @@ class TestPlus {
 
   @Test
   void testComplexAddition() {
-    ComplexNumber left = new ComplexNumber(1.1, 6.8);
-    ComplexNumber right = new ComplexNumber(8.9, 4);
+    ComplexNumber left = new ComplexNumber("1.1", "6.8");
+    ComplexNumber right = new ComplexNumber("8.9", "4");
 
     ArrayList<Expression> p = new ArrayList<>(
         Arrays.asList(left, right));
@@ -153,7 +169,7 @@ class TestPlus {
       t.accept(v);
       ComplexNumber result = (ComplexNumber) v.getResult();
 
-      assertEquals(result, new ComplexNumber(10, 10.8));
+      assertEquals(result, new ComplexNumber("10", "10.8"));
     } catch (IllegalConstruction _) {
       fail();
     }
