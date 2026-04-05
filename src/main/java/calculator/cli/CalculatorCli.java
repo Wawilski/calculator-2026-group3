@@ -47,17 +47,19 @@ public class CalculatorCli {
     CommandRegistry registry = new CommandRegistry();
     registry.register(new ExitCommand());
     registry.register(new DemoCommand());
+    registry.register(new PrecisionCommand());
     registry.register(new HelpCommand(registry));
 
     greet();
 
     while (context.isRunning()) {
       output.print("calculator> ");
-      String line = input.readLine().trim();
+      String rawline = input.readLine();
+      String line = rawline.trim();
       if (line.isEmpty())
         continue;
 
-      String commandName = line.split("\\s+")[0];
+      String commandName = rawline.split("\\s+")[0];
 
       CliCommand command = registry.find(commandName).map(cmd -> {
         return cmd;

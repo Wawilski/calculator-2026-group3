@@ -36,7 +36,7 @@ public class ExpressionParser {
     ParserVisitor visitor = new ParserVisitor();
     Expression e;
 
-    if (listener.getErrors() > 0) {
+    if (listener.getErrors() == 0) {
       e = visitor.visit(tree);
     } else {
       throw new InvalidTokenException("Invalid mathematical expression");

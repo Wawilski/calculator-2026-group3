@@ -173,7 +173,7 @@ public class CalculatorSteps {
       fail("A division by zero error was expected");
     } catch (ArithmeticException e) {
       assertNotNull(e, "An ArithmeticException was expected");
-      assertEquals("Division by zero is not allowed.", e.getMessage());
+      assertEquals("Division by zero is not allowed for integer numbers", e.getMessage());
     }
   }
 
