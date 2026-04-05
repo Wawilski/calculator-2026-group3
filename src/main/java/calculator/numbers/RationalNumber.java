@@ -1,6 +1,9 @@
 package calculator.numbers;
 
 import calculator.Operation;
+import calculator.BinaryFunction;
+import calculator.Function;
+import calculator.UnaryFunction;
 import calculator.numbers.visitor.TypeVisitor;
 import lombok.Getter;
 import visitor.Visitor;
@@ -113,6 +116,22 @@ public class RationalNumber implements BaseNumber {
   @Override
   public BaseNumber op(Operation o, BaseNumber rightHand) {
     return o.op(this, ((RationalNumber) rightHand));
+  }
+
+  @Override
+  public BaseNumber function(Function f) {
+    if (!(f instanceof UnaryFunction)) {
+      throw new IllegalArgumentException("Expected a unary function.");
+    }
+    return ((UnaryFunction) f).function(this);
+  }
+
+  @Override
+  public BaseNumber function(Function f, BaseNumber rightHand) {
+    if (!(f instanceof BinaryFunction)) {
+      throw new IllegalArgumentException("Expected a binary function.");
+    }
+    return ((BinaryFunction) f).function(this, (RationalNumber) rightHand);
   }
 
   /**
