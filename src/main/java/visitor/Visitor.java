@@ -1,11 +1,10 @@
 package visitor;
 
-import calculator.Function;
 import calculator.Operation;
+import calculator.numbers.RealNumber;
 import calculator.numbers.ComplexNumber;
 import calculator.numbers.IntegerNumber;
 import calculator.numbers.RationalNumber;
-import calculator.numbers.RealNumber;
 
 /**
  * Visitor design pattern
@@ -46,11 +45,4 @@ public abstract class Visitor {
    * @param o The operation being visited
    */
   public abstract void visit(Operation o);
-
-  /**
-   * The Visitor can traverse a function (a subtype of Expression)
-   *
-   * @param f The function being visited
-   */
-  public abstract void visit(Function f);
 }
