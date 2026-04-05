@@ -5,6 +5,7 @@ import java.math.MathContext;
 import java.math.RoundingMode;
 
 import calculator.Operation;
+import lombok.Getter;
 import visitor.Visitor;
 import calculator.numbers.visitor.*;
 
@@ -17,26 +18,48 @@ import calculator.numbers.visitor.*;
  * @see RationalNumber
  * @see ComplexNumber
  */
+@Getter
 public class RealNumber implements BaseNumber {
 
   /**
    * The value of the real number
+   * -- GETTER --
+   *  getter method to obtain the value contained in the object
+   *
+   * @return The BigDecimal contained in the object
+
    */
   private BigDecimal value;
 
   /**
    * A flag to determine if the number is a real number or a special value
    * (+INFINITY, -INFINITY, NaN)
+   * -- GETTER --
+   *  getter method to obtain the special flag value
+   *
+   * @return If the real is a Special one
+
    */
   private boolean special;
   /**
    * The special value of the number (+INFINITY,-INFINITY,NaN)
+   * -- GETTER --
+   *  getter method to obtain the special value contained in the object
+   *
+   * @return The BigDecimal contained in the object
+
    */
   private SpecialNumber specialValue;
 
   /**
    * The scale of all the BigDecimal concerning the real and complex numbers
+   * -- GETTER --
+   *  getter method to obtain the scale of the BigDecimal values
+   *
+   * @return The class attribute scale
+
    */
+  @Getter
   private static int scale = 16;
 
   /**
@@ -101,43 +124,7 @@ public class RealNumber implements BaseNumber {
     this.specialValue = specialValue;
   }
 
-  /**
-   * getter method to obtain the value contained in the object
-   *
-   * @return The BigDecimal contained in the object
-   */
-  public BigDecimal getValue() {
-    return value;
-  }
-
-  /**
-   * getter method to obtain the special value contained in the object
-   *
-   * @return The BigDecimal contained in the object
-   */
-  public SpecialNumber getSpecialValue() {
-    return specialValue;
-  }
-
-  /**
-   * getter method to obtain the special flag value
-   *
-   * @return If the real is a Special one
-   */
-  public boolean isSpecial() {
-    return special;
-  }
-
-  /**
-   * getter method to obtain the scale of the BigDecimal values
-   * 
-   * @return The class attribute scale
-   */
-  public static int getScale() {
-    return scale;
-  }
-
-  /**
+    /**
    * accept method to implement the visitor design pattern to traverse arithmetic
    * expressions.
    * Each number will pass itself to the visitor object to get processed by the
