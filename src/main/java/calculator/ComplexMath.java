@@ -29,10 +29,10 @@ public final class ComplexMath {
    * @return sin(z), or NaN complex on invalid input
    */
   public ComplexNumber sin(ComplexNumber z) {
-    ComplexValue c = from(z);
-    if (c == null) {
+    if (z == null || z.isNaN()) {
       return new ComplexNumber();
     }
+    ComplexValue c = new ComplexValue(z.getReal().doubleValue(), z.getImaginary().doubleValue());
     double re = Math.sin(c.re) * Math.cosh(c.im);
     double im = Math.cos(c.re) * Math.sinh(c.im);
     return to(re, im);
@@ -47,10 +47,10 @@ public final class ComplexMath {
    * @return cos(z), or NaN complex on invalid input
    */
   public ComplexNumber cos(ComplexNumber z) {
-    ComplexValue c = from(z);
-    if (c == null) {
+    if (z == null || z.isNaN()) {
       return new ComplexNumber();
     }
+    ComplexValue c = new ComplexValue(z.getReal().doubleValue(), z.getImaginary().doubleValue());
     double re = Math.cos(c.re) * Math.cosh(c.im);
     double im = -Math.sin(c.re) * Math.sinh(c.im);
     return to(re, im);
@@ -66,10 +66,10 @@ public final class ComplexMath {
    * @return tan(z), or NaN complex on invalid input
    */
   public ComplexNumber tan(ComplexNumber z) {
-    ComplexValue c = from(z);
-    if (c == null) {
+    if (z == null || z.isNaN()) {
       return new ComplexNumber();
     }
+    ComplexValue c = new ComplexValue(z.getReal().doubleValue(), z.getImaginary().doubleValue());
     double denominator = Math.cos(2.0 * c.re) + Math.cosh(2.0 * c.im);
     if (denominator == 0.0) {
       return new ComplexNumber();
@@ -88,10 +88,10 @@ public final class ComplexMath {
    * @return asin(z), or NaN complex on invalid input
    */
   public ComplexNumber asin(ComplexNumber z) {
-    ComplexValue c = from(z);
-    if (c == null) {
+    if (z == null || z.isNaN()) {
       return new ComplexNumber();
     }
+    ComplexValue c = new ComplexValue(z.getReal().doubleValue(), z.getImaginary().doubleValue());
     ComplexValue iz = new ComplexValue(-c.im, c.re);
     ComplexValue oneMinusZSquared = sub(new ComplexValue(1.0, 0.0), mul(c, c));
     ComplexValue root = sqrt(oneMinusZSquared);
@@ -114,11 +114,7 @@ public final class ComplexMath {
     if (asinValue.isNaN()) {
       return asinValue;
     }
-    ComplexValue c = from(asinValue);
-    if (c == null) {
-      return new ComplexNumber();
-    }
-    return to(HALF_PI - c.re, -c.im);
+    return to(HALF_PI - asinValue.getReal().doubleValue(), -asinValue.getImaginary().doubleValue());
   }
 
   /**
@@ -130,10 +126,10 @@ public final class ComplexMath {
    * @return atan(z), or NaN complex on invalid input
    */
   public ComplexNumber atan(ComplexNumber z) {
-    ComplexValue c = from(z);
-    if (c == null) {
+    if (z == null || z.isNaN()) {
       return new ComplexNumber();
     }
+    ComplexValue c = new ComplexValue(z.getReal().doubleValue(), z.getImaginary().doubleValue());
     ComplexValue iz = new ComplexValue(-c.im, c.re);
     ComplexValue oneMinusIz = sub(new ComplexValue(1.0, 0.0), iz);
     ComplexValue onePlusIz = add(new ComplexValue(1.0, 0.0), iz);
@@ -183,19 +179,6 @@ public final class ComplexMath {
     double re = Math.log(modulus);
     double im = Math.atan2(a.im, a.re);
     return new ComplexValue(re, im);
-  }
-
-  /**
-   * Convert domain model complex number to internal representation.
-   *
-   * @param z domain model value
-   * @return internal value, or null if input is null/NaN
-   */
-  public ComplexValue from(ComplexNumber z) {
-    if (z == null || z.isNaN()) {
-      return null;
-    }
-    return new ComplexValue(z.getReal().doubleValue(), z.getImaginary().doubleValue());
   }
 
   /**

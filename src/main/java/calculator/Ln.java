@@ -6,9 +6,11 @@ import java.util.List;
 import calculator.numbers.BaseNumber;
 import calculator.numbers.ComplexNumber;
 import calculator.numbers.IntegerNumber;
+import calculator.numbers.NumberType;
 import calculator.numbers.RationalNumber;
 import calculator.numbers.RealNumber;
 import calculator.numbers.SpecialNumber;
+import calculator.numbers.visitor.TypeCaster;
 
 /** Natural logarithm function: ln(x). */
 public final class Ln extends UnaryFunction {
@@ -43,14 +45,9 @@ public final class Ln extends UnaryFunction {
 
   @Override
   public BaseNumber function(RationalNumber value) {
-    double ratio = new RationalMath().toDouble(value);
-    if (ratio == 0.0) {
-      return new RealNumber(SpecialNumber.NegativeInfinity);
-    }
-    if (ratio < 0.0) {
-      return new RealNumber(SpecialNumber.NaN);
-    }
-    return new RealNumber(Math.log(ratio));
+    TypeCaster caster = new TypeCaster(NumberType.REAL);
+    value.accept(caster);
+    return function((RealNumber) caster.getResult());
   }
 
   /**

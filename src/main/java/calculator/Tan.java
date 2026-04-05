@@ -5,9 +5,11 @@ import java.util.List;
 import calculator.numbers.BaseNumber;
 import calculator.numbers.ComplexNumber;
 import calculator.numbers.IntegerNumber;
+import calculator.numbers.NumberType;
 import calculator.numbers.RationalNumber;
 import calculator.numbers.RealNumber;
 import calculator.numbers.SpecialNumber;
+import calculator.numbers.visitor.TypeCaster;
 
 /** Tangent function: tan(x). */
 public final class Tan extends UnaryFunction {
@@ -36,8 +38,9 @@ public final class Tan extends UnaryFunction {
 
   @Override
   public BaseNumber function(RationalNumber value) {
-    double ratio = new RationalMath().toDouble(value);
-    return new RealNumber(Math.tan(ratio));
+    TypeCaster caster = new TypeCaster(NumberType.REAL);
+    value.accept(caster);
+    return function((RealNumber) caster.getResult());
   }
 
   /**

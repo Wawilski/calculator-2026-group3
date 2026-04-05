@@ -6,9 +6,11 @@ import java.util.List;
 import calculator.numbers.BaseNumber;
 import calculator.numbers.ComplexNumber;
 import calculator.numbers.IntegerNumber;
+import calculator.numbers.NumberType;
 import calculator.numbers.RationalNumber;
 import calculator.numbers.RealNumber;
 import calculator.numbers.SpecialNumber;
+import calculator.numbers.visitor.TypeCaster;
 
 /** Square root function: sqrt(x). */
 public final class Sqrt extends UnaryFunction {
@@ -50,11 +52,9 @@ public final class Sqrt extends UnaryFunction {
    */
   @Override
   public BaseNumber function(RationalNumber value) {
-    double ratio = new RationalMath().toDouble(value);
-    if (ratio < 0.0) {
-      return new RealNumber(SpecialNumber.NaN);
-    }
-    return new RealNumber(Math.sqrt(ratio));
+    TypeCaster caster = new TypeCaster(NumberType.REAL);
+    value.accept(caster);
+    return function((RealNumber) caster.getResult());
   }
 
   /**

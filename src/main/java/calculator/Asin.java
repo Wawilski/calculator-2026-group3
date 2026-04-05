@@ -6,9 +6,11 @@ import java.util.List;
 import calculator.numbers.BaseNumber;
 import calculator.numbers.ComplexNumber;
 import calculator.numbers.IntegerNumber;
+import calculator.numbers.NumberType;
 import calculator.numbers.RationalNumber;
 import calculator.numbers.RealNumber;
 import calculator.numbers.SpecialNumber;
+import calculator.numbers.visitor.TypeCaster;
 
 /** Arc sine function: asin(x). */
 public final class Asin extends UnaryFunction {
@@ -37,8 +39,9 @@ public final class Asin extends UnaryFunction {
 
   @Override
   public BaseNumber function(RationalNumber value) {
-    double ratio = new RationalMath().toDouble(value);
-    return new RealNumber(Math.asin(ratio));
+    TypeCaster caster = new TypeCaster(NumberType.REAL);
+    value.accept(caster);
+    return function((RealNumber) caster.getResult());
   }
 
   /**

@@ -6,9 +6,11 @@ import java.util.List;
 import calculator.numbers.BaseNumber;
 import calculator.numbers.ComplexNumber;
 import calculator.numbers.IntegerNumber;
+import calculator.numbers.NumberType;
 import calculator.numbers.RationalNumber;
 import calculator.numbers.RealNumber;
 import calculator.numbers.SpecialNumber;
+import calculator.numbers.visitor.TypeCaster;
 
 /** General logarithm function: log(value, base). */
 public final class Log extends BinaryFunction {
@@ -52,22 +54,16 @@ public final class Log extends BinaryFunction {
   /**
    * Compute log(value, base) for rational inputs.
    *
-   * <p>Rationals are converted through {@link RationalMath#toDouble(RationalNumber)}.
+   * <p>Rationals are cast to real values before delegating to the real overload.
    */
   @Override
   public BaseNumber function(RationalNumber value, RationalNumber base) {
-    double baseValue = new RationalMath().toDouble(base);
-    double valueValue = new RationalMath().toDouble(value);
-    if (baseValue <= 0.0 || baseValue == 1.0) {
-      return new RealNumber(SpecialNumber.NaN);
-    }
-    if (valueValue == 0.0) {
-      return new RealNumber(SpecialNumber.NegativeInfinity);
-    }
-    if (valueValue < 0.0) {
-      return new RealNumber(SpecialNumber.NaN);
-    }
-    return new RealNumber(Math.log(valueValue) / Math.log(baseValue));
+    TypeCaster caster = new TypeCaster(NumberType.REAL);
+    value.accept(caster);
+    RealNumber realValue = (RealNumber) caster.getResult();
+    base.accept(caster);
+    RealNumber realBase = (RealNumber) caster.getResult();
+    return function(realValue, realBase);
   }
 
   /**
