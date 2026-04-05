@@ -25,8 +25,8 @@ class TestEvaluator {
     calc = new Calculator();
     value1 = 8;
     value2 = 6;
-    value3 = new BigDecimal(4.5);
-    value4 = new BigDecimal(1.2);
+    value3 = new BigDecimal("4.5");
+    value4 = new BigDecimal("1.2");
 
   }
 
@@ -46,7 +46,7 @@ class TestEvaluator {
         case "+" -> assertEquals(new IntegerNumber(value1 + value2), calc.eval(new Plus(params)));
         case "-" -> assertEquals(new IntegerNumber(value1 - value2), calc.eval(new Minus(params)));
         case "*" -> assertEquals(new IntegerNumber(value1 * value2), calc.eval(new Times(params)));
-        case "/" -> assertEquals(new IntegerNumber(value1 / value2), calc.eval(new Divides(params)));
+        case "/" -> assertEquals(new RationalNumber(value1, value2), calc.eval(new Divides(params)));
         default -> fail();
       }
     } catch (IllegalConstruction _) {
@@ -63,13 +63,14 @@ class TestEvaluator {
       // of the parameterised test
       switch (symbol) {
         case "+" ->
-          assertEquals(new RealNumber(value3.add(value4, MathContext.DECIMAL32)), calc.eval(new Plus(params)));
+          assertEquals(new RealNumber(value3.add(value4, MathContext.UNLIMITED)), calc.eval(new Plus(params)));
         case "-" ->
-          assertEquals(new RealNumber(value3.subtract(value4, MathContext.DECIMAL32)), calc.eval(new Minus(params)));
+          assertEquals(new RealNumber(value3.subtract(value4, MathContext.UNLIMITED)), calc.eval(new Minus(params)));
         case "*" ->
-          assertEquals(new RealNumber(value3.multiply(value4, MathContext.DECIMAL32)), calc.eval(new Times(params)));
+          assertEquals(new RealNumber(value3.multiply(value4, MathContext.UNLIMITED)), calc.eval(new Times(params)));
         case "/" ->
-          assertEquals(new RealNumber(value3.divide(value4, 16, RoundingMode.CEILING)), calc.eval(new Divides(params)));
+          assertEquals(new RealNumber(value3.divide(value4, RealNumber.getScale(), RoundingMode.CEILING)),
+              calc.eval(new Divides(params)));
         default -> fail();
       }
     } catch (IllegalConstruction _) {
@@ -122,12 +123,12 @@ class TestEvaluator {
 
     ComplexNumber times = new ComplexNumber(realPartTimes, imPartTimes);
 
-    BigDecimal mod = (imLeft.pow(2)).multiply(imRight.pow(2));
-    BigDecimal realPartDiv = realLeft.multiply(realRight).add(imLeft.multiply(imRight));
-    BigDecimal imPartDiv = realRight.multiply(imLeft).subtract(realLeft.multiply(imRight));
+    BigDecimal mod = (imLeft.pow(2)).multiply(imRight.pow(2), MathContext.UNLIMITED);
+    BigDecimal realPartDiv = realLeft.multiply(realRight, MathContext.UNLIMITED).add(imLeft.multiply(imRight));
+    BigDecimal imPartDiv = realRight.multiply(imLeft, MathContext.UNLIMITED).subtract(realLeft.multiply(imRight));
 
-    ComplexNumber div = new ComplexNumber(realPartDiv.divide(mod, 16, RoundingMode.CEILING),
-        imPartDiv.divide(mod, 16, RoundingMode.CEILING));
+    ComplexNumber div = new ComplexNumber(realPartDiv.divide(mod, RealNumber.getScale(), RoundingMode.CEILING),
+        imPartDiv.divide(mod, RealNumber.getScale(), RoundingMode.CEILING));
 
     try {
       // construct another type of operation depending on the input value

@@ -5,6 +5,7 @@ import calculator.BinaryFunction;
 import calculator.Function;
 import calculator.UnaryFunction;
 import calculator.numbers.visitor.TypeVisitor;
+import lombok.Getter;
 import visitor.Visitor;
 
 /**
@@ -16,12 +17,25 @@ import visitor.Visitor;
  * @see RealNumber
  * @see ComplexNumber
  */
+@Getter
 public class RationalNumber implements BaseNumber {
 
-  // Numerator of the rational number
+    /**
+     * -- GETTER --
+     *  getter method to obtain the numerator of the rational number
+     *
+     * @return the numerator of the rational number
+     */
+    // Numerator of the rational number
   private int numerator;
 
-  // Denominator of the rational number
+    /**
+     * -- GETTER --
+     *  getter method to obtain the denominator of the rational number
+     *
+     * @return the denominator of the rational number
+     */
+    // Denominator of the rational number
   private int denominator;
 
   /**
@@ -43,25 +57,7 @@ public class RationalNumber implements BaseNumber {
     this.simplify();
   }
 
-  /**
-   * getter method to obtain the numerator of the rational number
-   *
-   * @return the numerator of the rational number
-   */
-  public int getNumerator() {
-    return numerator;
-  }
-
-  /**
-   * getter method to obtain the denominator of the rational number
-   *
-   * @return the denominator of the rational number
-   */
-  public int getDenominator() {
-    return denominator;
-  }
-
-  /**
+    /**
    * accept method to implement the visitor design pattern to traverse arithmetic
    * expressions.
    * Each number will pass itself to the visitor object to get processed by the
@@ -154,18 +150,6 @@ public class RationalNumber implements BaseNumber {
     // If the object is compared to itself then return true
     if (o == this) {
       return true;
-    }
-
-    // If the value of the Integer number is equal to the numerator and the
-    // denominator is equal to 1 than the two objects are equal
-    if (o instanceof IntegerNumber) {
-      return this.denominator == 1 && this.numerator == ((IntegerNumber) o).getValue();
-    }
-
-    // If the value of the Real number is equal to the devision between the
-    // numerator and the denominator than two objects are equal
-    if (o instanceof RealNumber) {
-      return ((RealNumber) o).equals(new RealNumber(this.numerator / this.denominator));
     }
 
     if (!(o instanceof RationalNumber)) {

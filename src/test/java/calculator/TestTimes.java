@@ -100,6 +100,30 @@ class TestTimes {
   }
 
   @Test
+  void testInfinityMultiplication() {
+
+    RealNumber plusInf = new RealNumber(SpecialNumber.PositiveInfinity);
+    RealNumber minusInf = new RealNumber(SpecialNumber.NegativeInfinity);
+    List<Expression> param1 = Arrays.asList(minusInf, minusInf);
+    List<Expression> param2 = Arrays.asList(plusInf, minusInf);
+
+    try {
+      Times op = new Times(param1);
+      Evaluator e = new Evaluator();
+      op.accept(e);
+      RealNumber result = (RealNumber) e.getResult();
+      assertEquals(plusInf, result);
+
+      op = new Times(param2);
+      op.accept(e);
+      result = (RealNumber) e.getResult();
+      assertEquals(minusInf, result);
+    } catch (IllegalConstruction _) {
+      fail();
+    }
+  }
+
+  @Test
   void testRationalMultiplication() {
     RationalNumber left = new RationalNumber(1, 2);
     RationalNumber right = new RationalNumber(3, 2);
@@ -121,8 +145,8 @@ class TestTimes {
 
   @Test
   void testComplexMultiplication() {
-    ComplexNumber left = new ComplexNumber(1, 6.00);
-    ComplexNumber right = new ComplexNumber(8.00, 4);
+    ComplexNumber left = new ComplexNumber("1", "6.00");
+    ComplexNumber right = new ComplexNumber("8.00", "4");
 
     ArrayList<Expression> p = new ArrayList<>(
         Arrays.asList(left, right));
@@ -132,7 +156,7 @@ class TestTimes {
       t.accept(v);
       ComplexNumber result = (ComplexNumber) v.getResult();
 
-      assertEquals(result, new ComplexNumber(-16, 52));
+      assertEquals(result, new ComplexNumber("-16", "52"));
     } catch (IllegalConstruction _) {
       fail();
     }

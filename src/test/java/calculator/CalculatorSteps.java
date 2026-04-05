@@ -4,6 +4,7 @@ import calculator.numbers.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 import io.cucumber.java.Before;
+import io.cucumber.java.ParameterType;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -14,6 +15,11 @@ import java.util.List;
 import visitor.CountingVisitor;
 
 public class CalculatorSteps {
+
+  @ParameterType("[0-9]+")
+  public IntegerNumber integerNumber(String integer) {
+    return new IntegerNumber(Integer.valueOf(integer));
+  }
 
   private ArrayList<Expression> params;
   private Operation op;
@@ -65,25 +71,25 @@ public class CalculatorSteps {
   // The string in the Given annotation shows how to use regular expressions...
   // In this example, the notation d+ is used to represent numbers, i.e. nonempty
   // sequences of digits
-  @Given("^the sum of two numbers (\\d+) and (\\d+)$")
+  @Given("the sum of two numbers {integerNumber} and {integerNumber}")
   // The alternative, and in this case simpler, notation would be:
   // @Given("the sum of two numbers {int} and {int}")
-  public void givenTheSum(int n1, int n2) {
+  public void givenTheSum(IntegerNumber n1, IntegerNumber n2) {
     try {
       params = new ArrayList<>();
-      params.add(new IntegerNumber(n1));
-      params.add(new IntegerNumber(n2));
+      params.add(n1);
+      params.add(n2);
       op = new Plus(params);
     } catch (IllegalConstruction _) {
       fail();
     }
   }
 
-  @Given("^the nested expression \\((\\d+) \\+ (\\d+)\\) \\* \\((\\d+) - (\\d+)\\)$")
-  public void givenTheNestedExpression(int a, int b, int c1, int d) {
+  @Given("the nested expression \\({integerNumber} + {integerNumber}\\) * \\({integerNumber} - {integerNumber}\\)")
+  public void givenTheNestedExpression(IntegerNumber a, IntegerNumber b, IntegerNumber c, IntegerNumber d) {
     try {
-      Expression left = new Plus(List.of(new IntegerNumber(a), new IntegerNumber(b)));
-      Expression right = new Minus(List.of(new IntegerNumber(c1), new IntegerNumber(d)));
+      Expression left = new Plus(List.of(a, b));
+      Expression right = new Minus(List.of(c, d));
       op = new Times(List.of(left, right));
     } catch (IllegalConstruction _) {
       fail();
@@ -95,7 +101,7 @@ public class CalculatorSteps {
     assertEquals(s, c.format(op, Notation.valueOf(notation)));
   }
 
-  @Then("^it has depth (\\d+), (\\d+) operations and (\\d+) numbers$")
+  @Then("it has depth {int}, {int} operations and {int} numbers")
   public void thenItHasDepthOperationsAndNumbers(int depth, int operations, int numbers) {
     CountingVisitor visitor = new CountingVisitor();
     op.accept(visitor);
@@ -109,33 +115,54 @@ public class CalculatorSteps {
     assertEquals(expected, c.prettyFormat(op));
   }
 
-  @When("^I provide a (.*) number (\\d+)$")
-  public void whenIProvideANumber(String s, int val) {
-    // add extra parameter to the operation
+  @When("I provide a {word} number {integerNumber}")
+  public void iProvideaNumber(String s, IntegerNumber val) {
+    // Write code here that turns the phrase above into concrete actions
     params = new ArrayList<>();
-    params.add(new IntegerNumber(val));
+    params.add(val);
     op.addMoreParams(params);
   }
 
-  @Then("^the (.*) is (\\d+)$")
-  public void thenTheOperationIs(String s, int val) {
+  @Then("the {word} is {integerNumber}")
+  public void thenTheOperationIs(String s, IntegerNumber value) {
     try {
       switch (s) {
-        case "sum" -> op = new Plus(params);
-        case "product" -> op = new Times(params);
-        case "quotient" -> op = new Divides(params);
-        case "difference" -> op = new Minus(params);
-        default -> fail();
+        case "sum":
+          op = new Plus(params);
+          break;
+        case "product":
+          op = new Times(params);
+          break;
+        case "difference":
+          op = new Minus(params);
+          break;
+        default:
+          throw new IllegalConstruction();
       }
-      assertEquals(new IntegerNumber(val), c.eval(op));
+      assertEquals(value, c.eval(op));
     } catch (IllegalConstruction _) {
       fail();
     }
   }
 
-  @Then("the operation evaluates to {int}")
-  public void thenTheOperationEvaluatesTo(int val) {
-    assertEquals(new IntegerNumber(val), c.eval(op));
+  @Then("the quotient is {int} \\/ {int}")
+  public void thenTheOperationIs(int numerator, int denominator) {
+    try {
+      op = new Divides(params);
+      assertEquals(new RationalNumber(numerator, denominator), c.eval(op));
+    } catch (IllegalConstruction _) {
+      fail();
+    }
+  }
+
+  @Then("the operation evaluates to {integerNumber}")
+  public void thenTheOperationEvaluatesTo(IntegerNumber val) {
+    assertEquals(val, c.eval(op));
+  }
+
+  @Then("the operation evaluates to {int} \\/ {int}")
+  public void thenTheOperationEvaluatesTo(int val1, int val2) {
+    assertEquals(new RationalNumber(val1, val2), c.eval(op));
   }
 
   @Then("a division by zero error is raised")

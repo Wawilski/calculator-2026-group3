@@ -3,12 +3,14 @@ package calculator.numbers;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.math.RoundingMode;
 
 import calculator.BinaryFunction;
 import calculator.Function;
 import calculator.Operation;
 import calculator.UnaryFunction;
 import calculator.numbers.visitor.TypeVisitor;
+import lombok.Getter;
 import visitor.Visitor;
 
 /**
@@ -21,16 +23,35 @@ import visitor.Visitor;
  * @see RealNumber
  */
 
+@Getter
 public class ComplexNumber implements BaseNumber {
 
   // Real part of the complex number
 
-  private BigDecimal real;
+    /**
+     * -- GETTER --
+     *  getter method to return the real part of the complex number
+     *
+     * @return The real part of the complex number
+     */
+    private BigDecimal real;
 
-  // Imaginary part of the complex number
+    /**
+     * -- GETTER --
+     *  getter method to return the imaginary part of the complex number
+     *
+     * @return The imaginary part of the complex number
+     */
+    // Imaginary part of the complex number
   private BigDecimal imaginary;
 
-  // Is true if the complex number is a NaN
+    /**
+     * -- GETTER --
+     *  method to tell if the complex number is a NaN
+     *
+     * @return if the complex number is a NaN
+     */
+    // Is true if the complex number is a NaN
   // (e.g. if it should represent an infinite value in complex)
   private boolean isNaN;
 
@@ -41,8 +62,8 @@ public class ComplexNumber implements BaseNumber {
    * @param imaginary the BigDecimal representing the imaginary part
    */
   public /* constructor */ ComplexNumber(BigDecimal real, BigDecimal imaginary) {
-    this.real = real;
-    this.imaginary = imaginary;
+    this.real = real.setScale(RealNumber.getScale(), RoundingMode.CEILING);
+    this.imaginary = imaginary.setScale(RealNumber.getScale(), RoundingMode.CEILING);
     this.isNaN = false;
   }
 
@@ -53,8 +74,9 @@ public class ComplexNumber implements BaseNumber {
    * @param imaginary the integer representing the imaginary part
    */
   public /* constructor */ ComplexNumber(int real, int imaginary) {
-    this.real = new BigDecimal(real, MathContext.DECIMAL32);
-    this.imaginary = new BigDecimal(imaginary, MathContext.DECIMAL32);
+    this.real = new BigDecimal(real, MathContext.UNLIMITED).setScale(RealNumber.getScale(), RoundingMode.CEILING);
+    this.imaginary = new BigDecimal(imaginary, MathContext.UNLIMITED).setScale(RealNumber.getScale(),
+        RoundingMode.CEILING);
     this.isNaN = false;
   }
 
@@ -65,8 +87,23 @@ public class ComplexNumber implements BaseNumber {
    * @param imaginary the double representing the imaginary part
    */
   public /* constructor */ ComplexNumber(double real, double imaginary) {
-    this.real = new BigDecimal(real, MathContext.DECIMAL32);
-    this.imaginary = new BigDecimal(imaginary, MathContext.DECIMAL32);
+    this.real = new BigDecimal(real, MathContext.UNLIMITED).setScale(RealNumber.getScale(), RoundingMode.CEILING);
+    this.imaginary = new BigDecimal(imaginary, MathContext.UNLIMITED).setScale(RealNumber.getScale(),
+        RoundingMode.CEILING);
+    this.isNaN = false;
+  }
+
+  /**
+   * class constructor which specify the real and imaginary part with
+   * Strings
+   *
+   * @param real      the String representing the real part
+   * @param imaginary the String representing the imaginary part
+   */
+  public /* constructor */ ComplexNumber(String real, String imaginary) {
+    this.real = new BigDecimal(real, MathContext.UNLIMITED).setScale(RealNumber.getScale(), RoundingMode.CEILING);
+    this.imaginary = new BigDecimal(imaginary, MathContext.UNLIMITED).setScale(RealNumber.getScale(),
+        RoundingMode.CEILING);
     this.isNaN = false;
   }
 
@@ -79,34 +116,7 @@ public class ComplexNumber implements BaseNumber {
     this.isNaN = true;
   }
 
-  /**
-   * getter method to return the real part of the complex number
-   *
-   * @return The real part of the complex number
-   */
-  public BigDecimal getReal() {
-    return this.real;
-  }
-
-  /**
-   * getter method to return the imaginary part of the complex number
-   *
-   * @return The imaginary part of the complex number
-   */
-  public BigDecimal getImaginary() {
-    return this.imaginary;
-  }
-
-  /**
-   * method to tell if the complex number is a NaN
-   * 
-   * @return if the complex number is a NaN
-   */
-  public boolean isNaN() {
-    return this.isNaN;
-  }
-
-  /**
+    /**
    * Accept method to implement the visitor design pattern to numbers.
    * Each operation will delegate the visitor to each of its arguments
    * expressions,
@@ -172,13 +182,6 @@ public class ComplexNumber implements BaseNumber {
     if (o == this) {
       return true;
     }
-    if (o instanceof RealNumber) {
-      return this.real.equals(((RealNumber) o).getValue());
-    }
-
-    if (o instanceof IntegerNumber) {
-      return this.real.compareTo(new BigDecimal(((IntegerNumber) o).getValue())) == 0;
-    }
 
     // If the object is of another type then return false
     if (!(o instanceof ComplexNumber)) {
@@ -202,7 +205,7 @@ public class ComplexNumber implements BaseNumber {
    */
   @Override
   public int hashCode() {
-    return this.real.intValue() * this.imaginary.intValue();
+    return this.real.hashCode() + this.imaginary.hashCode();
   }
 
   @Override
@@ -211,10 +214,14 @@ public class ComplexNumber implements BaseNumber {
     if (isNaN) {
       s = "NaN";
     } else {
-      String realPart = (this.real.equals(BigDecimal.ZERO)) ? "" : this.real.toString();
-      String imPart = (this.imaginary.equals(BigDecimal.ZERO)) ? "" : " + " + this.imaginary.toString() + "i";
+      String realPart = (this.real.equals(new BigDecimal(0).setScale(RealNumber.getScale(), RoundingMode.CEILING))) ? ""
+          : this.real.toString();
+      String imPart = (this.imaginary.equals(new BigDecimal(0).setScale(RealNumber.getScale(), RoundingMode.CEILING)))
+          ? ""
+          : this.imaginary.toString() + "i";
+      String sign = (realPart == "" || imPart == "") ? "" : " + ";
 
-      s = realPart + imPart;
+      s = realPart + sign + imPart;
 
     }
     return s;

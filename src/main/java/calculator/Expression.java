@@ -5,7 +5,7 @@ import visitor.Visitor;
 
 /**
  * Expression is an inteface that represents arithmetic expressions.
- * It has two concrete subclasses Operation and MyNumber.
+ * It has two concrete subclasses Operation and BaseNumber.
  *
  * @see Operation
  * @see BaseNumber

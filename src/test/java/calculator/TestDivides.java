@@ -19,6 +19,7 @@ class TestDivides {
   private final int value2 = 6;
   private Divides op;
   private List<Expression> params;
+  private List<Expression> params1;
 
   @BeforeEach
   void setUp() {
@@ -161,6 +162,87 @@ class TestDivides {
   }
 
   @Test
+  void TestDivisionByInfinityReal() {
+    RealNumber plusInf = new RealNumber(SpecialNumber.PositiveInfinity);
+
+    RealNumber real = new RealNumber("1");
+    RealNumber zero = new RealNumber("0");
+
+    params1 = Arrays.asList(real, plusInf);
+
+    try {
+
+      op = new Divides(params1);
+      Evaluator e = new Evaluator();
+      op.accept(e);
+      RealNumber result = (RealNumber) e.getResult();
+      assertEquals(zero, result);
+
+    } catch (IllegalConstruction e) {
+      fail();
+    }
+  }
+
+  @Test
+  void TestDivisionInfinityByReal() {
+    RealNumber plusInf = new RealNumber(SpecialNumber.PositiveInfinity);
+    RealNumber minusInf = new RealNumber(SpecialNumber.NegativeInfinity);
+
+    RealNumber plusReal = new RealNumber("1");
+    RealNumber minusReal = new RealNumber("-1");
+
+    List<Expression> params1 = Arrays.asList(plusInf, plusReal);
+    List<Expression> params2 = Arrays.asList(minusInf, plusReal);
+    List<Expression> params3 = Arrays.asList(plusInf, minusReal);
+    List<Expression> params4 = Arrays.asList(minusInf, minusReal);
+    try {
+      op = new Divides(params1);
+      Evaluator e = new Evaluator();
+      op.accept(e);
+      RealNumber result = (RealNumber) e.getResult();
+      assertEquals(new RealNumber(SpecialNumber.PositiveInfinity), result);
+
+      op = new Divides(params2);
+      op.accept(e);
+      result = (RealNumber) e.getResult();
+      assertEquals(new RealNumber(SpecialNumber.NegativeInfinity), result);
+
+      op = new Divides(params3);
+      op.accept(e);
+      result = (RealNumber) e.getResult();
+      assertEquals(new RealNumber(SpecialNumber.NegativeInfinity), result);
+
+      op = new Divides(params4);
+      op.accept(e);
+      result = (RealNumber) e.getResult();
+      assertEquals(new RealNumber(SpecialNumber.PositiveInfinity), result);
+
+    } catch (IllegalConstruction e) {
+      fail();
+    }
+  }
+
+  @Test
+  void TestDivisionInfByInfReal() {
+
+    RealNumber plusInf = new RealNumber(SpecialNumber.PositiveInfinity);
+    RealNumber minusInf = new RealNumber(SpecialNumber.NegativeInfinity);
+
+    params1 = Arrays.asList(plusInf, minusInf);
+    try {
+
+      op = new Divides(params1);
+      Evaluator e = new Evaluator();
+      op.accept(e);
+      RealNumber result = (RealNumber) e.getResult();
+      assertEquals(result.getSpecialValue(), SpecialNumber.NaN);
+
+    } catch (IllegalConstruction e) {
+      fail();
+    }
+  }
+
+  @Test
   void testRationalDivision() {
     RationalNumber left = new RationalNumber(1, 2);
     RationalNumber right = new RationalNumber(3, 2);
@@ -202,8 +284,8 @@ class TestDivides {
 
   @Test
   void testComplexDivision() {
-    ComplexNumber left = new ComplexNumber(1, 6.00);
-    ComplexNumber right = new ComplexNumber(8.00, 4);
+    ComplexNumber left = new ComplexNumber("1", "6.00");
+    ComplexNumber right = new ComplexNumber("8.00", "4");
 
     ArrayList<Expression> p = new ArrayList<>(
         Arrays.asList(left, right));
@@ -213,7 +295,7 @@ class TestDivides {
       t.accept(v);
       ComplexNumber result = (ComplexNumber) v.getResult();
 
-      ComplexNumber test = new ComplexNumber(0.05555556, 0.07638889);
+      ComplexNumber test = new ComplexNumber("0.05555556", "0.07638889");
       // To compare solution and result we need to scale the result to the solution
       BigDecimal real = result.getReal().setScale(8, RoundingMode.CEILING);
       BigDecimal im = result.getImaginary().setScale(8, RoundingMode.CEILING);
@@ -225,7 +307,7 @@ class TestDivides {
 
   @Test
   void testComplexNaNDivision() {
-    ComplexNumber left = new ComplexNumber(1, 6);
+    ComplexNumber left = new ComplexNumber("1", "6");
     ComplexNumber right = new ComplexNumber();
 
     ArrayList<Expression> p = new ArrayList<>(
