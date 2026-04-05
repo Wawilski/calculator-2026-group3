@@ -55,6 +55,6 @@ public final class Cos extends UnaryFunction {
 
   @Override
   public BaseNumber function(ComplexNumber value) {
-    return ComplexMath.cos(value);
+    return new ComplexMath().cos(value);
   }
 }

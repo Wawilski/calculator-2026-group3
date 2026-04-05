@@ -55,6 +55,6 @@ public final class Sin extends UnaryFunction {
 
   @Override
   public BaseNumber function(ComplexNumber value) {
-    return ComplexMath.sin(value);
+    return new ComplexMath().sin(value);
   }
 }

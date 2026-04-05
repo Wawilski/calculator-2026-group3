@@ -3,21 +3,21 @@ package calculator;
 import calculator.numbers.ComplexNumber;
 
 /** Utility methods for elementary complex-valued functions. */
-final class ComplexMath {
+public final class ComplexMath {
 
-  private static final double HALF_PI = Math.PI / 2.0;
+  public final double HALF_PI = Math.PI / 2.0;
 
-  private static final class ComplexValue {
-    private final double re;
-    private final double im;
+  public final class ComplexValue {
+    public final double re;
+    public final double im;
 
-    private ComplexValue(double re, double im) {
+    public ComplexValue(double re, double im) {
       this.re = re;
       this.im = im;
     }
   }
 
-  private ComplexMath() {
+  public ComplexMath() {
   }
 
   /**
@@ -28,7 +28,7 @@ final class ComplexMath {
    * @param z input complex number
    * @return sin(z), or NaN complex on invalid input
    */
-  static ComplexNumber sin(ComplexNumber z) {
+  public ComplexNumber sin(ComplexNumber z) {
     ComplexValue c = from(z);
     if (c == null) {
       return new ComplexNumber();
@@ -46,7 +46,7 @@ final class ComplexMath {
    * @param z input complex number
    * @return cos(z), or NaN complex on invalid input
    */
-  static ComplexNumber cos(ComplexNumber z) {
+  public ComplexNumber cos(ComplexNumber z) {
     ComplexValue c = from(z);
     if (c == null) {
       return new ComplexNumber();
@@ -65,7 +65,7 @@ final class ComplexMath {
    * @param z input complex number
    * @return tan(z), or NaN complex on invalid input
    */
-  static ComplexNumber tan(ComplexNumber z) {
+  public ComplexNumber tan(ComplexNumber z) {
     ComplexValue c = from(z);
     if (c == null) {
       return new ComplexNumber();
@@ -87,7 +87,7 @@ final class ComplexMath {
    * @param z input complex number
    * @return asin(z), or NaN complex on invalid input
    */
-  static ComplexNumber asin(ComplexNumber z) {
+  public ComplexNumber asin(ComplexNumber z) {
     ComplexValue c = from(z);
     if (c == null) {
       return new ComplexNumber();
@@ -109,7 +109,7 @@ final class ComplexMath {
    * @param z input complex number
    * @return acos(z), or NaN complex on invalid input
    */
-  static ComplexNumber acos(ComplexNumber z) {
+  public ComplexNumber acos(ComplexNumber z) {
     ComplexNumber asinValue = asin(z);
     if (asinValue.isNaN()) {
       return asinValue;
@@ -129,7 +129,7 @@ final class ComplexMath {
    * @param z input complex number
    * @return atan(z), or NaN complex on invalid input
    */
-  static ComplexNumber atan(ComplexNumber z) {
+  public ComplexNumber atan(ComplexNumber z) {
     ComplexValue c = from(z);
     if (c == null) {
       return new ComplexNumber();
@@ -145,17 +145,17 @@ final class ComplexMath {
   }
 
   /** @return a + b */
-  private static ComplexValue add(ComplexValue a, ComplexValue b) {
+  public ComplexValue add(ComplexValue a, ComplexValue b) {
     return new ComplexValue(a.re + b.re, a.im + b.im);
   }
 
   /** @return a - b */
-  private static ComplexValue sub(ComplexValue a, ComplexValue b) {
+  public ComplexValue sub(ComplexValue a, ComplexValue b) {
     return new ComplexValue(a.re - b.re, a.im - b.im);
   }
 
   /** @return a * b */
-  private static ComplexValue mul(ComplexValue a, ComplexValue b) {
+  public ComplexValue mul(ComplexValue a, ComplexValue b) {
     return new ComplexValue(a.re * b.re - a.im * b.im, a.re * b.im + a.im * b.re);
   }
 
@@ -165,7 +165,7 @@ final class ComplexMath {
    * @param a complex value
    * @return sqrt(a) on the principal branch
    */
-  private static ComplexValue sqrt(ComplexValue a) {
+  public ComplexValue sqrt(ComplexValue a) {
     double modulus = Math.hypot(a.re, a.im);
     double re = Math.sqrt((modulus + a.re) / 2.0);
     double im = Math.copySign(Math.sqrt((modulus - a.re) / 2.0), a.im);
@@ -178,7 +178,7 @@ final class ComplexMath {
    * @param a complex value
    * @return log(a) on the principal branch
    */
-  private static ComplexValue log(ComplexValue a) {
+  public ComplexValue log(ComplexValue a) {
     double modulus = Math.hypot(a.re, a.im);
     double re = Math.log(modulus);
     double im = Math.atan2(a.im, a.re);
@@ -191,7 +191,7 @@ final class ComplexMath {
    * @param z domain model value
    * @return internal value, or null if input is null/NaN
    */
-  private static ComplexValue from(ComplexNumber z) {
+  public ComplexValue from(ComplexNumber z) {
     if (z == null || z.isNaN()) {
       return null;
     }
@@ -205,7 +205,7 @@ final class ComplexMath {
    * @param im imaginary part
    * @return complex number, or NaN complex if parts are not finite
    */
-  private static ComplexNumber to(double re, double im) {
+  public ComplexNumber to(double re, double im) {
     if (Double.isNaN(re) || Double.isNaN(im) || Double.isInfinite(re) || Double.isInfinite(im)) {
       return new ComplexNumber();
     }

@@ -62,6 +62,6 @@ public final class Asin extends UnaryFunction {
 
   @Override
   public BaseNumber function(ComplexNumber value) {
-    return ComplexMath.asin(value);
+    return new ComplexMath().asin(value);
   }
 }

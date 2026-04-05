@@ -55,6 +55,6 @@ public final class Tan extends UnaryFunction {
 
   @Override
   public BaseNumber function(ComplexNumber value) {
-    return ComplexMath.tan(value);
+    return new ComplexMath().tan(value);
   }
 }

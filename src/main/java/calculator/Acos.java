@@ -62,6 +62,6 @@ public final class Acos extends UnaryFunction {
 
   @Override
   public BaseNumber function(ComplexNumber value) {
-    return ComplexMath.acos(value);
+    return new ComplexMath().acos(value);
   }
 }

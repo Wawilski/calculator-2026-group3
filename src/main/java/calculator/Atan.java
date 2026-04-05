@@ -63,6 +63,6 @@ public final class Atan extends UnaryFunction {
 
   @Override
   public BaseNumber function(ComplexNumber value) {
-    return ComplexMath.atan(value);
+    return new ComplexMath().atan(value);
   }
 }
