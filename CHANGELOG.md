@@ -5,16 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.0.0] - 2026-04-03
 
 ### Added
-
 - Initial project structure
 - Basics Artithmetic operations
-- Documentation Files
-- All types of number Support (Reals, Integers, Rationals, Complex)
+- Repository Information Files
+- All types of number Support: Reals, Integers, Rationals and Complex [Feature #13](https://github.com/Wawilski/calculator-2026-group3/issues/13)
+- Github Actions workflow automation [CI #8](https://github.com/Wawilski/calculator-2026-group3/issues/8)
+    - Continuous building and testing [CI #15](https://github.com/Wawilski/calculator-2026-group3/issues/15)
+    - Continuous coverage and quality analysis [CI #16](https://github.com/Wawilski/calculator-2026-group3/issues/16)
+    - Continuous reporting [CI #17](https://github.com/Wawilski/calculator-2026-group3/issues/17)
 ### Changed
+### Fixed
+- Integer division by zero [BUG #5](https://github.com/Wawilski/calculator-2026-group3/issues/5)
+- Heterogenous use of in-/post-/prefix notation [BUG #6](https://github.com/Wawilski/calculator-2026-group3/issues/6)
+### Removed
 
-- Added target/ to .gitignore
-
+- MyNumber class management
 
