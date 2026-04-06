@@ -5,9 +5,12 @@ import java.math.MathContext;
 import java.math.RoundingMode;
 
 import calculator.Operation;
+import calculator.numbers.visitor.TypeVisitor;
 import lombok.Getter;
 import visitor.Visitor;
-import calculator.numbers.visitor.*;
+import calculator.functions.BinaryFunction;
+import calculator.functions.Function;
+import calculator.functions.UnaryFunction;
 
 /**
  * This class represents the real numbers.
@@ -163,6 +166,22 @@ public class RealNumber implements BaseNumber {
    */
   public BaseNumber op(Operation o, BaseNumber rightHand) {
     return o.op(this, (RealNumber) rightHand);
+  }
+
+  @Override
+  public BaseNumber function(Function f) {
+    if (!(f instanceof UnaryFunction)) {
+      throw new IllegalArgumentException("Expected a unary function.");
+    }
+    return ((UnaryFunction) f).function(this);
+  }
+
+  @Override
+  public BaseNumber function(Function f, BaseNumber rightHand) {
+    if (!(f instanceof BinaryFunction)) {
+      throw new IllegalArgumentException("Expected a binary function.");
+    }
+    return ((BinaryFunction) f).function(this, (RealNumber) rightHand);
   }
 
   /**

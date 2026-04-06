@@ -38,7 +38,6 @@ public class CalculatorCli {
     } catch (IOException e) {
       System.out.println("File not found");
     }
-
   }
 
   public void run() {

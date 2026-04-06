@@ -1,6 +1,9 @@
 package calculator.numbers;
 
 import calculator.Operation;
+import calculator.functions.BinaryFunction;
+import calculator.functions.Function;
+import calculator.functions.UnaryFunction;
 import calculator.numbers.visitor.TypeVisitor;
 import lombok.Getter;
 import visitor.Visitor;
@@ -75,24 +78,6 @@ public class RationalNumber implements BaseNumber {
   }
 
   /**
-   * getter method to obtain the numerator of the rational number
-   *
-   * @return the numerator of the rational number
-   */
-  public int getNumerator() {
-    return numerator;
-  }
-
-  /**
-   * getter method to obtain the denominator of the rational number
-   *
-   * @return the denominator of the rational number
-   */
-  public int getDenominator() {
-    return denominator;
-  }
-
-  /**
    * accept method to implement the visitor design pattern to traverse arithmetic
    * expressions.
    * Each number will pass itself to the visitor object to get processed by the
@@ -155,7 +140,22 @@ public class RationalNumber implements BaseNumber {
 
   @Override
   public BaseNumber negate() {
-    return new RationalNumber(-this.numerator, -this.denominator);
+    return new RationalNumber(-this.numerator, this.denominator);
+  }
+
+  public BaseNumber function(Function f) {
+    if (!(f instanceof UnaryFunction)) {
+      throw new IllegalArgumentException("Expected a unary function.");
+    }
+    return ((UnaryFunction) f).function(this);
+  }
+
+  @Override
+  public BaseNumber function(Function f, BaseNumber rightHand) {
+    if (!(f instanceof BinaryFunction)) {
+      throw new IllegalArgumentException("Expected a binary function.");
+    }
+    return ((BinaryFunction) f).function(this, (RationalNumber) rightHand);
   }
 
   /**
