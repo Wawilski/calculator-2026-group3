@@ -76,7 +76,8 @@ class TestPower {
     BaseNumber complexOverflow = power.op(new ComplexNumber(Double.MAX_VALUE, 0), new ComplexNumber(2, 0));
 
     assertTrue(((ComplexNumber) complexNaNInput).isNaN());
-    assertTrue(((ComplexNumber) complexImaginaryInput).isNaN());
+    assertEquals(3.0, ((ComplexNumber) complexImaginaryInput).getReal().doubleValue(), 1e-6);
+    assertEquals(4.0, ((ComplexNumber) complexImaginaryInput).getImaginary().doubleValue(), 1e-6);
     assertEquals(8.0, ((ComplexNumber) complexFinite).getReal().doubleValue(), 1e-6);
     assertEquals(0.0, ((ComplexNumber) complexFinite).getImaginary().doubleValue(), 1e-6);
     assertTrue(((ComplexNumber) complexOverflow).isNaN());

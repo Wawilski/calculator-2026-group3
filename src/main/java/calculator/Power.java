@@ -84,11 +84,8 @@ public final class Power extends Operation {
    */
   @Override
   public BaseNumber op(ComplexNumber l, ComplexNumber r) {
-    // This implementation supports power only on real-valued complex operands.
-    // Non-zero imaginary parts are treated as unsupported and mapped to NaN.
+    // is not defined if l == 0
     if (l.isNaN() || r.isNaN() ||
-        l.getImaginary().compareTo(BigDecimal.ZERO) != 0 ||
-        r.getImaginary().compareTo(BigDecimal.ZERO) != 0 ||
         (l.getReal().compareTo(BigDecimal.ZERO) == 0 && l.getImaginary().compareTo(BigDecimal.ZERO) == 0)) {
       return new ComplexNumber();
     }
