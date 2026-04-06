@@ -6,7 +6,10 @@ import calculator.Expression;
 import calculator.IllegalConstruction;
 
 /**
- * FunctionCreator
+ * FunctionCreator implements the simple Factory design pattern to create a
+ * function given a certain function name
+ *
+ * @see Function
  */
 public class FunctionCreator {
 

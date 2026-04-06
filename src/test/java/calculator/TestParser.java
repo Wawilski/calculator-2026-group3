@@ -165,8 +165,97 @@ public class TestParser {
   }
 
   @Test
+  void testInFct() {
+    e = parser.parse("log(100.0,10)");
+    assertEquals(new RealNumber(2), c.eval(e));
+    assertThrows(RuntimeException.class, () -> e = parser.parse("log(100.0)"));
+
+    e = parser.parse("ln(e)");
+    assertEquals(new RealNumber(1), c.eval(e));
+    assertThrows(RuntimeException.class, () -> e = parser.parse("ln(1,2)"));
+
+    e = parser.parse("(100, 10)log");
+
+    assertEquals(new RealNumber(2), c.eval(e));
+    assertThrows(RuntimeException.class, () -> e = parser.parse("(100)log"));
+
+    e = parser.parse("(e)ln");
+    assertEquals(new RealNumber(1), c.eval(e));
+    assertThrows(RuntimeException.class, () -> e = parser.parse("(1,2)ln"));
+
+    e = parser.parse("(100 5 5 +) log");
+
+    assertEquals(new RealNumber(2), c.eval(e));
+
+    assertThrows(RuntimeException.class, () -> e = parser.parse("100 log"));
+
+    e = parser.parse("e ln");
+    assertEquals(new RealNumber(1), c.eval(e));
+    assertThrows(RuntimeException.class, () -> e = parser.parse("(1 2) ln"));
+
+    e = parser.parse("log (100 + 5 5)");
+
+    assertEquals(new RealNumber(2), c.eval(e));
+
+    assertThrows(RuntimeException.class, () -> e = parser.parse("log 100"));
+
+    e = parser.parse("ln e");
+    assertEquals(new RealNumber(1), c.eval(e));
+    assertThrows(RuntimeException.class, () -> e = parser.parse("ln (1 2)"));
+
+    e = parser.parse("log(100, + (5, 5))");
+
+    assertEquals(new RealNumber(2), c.eval(e));
+
+    assertThrows(RuntimeException.class, () -> e = parser.parse("log(100)"));
+
+    e = parser.parse("sqrt(+(2,2))");
+    assertEquals(new RealNumber(2), c.eval(e));
+    assertThrows(RuntimeException.class, () -> e = parser.parse("ln(1,2)"));
+  }
+
+  @Test
+  void testCreateFunctions() {
+    e = parser.parse("sin(pi/2)");
+    assertEquals(new RealNumber(1), c.eval(e));
+
+    e = parser.parse("cos(pi/2)");
+    assertEquals(new RealNumber(0).getValue().doubleValue(), ((RealNumber) c.eval(e)).getValue().doubleValue(),
+        epsilon);
+
+    e = parser.parse("tan(0)");
+    assertEquals(new RealNumber(0).getValue().doubleValue(), ((RealNumber) c.eval(e)).getValue().doubleValue(),
+        epsilon);
+
+    e = parser.parse("asin(1)");
+    assertEquals(new RealNumber(Math.PI / 2).getValue().doubleValue(),
+        ((RealNumber) c.eval(e)).getValue().doubleValue(),
+        epsilon);
+
+    e = parser.parse("acos(0)");
+    assertEquals(new RealNumber(Math.PI / 2).getValue().doubleValue(),
+        ((RealNumber) c.eval(e)).getValue().doubleValue(),
+        epsilon);
+
+    e = parser.parse("atan(0)");
+    assertEquals(new RealNumber(0).getValue().doubleValue(), ((RealNumber) c.eval(e)).getValue().doubleValue(),
+        epsilon);
+
+    e = parser.parse("abs(-1)");
+    assertEquals(new IntegerNumber(1), c.eval(e));
+
+    e = parser.parse("sqrt(4)");
+    assertEquals(new RealNumber(2).getValue().doubleValue(), ((RealNumber) c.eval(e)).getValue().doubleValue(),
+        epsilon);
+
+  }
+
+  @Test
   void testFactor() {
     e = parser.parse("1");
+    assertEquals(new IntegerNumber(1), c.eval(e));
+
+    e = parser.parse("(1)");
     assertEquals(new IntegerNumber(1), c.eval(e));
 
     e = parser.parse("(1+1)");
@@ -195,6 +284,8 @@ public class TestParser {
     e = parser.parse("1/2");
     assertEquals(new RationalNumber(1, 2), c.eval(e));
 
+    e = parser.parse("phi");
+    assertEquals(new RealNumber((1 + Math.sqrt(5)) / 2), c.eval(e));
     e = parser.parse("2pii");
 
     String pi = Double.toString(Math.PI);

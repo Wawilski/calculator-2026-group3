@@ -355,20 +355,6 @@ public class ParserVisitor extends calculatorBaseVisitor<Expression> {
 
   /**
    * visits the grammar rule
-   * paren_prefix : fct paren_prefix
-   *
-   * @return Expression representing a function with one parameter
-   */
-  @Override
-  public Expression visitPreFct(PreFctContext ctx) {
-    ArrayList<Expression> args = new ArrayList<>();
-    args.add(visit(ctx.paren_prefix()));
-
-    return createFct(ctx.fct().getText(), args);
-  }
-
-  /**
-   * visits the grammar rule
    * paren_prefix : LPAREN (sign)? atom RPAREN
    * 
    * @return Expression representing a signed number
@@ -544,20 +530,6 @@ public class ParserVisitor extends calculatorBaseVisitor<Expression> {
 
     return createFct(ctx.fct().getText(), args);
 
-  }
-
-  /**
-   * visits the grammar rule
-   * paren_postfix: paren_postfix fct
-   *
-   * @return Expression representing a postfix function with one argument
-   */
-  @Override
-  public Expression visitPostFct(PostFctContext ctx) {
-    ArrayList<Expression> args = new ArrayList<>();
-    args.add(visit(ctx.paren_postfix()));
-
-    return createFct(ctx.fct().getText(), args);
   }
 
   /**

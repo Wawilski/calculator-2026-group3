@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 import calculator.Expression;
+import calculator.Operation;
 import calculator.IllegalConstruction;
 import calculator.Notation;
 import calculator.numbers.BaseNumber;

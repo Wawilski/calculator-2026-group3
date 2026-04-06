@@ -36,7 +36,6 @@ space_prefix: (operator | fct)? LPAREN space_prefix (space_prefix)+ RPAREN #PreS
             ;
 
 paren_prefix: (operator|fct)? LPAREN paren_prefix (COMMAT paren_prefix)* RPAREN #PreWrappedOp
-            | fct paren_prefix                                                  #PreFct
             | LPAREN (MINUS)? atom RPAREN                                       #PreSigned
             | atom                                                              #PreAtom 
             ;
@@ -47,8 +46,8 @@ postfix : space_postfix #SpacedPostFix
         | paren_postfix #ParenthesisPostFix
         ;
 
-space_postfix: LPAREN space_postfix (space_postfix)+ RPAREN (operator)? #PostSpaceWrappedOp
-             | LPAREN space_postfix (space_postfix)* RPAREN fct         #PostSpaceWrappedFct
+space_postfix: LPAREN space_postfix (space_postfix)* RPAREN fct         #PostSpaceWrappedFct
+             | LPAREN space_postfix (space_postfix)+ RPAREN (operator)? #PostSpaceWrappedOp
              | space_postfix fct                                        #PostSpaceFct
              | space_postfix space_postfix operator                     #PostSpaceSimpleOp
              | LPAREN (MINUS)? atom RPAREN                               #PostSpaceSigned
@@ -57,7 +56,6 @@ space_postfix: LPAREN space_postfix (space_postfix)+ RPAREN (operator)? #PostSpa
 
 paren_postfix: LPAREN paren_postfix (COMMAT paren_postfix)+ RPAREN (operator)?  #PostWrappedOp
              | LPAREN paren_postfix (COMMAT paren_postfix)* RPAREN fct          #PostWrappedFct
-             | paren_postfix fct                                                #PostFct
              | LPAREN (MINUS)? atom RPAREN                                      #PostSigned
              | atom                                                             #PostAtom 
              ;
