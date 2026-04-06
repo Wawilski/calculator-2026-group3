@@ -7,6 +7,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import calculator.functions.Cos;
+import calculator.functions.Sin;
 import calculator.functions.Tan;
 import calculator.numbers.BaseNumber;
 import calculator.numbers.ComplexNumber;
