@@ -12,7 +12,7 @@ public class ExitCommand implements CliCommand {
 
   @Override
   public String description() {
-    return "Quitter le CLI";
+    return "Quit CLI";
   }
 
   @Override

@@ -1,6 +1,12 @@
 package calculator.cli.commands;
 
 import calculator.cli.CommandResult;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import calculator.cli.CliContext;
 
 public class DemoCommand implements CliCommand {
@@ -17,6 +23,11 @@ public class DemoCommand implements CliCommand {
 
   @Override
   public CommandResult execute(CliContext context, String rawInput) {
-    return CommandResult.ok("This is a simple demo...");
+    try {
+      Path path = Paths.get("src/main/resources/demo.txt");
+      return CommandResult.ok(Files.readString(path));
+    } catch (IOException e) {
+      return CommandResult.systemError("File not found");
+    }
   }
 }

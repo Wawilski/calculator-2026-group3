@@ -13,6 +13,11 @@ import org.antlr.v4.runtime.CharStreams;
  * Parser
  */
 public class ExpressionParser {
+  /**
+   * Defines if the angle unit is considered in degrees (true) or in radiant
+   * (false)
+   */
+  public static boolean isAngleUnitDegree = false;
 
   public Expression parse(String s) {
 

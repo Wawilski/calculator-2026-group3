@@ -47,12 +47,13 @@ public class CalculatorCli {
     registry.register(new ExitCommand());
     registry.register(new DemoCommand());
     registry.register(new PrecisionCommand());
+    registry.register(new AngleUnitCommand());
     registry.register(new HelpCommand(registry));
 
     greet();
 
     while (context.isRunning()) {
-      output.print("calculator> ");
+      output.print("\033[33mcalculator> \033[0m");
       String rawline = input.readLine();
       String line = rawline.trim();
       if (line.isEmpty())

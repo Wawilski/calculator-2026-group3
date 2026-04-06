@@ -26,7 +26,7 @@ public class HelpCommand implements CliCommand {
   public CommandResult execute(CliContext context, String rawInput) {
     StringBuilder sb = new StringBuilder("Available commands : \n");
     for (CliCommand command : registry.all()) {
-      sb.append("- ").append(command.name()).append(": ").append(command.description()).append('\n');
+      sb.append("- ").append(command.name()).append(": ").append(command.description()).append("\n\n");
 
     }
     return CommandResult.ok(sb.toString().trim());
