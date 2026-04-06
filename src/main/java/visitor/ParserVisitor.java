@@ -11,6 +11,7 @@ import calculator.IllegalConstruction;
 import calculator.Minus;
 import calculator.Operation;
 import calculator.Plus;
+import calculator.Power;
 import calculator.Times;
 import calculator.calculatorBaseVisitor;
 import calculator.calculatorParser.*;
@@ -19,6 +20,7 @@ import calculator.numbers.ComplexNumber;
 import calculator.numbers.IntegerNumber;
 import calculator.numbers.RationalNumber;
 import calculator.numbers.RealNumber;
+import calculator.functions.*;
 
 /**
  * EquationListener
@@ -150,8 +152,7 @@ public class ParserVisitor extends calculatorBaseVisitor<Expression> {
       args.add(visit(factor));
     }
 
-    Expression operation = createOp("**", args);
-    return operation;
+    return createOp("**", args);
   }
 
   /**
@@ -162,7 +163,13 @@ public class ParserVisitor extends calculatorBaseVisitor<Expression> {
    */
   @Override
   public Expression visitInFct(InFctContext ctx) {
-    return new RealNumber(1);
+
+    ArrayList<Expression> args = new ArrayList<>();
+    for (InfixContext infix : ctx.infix()) {
+      args.add(visit(infix));
+    }
+    return createFct(ctx.fct().getText(), args);
+
   }
 
   /**
@@ -257,7 +264,7 @@ public class ParserVisitor extends calculatorBaseVisitor<Expression> {
     }
     Expression operation;
     if (ctx.fct() != null) {
-      operation = new RealNumber(1);
+      operation = createFct(ctx.fct().getText(), args);
     } else {
       String operator = (ctx.operator() == null) ? "" : ctx.operator().getText();
       operation = createOp(operator, args);
@@ -274,7 +281,11 @@ public class ParserVisitor extends calculatorBaseVisitor<Expression> {
    */
   @Override
   public Expression visitPreSpaceFct(PreSpaceFctContext ctx) {
-    return new RealNumber(1);
+
+    ArrayList<Expression> args = new ArrayList<>();
+    args.add(visit(ctx.space_prefix()));
+
+    return createFct(ctx.fct().getText(), args);
   }
 
   /**
@@ -334,23 +345,12 @@ public class ParserVisitor extends calculatorBaseVisitor<Expression> {
     }
     Expression operation;
     if (ctx.fct() != null) {
-      operation = new RealNumber(1);
+      operation = createFct(ctx.fct().getText(), args);
     } else {
       String op = (ctx.operator() == null) ? "" : ctx.operator().getText();
       operation = createOp(op, args);
     }
     return operation;
-  }
-
-  /**
-   * visits the grammar rule
-   * paren_prefix : fct paren_prefix
-   *
-   * @return Expression representing a function with one parameter
-   */
-  @Override
-  public Expression visitPreFct(PreFctContext ctx) {
-    return new RealNumber(1);
   }
 
   /**
@@ -428,7 +428,12 @@ public class ParserVisitor extends calculatorBaseVisitor<Expression> {
    */
   @Override
   public Expression visitPostSpaceWrappedFct(PostSpaceWrappedFctContext ctx) {
-    return new RealNumber(1);
+    ArrayList<Expression> args = new ArrayList<>();
+    for (Space_postfixContext sPostfixContext : ctx.space_postfix()) {
+      args.add(visit(sPostfixContext));
+    }
+
+    return createFct(ctx.fct().getText(), args);
   }
 
   /**
@@ -439,7 +444,11 @@ public class ParserVisitor extends calculatorBaseVisitor<Expression> {
    */
   @Override
   public Expression visitPostSpaceFct(PostSpaceFctContext ctx) {
-    return new RealNumber(1);
+    ArrayList<Expression> args = new ArrayList<>();
+    args.add(visit(ctx.space_postfix()));
+
+    return createFct(ctx.fct().getText(), args);
+
   }
 
   /**
@@ -519,19 +528,8 @@ public class ParserVisitor extends calculatorBaseVisitor<Expression> {
       args.add(visit(postFix));
     }
 
-    return new RealNumber(1);
+    return createFct(ctx.fct().getText(), args);
 
-  }
-
-  /**
-   * visits the grammar rule
-   * paren_postfix: paren_postfix fct
-   *
-   * @return Expression representing a postfix function with one argument
-   */
-  @Override
-  public Expression visitPostFct(PostFctContext ctx) {
-    return new RealNumber(1);
   }
 
   /**
@@ -742,7 +740,7 @@ public class ParserVisitor extends calculatorBaseVisitor<Expression> {
           op = new Divides(args);
           break;
         case "**":
-          op = new Times(args);
+          op = new Power(args);
           break;
         case "":
           op = new Times(args);
@@ -753,6 +751,14 @@ public class ParserVisitor extends calculatorBaseVisitor<Expression> {
 
       return op;
 
+    } catch (IllegalConstruction e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  public Expression createFct(String fct, List<Expression> args) {
+    try {
+      return FunctionCreator.createFunction(fct, args);
     } catch (IllegalConstruction e) {
       throw new RuntimeException(e);
     }

@@ -1,8 +1,9 @@
-package calculator;
+package calculator.functions;
 
-import java.math.BigDecimal;
 import java.util.List;
 
+import calculator.Expression;
+import calculator.IllegalConstruction;
 import calculator.numbers.BaseNumber;
 import calculator.numbers.ComplexNumber;
 import calculator.numbers.IntegerNumber;
@@ -12,44 +13,31 @@ import calculator.numbers.RealNumber;
 import calculator.numbers.SpecialNumber;
 import calculator.numbers.visitor.TypeCaster;
 
-/** Square root function: sqrt(x). */
-public final class Sqrt extends UnaryFunction {
+/** Tangent function: tan(x). */
+public final class Tan extends UnaryFunction {
 
   /**
-   * Build a square-root.
+   * Build a tangent.
    *
    * @param elist function argument list
    * @throws IllegalConstruction if the argument list is invalid
    */
-  public Sqrt(List<Expression> elist) throws IllegalConstruction {
+  public Tan(List<Expression> elist) throws IllegalConstruction {
     super(elist);
-    symbol = "sqrt";
-    neutral = 1;
+    symbol = "tan";
+    neutral = 0;
   }
 
   @Override
   public int function(int value) {
-    return (int) Math.sqrt(value);
+    return (int) Math.tan(value);
   }
 
-  /**
-   * Compute sqrt(x) for integer inputs.
-   *
-   * <p>Negative inputs return NaN.
-   */
   @Override
   public BaseNumber function(IntegerNumber value) {
-    if (value.getValue() < 0) {
-      return new RealNumber(SpecialNumber.NaN);
-    }
-    return new RealNumber(Math.sqrt(value.getValue()));
+    return new RealNumber(Math.tan(value.getValue()));
   }
 
-  /**
-   * Compute sqrt(x) for rational inputs.
-   *
-   * <p>Negative inputs return NaN.
-   */
   @Override
   public BaseNumber function(RationalNumber value) {
     TypeCaster caster = new TypeCaster(NumberType.REAL);
@@ -58,24 +46,21 @@ public final class Sqrt extends UnaryFunction {
   }
 
   /**
-   * Compute sqrt(x) for real inputs with special-value handling.
+   * Compute tan(x) for real values.
+   *
+   * <p>
+   * Special values are mapped to NaN.
    */
   @Override
   public BaseNumber function(RealNumber value) {
     if (value.isSpecial()) {
-      if (value.getSpecialValue() == SpecialNumber.PositiveInfinity) {
-        return new RealNumber(SpecialNumber.PositiveInfinity);
-      }
       return new RealNumber(SpecialNumber.NaN);
     }
-    if (value.getValue().compareTo(BigDecimal.ZERO) < 0) {
-      return new RealNumber(SpecialNumber.NaN);
-    }
-    return new RealNumber(Math.sqrt(value.getValue().doubleValue()));
+    return new RealNumber(Math.tan(value.getValue().doubleValue()));
   }
 
   @Override
   public BaseNumber function(ComplexNumber value) {
-    return new ComplexNumber();
+    return new ComplexMath().tan(value);
   }
 }

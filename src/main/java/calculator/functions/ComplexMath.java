@@ -1,4 +1,4 @@
-package calculator;
+package calculator.functions;
 
 import calculator.numbers.ComplexNumber;
 
@@ -23,7 +23,8 @@ public final class ComplexMath {
   /**
    * Compute complex sine.
    *
-   * <p>Formula: sin(a + bi) = sin(a)cosh(b) + i cos(a)sinh(b).
+   * <p>
+   * Formula: sin(a + bi) = sin(a)cosh(b) + i cos(a)sinh(b).
    *
    * @param z input complex number
    * @return sin(z), or NaN complex on invalid input
@@ -41,7 +42,8 @@ public final class ComplexMath {
   /**
    * Compute complex cosine.
    *
-   * <p>Formula: cos(a + bi) = cos(a)cosh(b) - i sin(a)sinh(b).
+   * <p>
+   * Formula: cos(a + bi) = cos(a)cosh(b) - i sin(a)sinh(b).
    *
    * @param z input complex number
    * @return cos(z), or NaN complex on invalid input
@@ -59,7 +61,8 @@ public final class ComplexMath {
   /**
    * Compute complex tangent.
    *
-   * <p>Formula:
+   * <p>
+   * Formula:
    * tan(a + bi) = sin(2a)/(cos(2a)+cosh(2b)) + i sinh(2b)/(cos(2a)+cosh(2b)).
    *
    * @param z input complex number
@@ -82,7 +85,8 @@ public final class ComplexMath {
   /**
    * Compute complex arc-sine.
    *
-   * <p>Formula: asin(z) = -i * log(iz + sqrt(1 - z^2)).
+   * <p>
+   * Formula: asin(z) = -i * log(iz + sqrt(1 - z^2)).
    *
    * @param z input complex number
    * @return asin(z), or NaN complex on invalid input
@@ -104,7 +108,8 @@ public final class ComplexMath {
   /**
    * Compute complex arc-cosine.
    *
-   * <p>Identity: acos(z) = pi/2 - asin(z).
+   * <p>
+   * Identity: acos(z) = pi/2 - asin(z).
    *
    * @param z input complex number
    * @return acos(z), or NaN complex on invalid input
@@ -120,7 +125,8 @@ public final class ComplexMath {
   /**
    * Compute complex arc-tangent.
    *
-   * <p>Formula: atan(z) = (i/2) * (log(1 - iz) - log(1 + iz)).
+   * <p>
+   * Formula: atan(z) = (i/2) * (log(1 - iz) - log(1 + iz)).
    *
    * @param z input complex number
    * @return atan(z), or NaN complex on invalid input

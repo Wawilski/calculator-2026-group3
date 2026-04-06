@@ -1,6 +1,6 @@
 package visitor;
 
-import calculator.Function;
+import calculator.functions.Function;
 import calculator.Operation;
 import calculator.numbers.ComplexNumber;
 import calculator.numbers.IntegerNumber;

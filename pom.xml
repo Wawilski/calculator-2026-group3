@@ -159,39 +159,19 @@
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>${jacoco.version}</version>
                 <executions>
-                    <execution>
-                        <goals>
-                            <goal>prepare-agent</goal>
-                        </goals>
-                    </execution>
-
-                    <execution>
-                        <id>report</id>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>report</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <excludes>
-                        <exclude>calculator/Main.class</exclude>
-                        <exclude>calculator/calculatorParser*.class</exclude>
-                        <exclude>calculator/calculatorBaseVisitor.class</exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <version>${jacoco.version}</version>
-                <executions>
                     <!--configures testing coverage-->
                     <execution>
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
+                    <configuration>
+                        <excludes>
+                          <exclude>calculator/Main.class</exclude>
+                          <exclude>calculator/calculatorParser.class</exclude>
+                          <exclude>calculator/calculatorParser/*</exclude>
+                          <exclude>calculator/calculatorBaseVisitor.class</exclude>
+                        </excludes>
+                </configuration>
                     </execution>
 
                     <!--generates report in target/site/jacoco-->
@@ -206,6 +186,9 @@
                 <configuration>
                     <excludes>
                         <exclude>calculator/Main.class</exclude>
+                        <exclude>calculator/calculatorParser.class</exclude>
+                        <exclude>calculator/calculatorParser$*.class</exclude>
+                        <exclude>calculator/calculatorBaseVisitor.class</exclude>
                     </excludes>
                 </configuration>
             </plugin>

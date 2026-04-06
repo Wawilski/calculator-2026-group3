@@ -1,7 +1,10 @@
-package calculator;
+package calculator.functions;
 
+import java.math.BigDecimal;
 import java.util.List;
 
+import calculator.Expression;
+import calculator.IllegalConstruction;
 import calculator.numbers.BaseNumber;
 import calculator.numbers.ComplexNumber;
 import calculator.numbers.IntegerNumber;
@@ -11,29 +14,29 @@ import calculator.numbers.RealNumber;
 import calculator.numbers.SpecialNumber;
 import calculator.numbers.visitor.TypeCaster;
 
-/** Arc tangent function: atan(x). */
-public final class Atan extends UnaryFunction {
+/** Arc cosine function: acos(x). */
+public final class Acos extends UnaryFunction {
 
   /**
-   * Build an arc-tangent function with one argument.
+   * Build an arc-cosine function with one argument.
    *
    * @param elist function argument list
    * @throws IllegalConstruction if the argument list is invalid
    */
-  public Atan(List<Expression> elist) throws IllegalConstruction {
+  public Acos(List<Expression> elist) throws IllegalConstruction {
     super(elist);
-    symbol = "atan";
+    symbol = "acos";
     neutral = 0;
   }
 
   @Override
   public int function(int value) {
-    return (int) Math.atan(value);
+    return (int) Math.acos(value);
   }
 
   @Override
   public BaseNumber function(IntegerNumber value) {
-    return new RealNumber(Math.atan(value.getValue()));
+    return new RealNumber(Math.acos(value.getValue()));
   }
 
   @Override
@@ -44,28 +47,27 @@ public final class Atan extends UnaryFunction {
   }
 
   /**
-   * Compute atan(x) for real numbers.
+   * Compute acos(x) for real numbers.
    *
-   * <p>Special values are mapped to the usual principal values:
-   * +inf -&gt; pi/2, -inf -&gt; -pi/2, NaN -&gt; NaN.
+   * <p>
+   * Returns NaN for special values and for out-of-domain values |x| &gt; 1.
    */
   @Override
   public BaseNumber function(RealNumber value) {
     if (value.isSpecial()) {
-      if (value.getSpecialValue() == SpecialNumber.PositiveInfinity) {
-        return new RealNumber(Math.PI / 2.0);
-      }
-      if (value.getSpecialValue() == SpecialNumber.NegativeInfinity) {
-        return new RealNumber(-Math.PI / 2.0);
-      }
       return new RealNumber(SpecialNumber.NaN);
     }
 
-    return new RealNumber(Math.atan(value.getValue().doubleValue()));
+    BigDecimal realValue = value.getValue();
+    if (realValue.abs().compareTo(BigDecimal.ONE) > 0) {
+      return new RealNumber(SpecialNumber.NaN);
+    }
+
+    return new RealNumber(Math.acos(realValue.doubleValue()));
   }
 
   @Override
   public BaseNumber function(ComplexNumber value) {
-    return new ComplexMath().atan(value);
+    return new ComplexMath().acos(value);
   }
 }

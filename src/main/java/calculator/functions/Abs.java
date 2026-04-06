@@ -1,9 +1,11 @@
-package calculator;
+package calculator.functions;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.util.List;
 
+import calculator.IllegalConstruction;
+import calculator.Expression;
 import calculator.numbers.BaseNumber;
 import calculator.numbers.ComplexNumber;
 import calculator.numbers.IntegerNumber;
@@ -44,7 +46,8 @@ public final class Abs extends UnaryFunction {
   /**
    * Compute abs(x) for real values.
    *
-   * <p>Special handling:
+   * <p>
+   * Special handling:
    * NaN -&gt; NaN, +/-inf -&gt; +inf.
    */
   @Override
@@ -55,7 +58,7 @@ public final class Abs extends UnaryFunction {
       }
       return new RealNumber(SpecialNumber.PositiveInfinity);
     }
-    return new RealNumber(value.getValue().abs(MathContext.DECIMAL32));
+    return new RealNumber(value.getValue().abs(MathContext.UNLIMITED));
   }
 
   /**

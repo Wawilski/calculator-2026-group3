@@ -1,7 +1,9 @@
-package calculator;
+package calculator.functions;
 
 import java.util.List;
 
+import calculator.Expression;
+import calculator.IllegalConstruction;
 import calculator.numbers.BaseNumber;
 import calculator.numbers.ComplexNumber;
 import calculator.numbers.IntegerNumber;
@@ -11,7 +13,8 @@ import calculator.numbers.RealNumber;
 /**
  * Binary mathematical function.
  *
- * <p>This class defines the contract for two-argument functions and
+ * <p>
+ * This class defines the contract for two-argument functions and
  * type-specific evaluation entry points.
  */
 public abstract class BinaryFunction extends Function {
@@ -29,7 +32,7 @@ public abstract class BinaryFunction extends Function {
   /**
    * Evaluate the binary function for primitive integer values.
    *
-   * @param left left operand
+   * @param left  left operand
    * @param right right operand
    * @return primitive integer result
    */
@@ -38,7 +41,7 @@ public abstract class BinaryFunction extends Function {
   /**
    * Evaluate the binary function for {@link IntegerNumber} operands.
    *
-   * @param left left operand
+   * @param left  left operand
    * @param right right operand
    * @return evaluated number
    */
@@ -47,7 +50,7 @@ public abstract class BinaryFunction extends Function {
   /**
    * Evaluate the binary function for {@link RationalNumber} operands.
    *
-   * @param left left operand
+   * @param left  left operand
    * @param right right operand
    * @return evaluated number
    */
@@ -56,7 +59,7 @@ public abstract class BinaryFunction extends Function {
   /**
    * Evaluate the binary function for {@link RealNumber} operands.
    *
-   * @param left left operand
+   * @param left  left operand
    * @param right right operand
    * @return evaluated number
    */
@@ -65,7 +68,7 @@ public abstract class BinaryFunction extends Function {
   /**
    * Evaluate the binary function for {@link ComplexNumber} operands.
    *
-   * @param left left operand
+   * @param left  left operand
    * @param right right operand
    * @return evaluated number
    */

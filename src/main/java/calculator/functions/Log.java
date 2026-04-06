@@ -1,8 +1,13 @@
-package calculator;
+package calculator.functions;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import calculator.Divides;
+import calculator.Expression;
+import calculator.IllegalConstruction;
 import calculator.numbers.BaseNumber;
 import calculator.numbers.ComplexNumber;
 import calculator.numbers.IntegerNumber;
@@ -35,7 +40,8 @@ public final class Log extends BinaryFunction {
   /**
    * Compute log(value, base) for integer inputs.
    *
-   * <p>Domain checks are applied on base/value before evaluating.
+   * <p>
+   * Domain checks are applied on base/value before evaluating.
    */
   @Override
   public BaseNumber function(IntegerNumber value, IntegerNumber base) {
@@ -54,7 +60,8 @@ public final class Log extends BinaryFunction {
   /**
    * Compute log(value, base) for rational inputs.
    *
-   * <p>Rationals are cast to real values before delegating to the real overload.
+   * <p>
+   * Rationals are cast to real values before delegating to the real overload.
    */
   @Override
   public BaseNumber function(RationalNumber value, RationalNumber base) {
