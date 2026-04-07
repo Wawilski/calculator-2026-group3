@@ -102,6 +102,25 @@ class TestExpressionMapper {
     }
 
     @Test
+    void testMapRejectsBlankType() {
+        ExpressionRequest request = new ExpressionRequest("   ", 1, null);
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> mapper.map(request));
+
+        assertEquals("Expression type must not be null or empty.", exception.getMessage());
+    }
+
+    @Test
+    void testMapAcceptsTypeWithSpacesAndUppercase() {
+        ExpressionRequest request = new ExpressionRequest("  NUMBER  ", 9, null);
+
+        Expression expression = mapper.map(request);
+
+        IntegerNumber number = assertInstanceOf(IntegerNumber.class, expression);
+        assertEquals(9, number.getValue());
+    }
+
+    @Test
     void testMapRejectsMissingNumberValue() {
         ExpressionRequest request = new ExpressionRequest("number", null, null);
 
