@@ -2,6 +2,8 @@ package calculator.api.controller;
 
 import calculator.api.EvaluationResponse;
 import calculator.api.ExpressionRequest;
+import calculator.api.TextEvaluationRequest;
+import calculator.api.TextEvaluationResponse;
 import calculator.api.service.CalculatorApiService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
@@ -28,5 +30,11 @@ public class CalculatorApiController {
     @GetMapping("/health")
     public Map<String, String> health() {
         return Map.of("status", "UP");
+    }
+
+    // REST endpoint used by the GUI to evaluate a textual expression.
+    @PostMapping("/evaluate-text")
+    public TextEvaluationResponse evaluateText(@Valid @RequestBody TextEvaluationRequest request) {
+        return calculatorApiService.evaluateText(request.getExpression());
     }
 }

@@ -5,7 +5,10 @@ createApp({
     return {
       expression: "",
       isScienceMenuOpen: false,
-      hintMessage: "No calculation is done in this GUI."
+      hintMessage: "Ready.",
+      result: "",
+      resultPretty: "",
+      isLoading: false
     };
   },
   mounted() {
@@ -20,8 +23,12 @@ createApp({
     },
 
     appendToken(token) {
+      if (token === "=") {
+        this.evaluateExpression();
+        return;
+      }
       this.expression += token;
-      this.hintMessage = "Expression captured only (frontend demo).";
+      this.hintMessage = "Expression updated.";
     },
 
     appendScientificToken(token) {
@@ -43,7 +50,7 @@ createApp({
 
       if (event.key === "Enter") {
         event.preventDefault();
-       
+        this.evaluateExpression();
         return;
       }
 
@@ -61,6 +68,8 @@ createApp({
 
     clearExpression() {
       this.expression = "";
+      this.result = "";
+      this.resultPretty = "";
       this.hintMessage = "Expression cleared.";
     },
 
@@ -70,7 +79,66 @@ createApp({
       }
 
       this.expression = this.expression.slice(0, -1);
-      this.hintMessage = "Expression captured only (frontend demo).";
+      this.hintMessage = "Expression updated.";
+    },
+
+    async evaluateExpression() {
+      if (this.isLoading) {
+        return;
+      }
+
+      const expression = this.expression.trim();
+      if (!expression) {
+        this.result = "";
+        this.resultPretty = "";
+        this.hintMessage = "Enter an expression first.";
+        return;
+      }
+
+      this.isLoading = true;
+      this.hintMessage = "Calculating...";
+
+      try {
+        const response = await fetch("/api/evaluate-text", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ expression: this.normalizeExpression(expression) })
+        });
+
+        const payload = await response.json();
+        if (!response.ok) {
+          this.result = "";
+          this.resultPretty = "";
+          this.hintMessage = this.formatApiError(payload);
+          return;
+        }
+
+        this.result = payload.result ?? "";
+        this.resultPretty = payload.pretty ?? "";
+        this.hintMessage = "Calculation done.";
+      } catch (_) {
+        this.result = "";
+        this.resultPretty = "";
+        this.hintMessage = "Unable to reach the API.";
+      } finally {
+        this.isLoading = false;
+      }
+    },
+
+    normalizeExpression(expression) {
+      return expression.replace(/\^/g, "**");
+    },
+
+    formatApiError(payload) {
+      if (!payload || typeof payload !== "object") {
+        return "Request failed.";
+      }
+      if (Array.isArray(payload.details) && payload.details.length > 0) {
+        return payload.details[0];
+      }
+      return payload.message || "Request failed.";
     }
   }
 }).mount("#app");
