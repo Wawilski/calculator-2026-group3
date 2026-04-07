@@ -69,4 +69,20 @@ class TestCalculatorApiService {
 
         assertEquals("Division by zero is not allowed.", exception.getMessage());
     }
+
+    @Test
+    void testEvaluateRejectsNonIntegerResult() {
+        ExpressionRequest request = new ExpressionRequest(
+                "divides",
+                null,
+                List.of(
+                        new ExpressionRequest("number", 7, null),
+                        new ExpressionRequest("number", 5, null)
+                )
+        );
+
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> service.evaluate(request));
+
+        assertEquals("API currently supports integer results only.", exception.getMessage());
+    }
 }
