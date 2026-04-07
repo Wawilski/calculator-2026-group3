@@ -227,4 +227,55 @@ class TestCalculatorApiController {
                 .andExpect(status().isPayloadTooLarge())
                 .andExpect(jsonPath("$.code").value("REQUEST_TOO_LARGE"));
     }
+
+    @Test
+    void testEvaluateTextEndpoint() throws Exception {
+        String payload = """
+                {
+                  "expression": "(3+4)*5"
+                }
+                """;
+
+        mockMvc.perform(post("/api/evaluate-text")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(payload))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.result").value("35"))
+                .andExpect(jsonPath("$.infix").exists())
+                .andExpect(jsonPath("$.pretty").exists())
+                .andExpect(jsonPath("$.prefix").exists());
+    }
+
+    @Test
+    void testEvaluateTextEndpointRejectsBlankExpression() throws Exception {
+        String payload = """
+                {
+                  "expression": "   "
+                }
+                """;
+
+        mockMvc.perform(post("/api/evaluate-text")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(payload))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value("VALIDATION_ERROR"))
+                .andExpect(jsonPath("$.details", hasItem("expression: expression must not be blank")));
+    }
+
+    @Test
+    void testEvaluateTextEndpointRejectsInvalidSyntax() throws Exception {
+        String payload = """
+                {
+                  "expression": "3++"
+                }
+                """;
+
+        mockMvc.perform(post("/api/evaluate-text")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(payload))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value("INVALID_REQUEST"))
+                .andExpect(jsonPath("$.message").value("Invalid expression syntax."));
+    }
 }
