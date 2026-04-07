@@ -26,7 +26,6 @@ jobs:
       name: checkout repository
       uses: actions/checkout@v6
       with:
-        ref: ${{ github.ref_name }}
         fetch-depth: 0
       
     - id: setupjava
