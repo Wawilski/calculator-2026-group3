@@ -5,8 +5,12 @@ import java.math.MathContext;
 import java.math.RoundingMode;
 
 import calculator.Operation;
+import calculator.numbers.visitor.TypeVisitor;
+import lombok.Getter;
 import visitor.Visitor;
-import calculator.numbers.visitor.*;
+import calculator.functions.BinaryFunction;
+import calculator.functions.Function;
+import calculator.functions.UnaryFunction;
 
 /**
  * This class represents the real numbers.
@@ -17,26 +21,48 @@ import calculator.numbers.visitor.*;
  * @see RationalNumber
  * @see ComplexNumber
  */
+@Getter
 public class RealNumber implements BaseNumber {
 
   /**
    * The value of the real number
+   * -- GETTER --
+   * getter method to obtain the value contained in the object
+   *
+   * @return The BigDecimal contained in the object
+   * 
    */
   private BigDecimal value;
 
   /**
    * A flag to determine if the number is a real number or a special value
    * (+INFINITY, -INFINITY, NaN)
+   * -- GETTER --
+   * getter method to obtain the special flag value
+   *
+   * @return If the real is a Special one
+   * 
    */
   private boolean special;
   /**
    * The special value of the number (+INFINITY,-INFINITY,NaN)
+   * -- GETTER --
+   * getter method to obtain the special value contained in the object
+   *
+   * @return The BigDecimal contained in the object
+   * 
    */
   private SpecialNumber specialValue;
 
   /**
    * The scale of all the BigDecimal concerning the real and complex numbers
+   * -- GETTER --
+   * getter method to obtain the scale of the BigDecimal values
+   *
+   * @return The class attribute scale
+   * 
    */
+  @Getter
   private static int scale = 16;
 
   /**
@@ -82,6 +108,7 @@ public class RealNumber implements BaseNumber {
    *
    * @param value the String value representing the real number
    */
+
   public /* constructor */ RealNumber(String value) {
     this.value = (new BigDecimal(value, MathContext.UNLIMITED)).setScale(scale, RoundingMode.CEILING);
     this.special = false;
@@ -98,42 +125,6 @@ public class RealNumber implements BaseNumber {
     this.value = null;
     this.special = true;
     this.specialValue = specialValue;
-  }
-
-  /**
-   * getter method to obtain the value contained in the object
-   *
-   * @return The BigDecimal contained in the object
-   */
-  public BigDecimal getValue() {
-    return value;
-  }
-
-  /**
-   * getter method to obtain the special value contained in the object
-   *
-   * @return The BigDecimal contained in the object
-   */
-  public SpecialNumber getSpecialValue() {
-    return specialValue;
-  }
-
-  /**
-   * getter method to obtain the special flag value
-   *
-   * @return If the real is a Special one
-   */
-  public boolean isSpecial() {
-    return special;
-  }
-
-  /**
-   * getter method to obtain the scale of the BigDecimal values
-   * 
-   * @return The class attribute scale
-   */
-  public static int getScale() {
-    return scale;
   }
 
   /**
@@ -177,6 +168,22 @@ public class RealNumber implements BaseNumber {
     return o.op(this, (RealNumber) rightHand);
   }
 
+  @Override
+  public BaseNumber function(Function f) {
+    if (!(f instanceof UnaryFunction)) {
+      throw new IllegalArgumentException("Expected a unary function.");
+    }
+    return ((UnaryFunction) f).function(this);
+  }
+
+  @Override
+  public BaseNumber function(Function f, BaseNumber rightHand) {
+    if (!(f instanceof BinaryFunction)) {
+      throw new IllegalArgumentException("Expected a binary function.");
+    }
+    return ((BinaryFunction) f).function(this, (RealNumber) rightHand);
+  }
+
   /**
    * determine the sign of the RealNumber
    *
@@ -184,7 +191,7 @@ public class RealNumber implements BaseNumber {
    */
   public int sign() {
     int sign;
-    if (!this.isSpecial()) {
+    if (!this.special) {
       sign = this.value.compareTo(BigDecimal.ZERO);
     } else if (this.specialValue == SpecialNumber.PositiveInfinity) {
       sign = 1;
@@ -195,6 +202,33 @@ public class RealNumber implements BaseNumber {
     }
 
     return sign;
+  }
+
+  public static void setScale(int scale) {
+    RealNumber.scale = scale;
+  }
+
+  @Override
+  public BaseNumber negate() {
+    RealNumber result;
+    if (this.special) {
+      result = negateSpecial();
+    } else {
+      result = new RealNumber(this.value.negate());
+    }
+    return result;
+  }
+
+  public RealNumber negateSpecial() {
+    RealNumber result;
+    if (this.specialValue == SpecialNumber.PositiveInfinity) {
+      result = new RealNumber(SpecialNumber.NegativeInfinity);
+    } else if (this.specialValue == SpecialNumber.NegativeInfinity) {
+      result = new RealNumber(SpecialNumber.PositiveInfinity);
+    } else {
+      result = new RealNumber(SpecialNumber.NaN);
+    }
+    return result;
   }
 
   /**

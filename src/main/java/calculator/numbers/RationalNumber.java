@@ -1,7 +1,11 @@
 package calculator.numbers;
 
 import calculator.Operation;
+import calculator.functions.BinaryFunction;
+import calculator.functions.Function;
+import calculator.functions.UnaryFunction;
 import calculator.numbers.visitor.TypeVisitor;
+import lombok.Getter;
 import visitor.Visitor;
 
 /**
@@ -13,11 +17,24 @@ import visitor.Visitor;
  * @see RealNumber
  * @see ComplexNumber
  */
+@Getter
 public class RationalNumber implements BaseNumber {
 
+  /**
+   * -- GETTER --
+   * getter method to obtain the numerator of the rational number
+   *
+   * @return the numerator of the rational number
+   */
   // Numerator of the rational number
   private int numerator;
 
+  /**
+   * -- GETTER --
+   * getter method to obtain the denominator of the rational number
+   *
+   * @return the denominator of the rational number
+   */
   // Denominator of the rational number
   private int denominator;
 
@@ -41,21 +58,23 @@ public class RationalNumber implements BaseNumber {
   }
 
   /**
-   * getter method to obtain the numerator of the rational number
+   * class constructor which specify the numerator and denominator of the rational
+   * number as String
    *
-   * @return the numerator of the rational number
-   */
-  public int getNumerator() {
-    return numerator;
-  }
-
-  /**
-   * getter method to obtain the denominator of the rational number
+   * @throws IllegalNumberConstruction the denominator can't be 0
    *
-   * @return the denominator of the rational number
+   * @param numerator   the String representing the numerator
+   * @param denominator the String representing the denominator
    */
-  public int getDenominator() {
-    return denominator;
+  public /* constructor */ RationalNumber(String numerator, String denominator) {
+    int num = Integer.valueOf(numerator);
+    int den = Integer.valueOf(denominator);
+    if (den == 0) {
+      throw new IllegalNumberConstruction();
+    }
+    this.numerator = num;
+    this.denominator = den;
+    this.simplify();
   }
 
   /**
@@ -117,6 +136,26 @@ public class RationalNumber implements BaseNumber {
   @Override
   public BaseNumber op(Operation o, BaseNumber rightHand) {
     return o.op(this, ((RationalNumber) rightHand));
+  }
+
+  @Override
+  public BaseNumber negate() {
+    return new RationalNumber(-this.numerator, this.denominator);
+  }
+
+  public BaseNumber function(Function f) {
+    if (!(f instanceof UnaryFunction)) {
+      throw new IllegalArgumentException("Expected a unary function.");
+    }
+    return ((UnaryFunction) f).function(this);
+  }
+
+  @Override
+  public BaseNumber function(Function f, BaseNumber rightHand) {
+    if (!(f instanceof BinaryFunction)) {
+      throw new IllegalArgumentException("Expected a binary function.");
+    }
+    return ((BinaryFunction) f).function(this, (RationalNumber) rightHand);
   }
 
   /**

@@ -1,5 +1,7 @@
 package calculator;
 
+import calculator.cli.CalculatorCli;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,6 +31,11 @@ public class Main {
    * @param args Command-line parameters are not used in this version
    */
   public static void main(String[] args) {
+
+    if (args.length > 0 && "--cli".equals(args[0])) {
+      new CalculatorCli().run();
+      return;
+    }
 
     Expression e;
     Calculator c = new Calculator();
@@ -87,6 +94,26 @@ public class Main {
       c.print(e);
       c.eval(e);
       logger.info("Postfix form: " + c.format(e, Notation.POSTFIX));
+
+      ExpressionParser parser = new ExpressionParser();
+      e = parser.parse("1 + 1i * 2");
+      c.print(e);
+      c.eval(e);
+      e = parser.parse("1 + 6 - 1i");
+      c.print(e);
+      c.eval(e);
+      e = parser.parse(" + (1, i)");
+      c.print(e);
+      c.eval(e);
+      e = parser.parse("i pi +");
+      c.print(e);
+      c.eval(e);
+      e = parser.parse("(1 + 2)(2.0 / 4.0)*2*(7-1)*4");
+      c.print(e);
+      c.eval(e);
+      e = parser.parse("(3)(0.5)*2*(7-1)*4");
+      c.print(e);
+      c.eval(e);
 
       List<Expression> params8 = new ArrayList<>();
       Collections.addAll(params8, new RationalNumber(1, 2), new IntegerNumber(1));

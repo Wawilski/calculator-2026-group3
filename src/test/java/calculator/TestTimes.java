@@ -164,7 +164,7 @@ class TestTimes {
 
   @Test
   void testComplexNaNMultiplication() {
-    ComplexNumber left = new ComplexNumber(1, 6);
+    ComplexNumber left = new ComplexNumber("1", "6");
     ComplexNumber right = new ComplexNumber();
 
     ArrayList<Expression> p = new ArrayList<>(

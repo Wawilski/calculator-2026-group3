@@ -1,13 +1,14 @@
 package visitor;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
+
+import calculator.functions.Function;
 import calculator.Operation;
-import calculator.numbers.RealNumber;
 import calculator.numbers.ComplexNumber;
 import calculator.numbers.IntegerNumber;
 import calculator.numbers.RationalNumber;
-
-import java.util.ArrayDeque;
-import java.util.Deque;
+import calculator.numbers.RealNumber;
 
 /**
  * CountingVisitor computes depth, number of operations and number of numbers in
@@ -60,6 +61,16 @@ public class CountingVisitor extends Visitor {
     opsCount++;
     int maxDepth = 0;
     for (int i = 0; i < o.getArgs().size(); i++) {
+      maxDepth = Math.max(maxDepth, depths.pop());
+    }
+    depths.push(maxDepth + 1);
+  }
+
+  @Override
+  public void visit(Function f) {
+    opsCount++;
+    int maxDepth = 0;
+    for (int i = 0; i < f.getArgs().size(); i++) {
       maxDepth = Math.max(maxDepth, depths.pop());
     }
     depths.push(maxDepth + 1);

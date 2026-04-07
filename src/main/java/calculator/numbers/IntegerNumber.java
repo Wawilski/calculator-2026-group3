@@ -1,9 +1,13 @@
 
 package calculator.numbers;
 
+import calculator.functions.BinaryFunction;
+import calculator.functions.Function;
 import calculator.Operation;
+import calculator.functions.UnaryFunction;
+import calculator.numbers.visitor.TypeVisitor;
+import lombok.Getter;
 import visitor.Visitor;
-import calculator.numbers.visitor.*;
 
 /**
  * This class represents the integer numbers.
@@ -14,18 +18,16 @@ import calculator.numbers.visitor.*;
  * @see RealNumber
  * @see ComplexNumber
  */
+@Getter
 public class IntegerNumber implements BaseNumber {
 
-  private int value;
-
   /**
+   * -- GETTER --
    * getter method to obtain the value contained in the object
    *
    * @return The integer number contained in the object
    */
-  public int getValue() {
-    return value;
-  }
+  private int value;
 
   /**
    * Constructor method
@@ -34,6 +36,15 @@ public class IntegerNumber implements BaseNumber {
    */
   public /* constructor */ IntegerNumber(int v) {
     this.value = v;
+  }
+
+  /**
+   * Constructor method with value specified as a String
+   *
+   * @param v The value to be contained in the object as a String
+   */
+  public /* constructor */ IntegerNumber(String v) {
+    this.value = Integer.valueOf(v);
   }
 
   /**
@@ -73,6 +84,26 @@ public class IntegerNumber implements BaseNumber {
    */
   public BaseNumber op(Operation o, BaseNumber rightHand) {
     return o.op(this, (IntegerNumber) rightHand);
+  }
+
+  public BaseNumber negate() {
+    return new IntegerNumber(-this.value);
+  }
+
+  @Override
+  public BaseNumber function(Function f) {
+    if (!(f instanceof UnaryFunction)) {
+      throw new IllegalArgumentException("Expected a unary function.");
+    }
+    return ((UnaryFunction) f).function(this);
+  }
+
+  @Override
+  public BaseNumber function(Function f, BaseNumber rightHand) {
+    if (!(f instanceof BinaryFunction)) {
+      throw new IllegalArgumentException("Expected a binary function.");
+    }
+    return ((BinaryFunction) f).function(this, (IntegerNumber) rightHand);
   }
 
   /**
