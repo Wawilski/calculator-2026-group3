@@ -167,6 +167,7 @@
                     <configuration>
                         <excludes>
                           <exclude>calculator/Main.class</exclude>
+                          <exclude>calculator/cli/CalculatorCli.class</exclude>
                           <exclude>calculator/calculatorParser.class</exclude>
                           <exclude>calculator/calculatorParser/*</exclude>
                           <exclude>calculator/calculatorBaseVisitor.class</exclude>
@@ -186,6 +187,7 @@
                 <configuration>
                     <excludes>
                         <exclude>calculator/Main.class</exclude>
+                        <exclude>calculator/cli/CalculatorCli.class</exclude>
                         <exclude>calculator/calculatorParser.class</exclude>
                         <exclude>calculator/calculatorParser$*.class</exclude>
                         <exclude>calculator/calculatorBaseVisitor.class</exclude>
@@ -213,6 +215,14 @@
                     </execution>
                 </executions>
                 </plugin> 
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${maven-surefire-plugin.version}</version>
+                    <configuration>
+                        <useModulePath>false</useModulePath>
+                    </configuration>
+                </plugin>
                 <plugin>
               <groupId>org.codehaus.mojo</groupId>
               <artifactId>build-helper-maven-plugin</artifactId>

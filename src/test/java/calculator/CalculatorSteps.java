@@ -96,6 +96,26 @@ public class CalculatorSteps {
     }
   }
 
+  @Given("the right-nested division of {integerNumber}, {integerNumber}, and {integerNumber}")
+  public void givenTheRightNestedDivisionExpression(IntegerNumber left, IntegerNumber nestedLeft,
+      IntegerNumber nestedRight) {
+    try {
+      op = new Divides(List.of(left, new Divides(List.of(nestedLeft, nestedRight))));
+    } catch (IllegalConstruction _) {
+      fail();
+    }
+  }
+
+  @Given("the right-nested subtraction of {integerNumber}, {integerNumber}, and {integerNumber}")
+  public void givenTheRightNestedSubtractionExpression(IntegerNumber left, IntegerNumber nestedLeft,
+      IntegerNumber nestedRight) {
+    try {
+      op = new Minus(List.of(left, new Minus(List.of(nestedLeft, nestedRight))));
+    } catch (IllegalConstruction _) {
+      fail();
+    }
+  }
+
   @Then("^its (PREFIX|POSTFIX|INFIX) notation is (.*)$")
   public void thenItsNotationIs(String notation, String s) {
     assertEquals(s, c.format(op, Notation.valueOf(notation)));

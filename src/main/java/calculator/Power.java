@@ -86,7 +86,7 @@ public final class Power extends Operation {
   public BaseNumber op(ComplexNumber l, ComplexNumber r) {
     // is not defined if l == 0
     if (l.isNaN() || r.isNaN() ||
-        (l.getReal().compareTo(BigDecimal.ZERO) == 0 && l.getReal().compareTo(BigDecimal.ZERO) == 0)) {
+        (l.getReal().compareTo(BigDecimal.ZERO) == 0 && l.getImaginary().compareTo(BigDecimal.ZERO) == 0)) {
       return new ComplexNumber();
     }
     double a = l.getReal().doubleValue();
@@ -96,17 +96,26 @@ public final class Power extends Operation {
 
     double modulus = Math.sqrt(a * a + b * b);
     double arg = Math.atan2(b, a);
-    double lnZ_re = Math.log(modulus);
-    double lnZ_im = arg;
+    double lnZRe = Math.log(modulus);
+    double lnZIm = arg;
 
-    double v_re = c * lnZ_re - d * lnZ_im;
-    double v_im = c * lnZ_im + d * lnZ_re;
+    double vRe = c * lnZRe - d * lnZIm;
+    double vIm = c * lnZIm + d * lnZRe;
 
-    double expX = Math.exp(v_re);
-    BigDecimal finalRe = BigDecimal.valueOf(expX * Math.cos(v_im));
-    BigDecimal finalIm = BigDecimal.valueOf(expX * Math.sin(v_im));
+    double expX = Math.exp(vRe);
+    double finalRe = expX * Math.cos(vIm);
+    double finalIm = expX * Math.sin(vIm);
 
-    return new ComplexNumber(finalRe, finalIm);
+    if (!Double.isFinite(finalRe) || !Double.isFinite(finalIm)) {
+      return new ComplexNumber();
+    }
+
+    // BigDecimal does not accept NaN/Infinity; keep this as a defensive guard.
+    try {
+      return new ComplexNumber(BigDecimal.valueOf(finalRe), BigDecimal.valueOf(finalIm));
+    } catch (NumberFormatException _) {
+      return new ComplexNumber();
+    }
   }
 
   /**

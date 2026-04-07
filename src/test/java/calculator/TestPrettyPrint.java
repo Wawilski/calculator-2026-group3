@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This test class checks the pretty printing of expressions, including nested
@@ -51,5 +52,29 @@ class TestPrettyPrint {
   void testPrettyPrintEmptyOperation() throws IllegalConstruction {
     Expression expr = new Plus(new ArrayList<>());
     assertEquals("+()", calc.prettyFormat(expr));
+  }
+
+  @Test
+  void testPrettyPrintDivisionParenthesesOnRightOperand() throws IllegalConstruction {
+    Expression expr = new Divides(List.of(
+        new IntegerNumber(8),
+        new Divides(List.of(new IntegerNumber(4), new IntegerNumber(2)))));
+    assertEquals("8 / (4 / 2)", calc.prettyFormat(expr));
+  }
+
+  @Test
+  void testPrettyPrintKeepsLeftAssociativeDivisionFlat() throws IllegalConstruction {
+    Expression expr = new Divides(List.of(
+        new Divides(List.of(new IntegerNumber(8), new IntegerNumber(4))),
+        new IntegerNumber(2)));
+    assertEquals("8 / 4 / 2", calc.prettyFormat(expr));
+  }
+
+  @Test
+  void testPrettyPrintSubtractionParenthesesOnRightOperand() throws IllegalConstruction {
+    Expression expr = new Minus(List.of(
+        new IntegerNumber(10),
+        new Minus(List.of(new IntegerNumber(4), new IntegerNumber(1)))));
+    assertEquals("10 - (4 - 1)", calc.prettyFormat(expr));
   }
 }

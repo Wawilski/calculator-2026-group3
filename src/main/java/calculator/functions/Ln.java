@@ -79,19 +79,16 @@ public final class Ln extends UnaryFunction {
 
   @Override
   public BaseNumber function(ComplexNumber value) {
-    ComplexNumber result;
-    if (value.isNaN() ||
-        (value.getReal().compareTo(BigDecimal.ZERO) == 0 &&
-            value.getImaginary().compareTo(BigDecimal.ZERO) == 0)) {
-      result = new ComplexNumber();
-    } else {
-      BigDecimal squareReal = value.getReal().pow(2);
-      BigDecimal squareImaginary = value.getImaginary().pow(2);
-      double mod = Math.sqrt(squareReal.add(squareImaginary).doubleValue());
-      double lnMod = Math.log(mod);
-      double arg = Math.atan2(value.getImaginary().doubleValue(), value.getReal().doubleValue());
-      result = new ComplexNumber(lnMod, arg);
+    // For this calculator, ln is defined on real values only.
+    // Any non-real or NaN complex input returns complex NaN.
+    if (value.isNaN() || value.getImaginary().compareTo(BigDecimal.ZERO) != 0) {
+      return new ComplexNumber();
     }
-    return result;
+
+    BaseNumber realResult = function(new RealNumber(value.getReal()));
+    if (realResult instanceof RealNumber && ((RealNumber) realResult).isSpecial()) {
+      return new ComplexNumber();
+    }
+    return new ComplexNumber(((RealNumber) realResult).getValue(), BigDecimal.ZERO);
   }
 }

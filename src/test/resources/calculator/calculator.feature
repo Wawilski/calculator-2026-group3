@@ -57,6 +57,16 @@ Feature: Integer Arithmetic Expressions
     Then its pretty notation is "(3 + 4) * (5 - 2)"
     And it has depth 2, 3 operations and 4 numbers
 
+  Scenario: Pretty printing a right-nested division
+    Given the right-nested division of 8, 4, and 2
+    Then its pretty notation is "8 / (4 / 2)"
+    And the operation evaluates to 4 / 1
+
+  Scenario: Pretty printing a right-nested subtraction
+    Given the right-nested subtraction of 10, 4, and 1
+    Then its pretty notation is "10 - (4 - 1)"
+    And the operation evaluates to 7
+
   # This is an example of a scenario in which we provide a list of numbers as input.
   # (In fact, this is not entirely true, since what is given as input is a table of
   # strings. In this case, the table is of dimension 1 * 3 (1 line and three columns).
