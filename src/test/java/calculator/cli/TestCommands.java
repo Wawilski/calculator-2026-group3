@@ -37,7 +37,7 @@ public class TestCommands {
   void testPrecisionCommand() {
     PrecisionCommand precisionCmd = new PrecisionCommand();
 
-    assertEquals("To choose the significant amount of decimal number",
+    assertEquals("To choose the significant amount of decimal number: current = 16 (max = 16)",
         precisionCmd.description());
 
     precisionCmd.execute(context, "set-precision 5");

@@ -15,7 +15,8 @@ public class PrecisionCommand implements CliCommand {
 
   @Override
   public String description() {
-    return "To choose the significant amount of decimal number";
+    return "To choose the significant amount of decimal number: current = " + String.valueOf(RealNumber.getScale())
+        + " (max = 16)";
   }
 
   @Override
@@ -30,7 +31,7 @@ public class PrecisionCommand implements CliCommand {
     } else {
       try {
         int intScale = Integer.valueOf(scale[1]);
-        if (intScale < 0) {
+        if (intScale < 0 || intScale > 16) {
           throw new Exception();
         }
         RealNumber.setScale(Integer.valueOf(scale[1]));
