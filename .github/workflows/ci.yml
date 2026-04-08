@@ -2,10 +2,10 @@ name: Java CI - Full Pipeline
 
 on:
   push:
-    branches: [ "master" , "dev", "bugfix/ANTLRmacOS"]
+    branches: [ "master" , "dev"]
     tags: [ 'v*' ]
   pull_request:
-    branches: [ "master", "dev", "bugfix/ANTLRmacOS"]
+    branches: [ "master", "dev"]
 
 permissions:
   contents: write
