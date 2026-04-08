@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calculator GUI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="app" class="page">
+      <main class="calculator-card with-drawer" :class="{ open: isScienceMenuOpen }">
+        <button
+          type="button"
+          class="science-toggle"
+          @click="toggleScienceMenu"
+          :aria-expanded="isScienceMenuOpen ? 'true' : 'false'"
+          aria-controls="science-drawer"
+        >
+          ƒx
+        </button>
+
+        <aside id="science-drawer" class="science-drawer" aria-label="Scientific functions">
+          <p class="science-title">Scientific</p>
+          <section class="science-actions">
+            <button type="button" class="science" @click="appendScientificToken('sqrt(')">√x</button>
+            <button type="button" class="science" @click="appendScientificToken('ln(')">ln</button>
+            <button type="button" class="science" @click="appendScientificToken('log(')">log</button>
+            <button type="button" class="science" @click="appendScientificToken('sin(')">sin</button>
+            <button type="button" class="science" @click="appendScientificToken('cos(')">cos</button>
+            <button type="button" class="science" @click="appendScientificToken('tan(')">tan</button>
+            <button type="button" class="science" @click="appendScientificToken('asin(')">sin<sup>-1</sup></button>
+            <button type="button" class="science" @click="appendScientificToken('acos(')">cos<sup>-1</sup></button>
+            <button type="button" class="science" @click="appendScientificToken('atan(')">tan<sup>-1</sup></button>
+            <button type="button" class="science" @click="appendScientificToken('1/(')">1/x</button>
+            <button type="button" class="science" @click="appendScientificToken('e^(')">eˣ</button>
+            <button type="button" class="science" @click="appendScientificToken('^2')">x²</button>
+            <button type="button" class="science" @click="appendScientificToken('^')">x^y</button>
+            <button type="button" class="science" @click="appendScientificToken('abs(')">|x|</button>
+            <button type="button" class="science" @click="appendScientificToken('pi')">pi</button>
+            <button type="button" class="science" @click="appendScientificToken('deg(')">Deg</button>
+          </section>
+        </aside>
+
+        <section class="display" aria-label="Expression display">
+          <p class="display-label">Expression</p>
+          <input
+            :value="expression || ''"
+            type="text"
+            readonly
+            aria-readonly="true"
+          />
+        </section>
+
+        <section class="actions" aria-label="Calculator keypad">
+          <button type="button" class="ghost" @click="clearExpression">C</button>
+          <button type="button" class="ghost" @click="backspace">&#9003;</button>
+          <button type="button" class="ghost" @click="appendToken('(')">(</button>
+          <button type="button" class="ghost" @click="appendToken(')')">)</button>
+
+          <button type="button" @click="appendToken('7')">7</button>
+          <button type="button" @click="appendToken('8')">8</button>
+          <button type="button" @click="appendToken('9')">9</button>
+          <button type="button" class="op" @click="appendToken('/')">/</button>
+
+          <button type="button" @click="appendToken('4')">4</button>
+          <button type="button" @click="appendToken('5')">5</button>
+          <button type="button" @click="appendToken('6')">6</button>
+          <button type="button" class="op" @click="appendToken('*')">*</button>
+
+          <button type="button" @click="appendToken('1')">1</button>
+          <button type="button" @click="appendToken('2')">2</button>
+          <button type="button" @click="appendToken('3')">3</button>
+          <button type="button" class="op" @click="appendToken('-')">-</button>
+
+          <button type="button" class="ghost" @click="appendToken('-')">+/-</button>
+          <button type="button" @click="appendToken('0')">0</button>
+          <button type="button" @click="appendToken('.')">.</button>
+          <button type="button" class="op" @click="appendToken('+')">+</button>
+
+          <button type="button" class="ghost" @click="evaluateExpression">=</button>
+        </section>
+
+        <section class="output" aria-live="polite">
+          <p class="hint">{{ hintMessage }}</p>
+          <p v-if="result" class="hint">Result: {{ result }}</p>
+          <p v-if="resultPretty" class="hint">Pretty: {{ resultPretty }}</p>
+        </section>
+      </main>
+    </div>
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
