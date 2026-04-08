@@ -3,10 +3,12 @@ package calculator.api.service;
 
 import calculator.Calculator;
 import calculator.Expression;
+import calculator.ExpressionParser;
 import calculator.Notation;
 import calculator.api.EvaluationResponse;
 import calculator.api.ExpressionMapper;
 import calculator.api.ExpressionRequest;
+import calculator.api.TextEvaluationResponse;
 import calculator.numbers.BaseNumber;
 import calculator.numbers.IntegerNumber;
 import org.springframework.stereotype.Service;
@@ -25,10 +27,12 @@ public class CalculatorApiService {
 
     private final Calculator calculator;
     private final ExpressionMapper expressionMapper;
+    private final ExpressionParser expressionParser;
 
     public CalculatorApiService(ExpressionMapper expressionMapper) {
         this.calculator = new Calculator();
         this.expressionMapper = Objects.requireNonNull(expressionMapper, "expressionMapper must not be null");
+        this.expressionParser = new ExpressionParser();
     }
 
     // This method connects the API layer to the calculator core.
@@ -45,5 +49,29 @@ public class CalculatorApiService {
         response.setPretty(calculator.prettyFormat(expression));
         response.setPrefix(calculator.format(expression, Notation.PREFIX));
         return response;
+    }
+
+    public TextEvaluationResponse evaluateText(String rawExpression) {
+        if (rawExpression == null || rawExpression.isBlank()) {
+            throw new IllegalArgumentException("Expression text must not be blank.");
+        }
+
+        String normalizedExpression = normalizeExpression(rawExpression);
+        try {
+            Expression expression = expressionParser.parse(normalizedExpression);
+            BaseNumber evaluated = calculator.eval(expression);
+            TextEvaluationResponse response = new TextEvaluationResponse();
+            response.setResult(evaluated.toString());
+            response.setInfix(calculator.format(expression, Notation.INFIX));
+            response.setPretty(calculator.prettyFormat(expression));
+            response.setPrefix(calculator.format(expression, Notation.PREFIX));
+            return response;
+        } catch (RuntimeException exception) {
+            throw new IllegalArgumentException("Invalid expression syntax.");
+        }
+    }
+
+    private String normalizeExpression(String expression) {
+        return expression.replace("^", "**").trim();
     }
 }

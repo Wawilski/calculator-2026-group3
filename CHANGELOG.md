@@ -6,12 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+# [1.1.0] - 2026-04-08
+
+### Added
+- Web Based GUI [Feature #12](https://github.com/Wawilski/calculator-2026-group3/issues/12)
+- REST API [Feature #11](https://github.com/Wawilski/calculator-2026-group3/issues/11)
 
 # [1.0.1] - 2026-04-07
 
 ### Added
 - Basic functions support
-    - Trigonoimetric functions
+    - Trigonometric functions
     - Log and Ln functions
     - Abs function
     - Sqrt function
