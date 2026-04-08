@@ -28,11 +28,34 @@ The BDD scenarios are specified as .feature files in the src\test\resources dire
 
 ### Installation and testing instructions
 
-*  Upon first use of the code in this repository, you will need to run "mvn clean install" to ensure that all required project dependencies (e.g. for Java, JUnit, Cucumber, and Maven) will be downloaded and installed locally.
-*  Assuming you have a sufficiently recent version of Maven installed (the required versions are specified as properties in the POM file), you can compile the source code using "mvn compile"
-*  Once the code is compiled, you can execute the main class of the Java code using "mvn exec:java" 
-*  The tests and BDD scenarios are executable with Maven using "mvn test"
+*  Upon first use of the code in this repository, you will need to run 
+```bash
+mvn clean install
+```
+This ensures that all required project dependencies (e.g. for Java, JUnit, Cucumber, and Maven) will be downloaded and installed locally.
+*  Assuming you have a sufficiently recent version of Maven installed (the required versions are specified as properties in the POM file), you can compile the source code using 
+```bash
+mvn compile
+```
+*  Once the code is compiled, you can execute the main class of the Java code using 
+
+```bash
+mvn exec:java
+```
+
+*  The tests and BDD scenarios are executable with Maven using 
+```bash
+mvn test
+```
 *  Note that the tests are also executed when you do a "mvn install". It is possible to skip those tests by providing an extra parameter. For details of more advanced uses of Maven, please refer to its official documentation https://maven.apache.org/guides/.
+
+### Web-Based GUI
+
+* To run locally the Web-based GUI use the following command:
+```bash
+mvn spring-boot:run
+```
+* The web GUI should now run locally on the local port [8080](http://127.0.0.1:8080/)
 
 ### Test coverage and JavaDoc reporting
 
