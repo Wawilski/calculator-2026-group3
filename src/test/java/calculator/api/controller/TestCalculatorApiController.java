@@ -155,64 +155,71 @@ class TestCalculatorApiController {
                     },
                     { "type": "number", "value": 3 }
                   ]
-                }
-                """.formatted("{\"type\":\"number\",\"value\":1},".repeat(80));
+                },
+                { "type": "number", "value": 4 }
+              ]
+            },
+            { "type": "number", "value": 5 }
+          ]
+        }
+        """;
 
-        mockMvc.perform(post("/api/evaluate")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(payload))
-                .andExpect(status().isPayloadTooLarge())
-                .andExpect(jsonPath("$.code").value("REQUEST_TOO_LARGE"));
-    }
+    mockMvc.perform(post("/api/evaluate")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(payload))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.code").value("INVALID_REQUEST"))
+        .andExpect(jsonPath("$.message").value("Expression nesting exceeds the maximum depth of 4."));
+  }
 
-    @Test
-    void testEvaluateTextEndpoint() throws Exception {
-        String payload = """
-                {
-                  "expression": "(3+4)*5"
-                }
-                """;
+  @Test
+  void testEvaluateTextEndpoint() throws Exception {
+    String payload = """
+        {
+          "expression": "(3+4)*5"
+        }
+        """;
 
-        mockMvc.perform(post("/api/evaluate-text")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(payload))
-                .andExpect(status().isOk())
-                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.result").value("35"))
-                .andExpect(jsonPath("$.infix").exists())
-                .andExpect(jsonPath("$.pretty").exists())
-                .andExpect(jsonPath("$.prefix").exists());
-    }
+    mockMvc.perform(post("/api/evaluate-text")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(payload))
+        .andExpect(status().isOk())
+        .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.result").value("35"))
+        .andExpect(jsonPath("$.infix").exists())
+        .andExpect(jsonPath("$.pretty").exists())
+        .andExpect(jsonPath("$.prefix").exists());
+  }
 
-    @Test
-    void testEvaluateTextEndpointRejectsBlankExpression() throws Exception {
-        String payload = """
-                {
-                  "expression": "   "
-                }
-                """;
+  @Test
+  void testEvaluateTextEndpointRejectsBlankExpression() throws Exception {
+    String payload = """
+        {
+          "expression": "   "
+        }
+        """;
 
-        mockMvc.perform(post("/api/evaluate-text")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(payload))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.code").value("VALIDATION_ERROR"))
-                .andExpect(jsonPath("$.details", hasItem("expression: expression must not be blank")));
-    }
+    mockMvc.perform(post("/api/evaluate-text")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(payload))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.code").value("VALIDATION_ERROR"))
+        .andExpect(jsonPath("$.details", hasItem("expression: expression must not be blank")));
+  }
 
-    @Test
-    void testEvaluateTextEndpointRejectsInvalidSyntax() throws Exception {
-        String payload = """
-                {
-                  "expression": "3++"
-                }
-                """;
+  @Test
+  void testEvaluateTextEndpointRejectsInvalidSyntax() throws Exception {
+    String payload = """
+        {
+          "expression": "3++"
+        }
+        """;
 
-        mockMvc.perform(post("/api/evaluate-text")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(payload))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.code").value("INVALID_REQUEST"))
-                .andExpect(jsonPath("$.message").value("Invalid expression syntax."));
-    }
+    mockMvc.perform(post("/api/evaluate-text")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(payload))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.code").value("INVALID_REQUEST"))
+        .andExpect(jsonPath("$.message").value("Invalid expression syntax."));
+  }
 }
