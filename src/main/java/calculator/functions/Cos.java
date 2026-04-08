@@ -3,6 +3,7 @@ package calculator.functions;
 import java.util.List;
 
 import calculator.Expression;
+import calculator.ExpressionParser;
 import calculator.IllegalConstruction;
 import calculator.numbers.BaseNumber;
 import calculator.numbers.ComplexNumber;
@@ -35,7 +36,9 @@ public final class Cos extends UnaryFunction {
 
   @Override
   public BaseNumber function(IntegerNumber value) {
-    return new RealNumber(Math.cos(value.getValue()));
+    double angle = (ExpressionParser.isAngleUnitDegree) ? Math.toRadians(value.getValue())
+        : value.getValue();
+    return new RealNumber(Math.cos(angle));
   }
 
   @Override
@@ -56,7 +59,9 @@ public final class Cos extends UnaryFunction {
     if (value.isSpecial()) {
       return new RealNumber(SpecialNumber.NaN);
     }
-    return new RealNumber(Math.cos(value.getValue().doubleValue()));
+    double angle = (ExpressionParser.isAngleUnitDegree) ? Math.toRadians(value.getValue().doubleValue())
+        : value.getValue().doubleValue();
+    return new RealNumber(Math.cos(angle));
   }
 
   @Override

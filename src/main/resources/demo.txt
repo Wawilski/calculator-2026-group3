@@ -1,0 +1,31 @@
+
+                Welcome to the demo!
+These are some possible inputs accepted by our calculator !
+
+== Infix notation ==
+calculator> 1+1
+2
+
+== Elementary Functions ==
+calculator> ln(e)
+1
+
+== Complex Numbers ==
+calculator> 2 + 3i + 4i + 5
+7 + 7i
+
+== Prefix Notation ==
+calculator> + (1.1,1.1)
+2.2
+
+== Postfix Notation ==
+calculator> 1.1 2.2 +
+3.3
+
+== Precision settings ==
+calculator> set-precision 5
+Precision set to 5
+
+/!\ This calculator round by default to the ceiling /!\
+calculator> 0.000005
+0.00001

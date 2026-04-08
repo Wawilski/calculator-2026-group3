@@ -23,7 +23,7 @@ import calculator.numbers.RealNumber;
 import calculator.functions.*;
 
 /**
- * EquationListener
+ * ParserVisitor
  */
 
 public class ParserVisitor extends calculatorBaseVisitor<Expression> {

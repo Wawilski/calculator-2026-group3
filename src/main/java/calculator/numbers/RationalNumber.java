@@ -50,7 +50,7 @@ public class RationalNumber implements BaseNumber {
   public /* constructor */ RationalNumber(int numerator, int denominator) throws IllegalNumberConstruction {
 
     if (denominator == 0) {
-      throw new IllegalNumberConstruction();
+      throw new IllegalNumberConstruction("Division by zero is not allowed.");
     }
     this.numerator = numerator;
     this.denominator = denominator;
@@ -70,7 +70,7 @@ public class RationalNumber implements BaseNumber {
     int num = Integer.valueOf(numerator);
     int den = Integer.valueOf(denominator);
     if (den == 0) {
-      throw new IllegalNumberConstruction();
+      throw new IllegalNumberConstruction("Division by zero is not allowed for integer numbers");
     }
     this.numerator = num;
     this.denominator = den;

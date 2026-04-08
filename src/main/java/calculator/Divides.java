@@ -58,7 +58,7 @@ public final class Divides extends Operation {
   public RationalNumber op(IntegerNumber l, IntegerNumber r) {
     int rightHand = r.getValue();
     if (rightHand == 0)
-      throw new ArithmeticException("Division by zero is not allowed.");
+      throw new ArithmeticException("Division by zero is not allowed for integer numbers");
     return new RationalNumber(l.getValue(), rightHand);
   }
 
