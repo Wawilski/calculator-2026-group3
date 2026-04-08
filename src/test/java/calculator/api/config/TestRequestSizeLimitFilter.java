@@ -58,6 +58,21 @@ class TestRequestSizeLimitFilter {
     }
 
     @Test
+    void testRejectsTooLargeEvaluateTextPayload() throws Exception {
+        RequestSizeLimitFilter filter = new RequestSizeLimitFilter(8);
+        MockHttpServletRequest request = new MockHttpServletRequest("POST", "/api/evaluate-text");
+        request.setContent("123456789".getBytes(StandardCharsets.UTF_8));
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        MockFilterChain chain = new MockFilterChain();
+
+        filter.doFilter(request, response, chain);
+
+        assertEquals(413, response.getStatus());
+        assertTrue(response.getContentAsString().contains("\"code\":\"REQUEST_TOO_LARGE\""));
+        assertNull(chain.getRequest());
+    }
+
+    @Test
     void testSkipsFilterForNonPostMethod() throws Exception {
         RequestSizeLimitFilter filter = new RequestSizeLimitFilter(1);
         MockHttpServletRequest request = new MockHttpServletRequest("GET", "/api/evaluate");

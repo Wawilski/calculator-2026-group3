@@ -40,8 +40,11 @@ public class RequestSizeLimitFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        // For now I only apply this protection to the evaluation endpoint.
-        return !"/api/evaluate".equals(request.getRequestURI()) || !"POST".equalsIgnoreCase(request.getMethod());
+        if (!"POST".equalsIgnoreCase(request.getMethod())) {
+            return true;
+        }
+        String uri = request.getRequestURI();
+        return !"/api/evaluate".equals(uri) && !"/api/evaluate-text".equals(uri);
     }
 
     private void writePayloadTooLargeResponse(
