@@ -107,7 +107,7 @@ createApp({
           body: JSON.stringify({ expression: this.normalizeExpression(expression) })
         });
 
-        const payload = await response.json();
+        const payload = await this.readApiPayload(response);
         if (!response.ok) {
           this.result = "";
           this.resultPretty = "";
@@ -138,7 +138,23 @@ createApp({
       if (Array.isArray(payload.details) && payload.details.length > 0) {
         return payload.details[0];
       }
+      if (payload.rawText) {
+        return payload.rawText;
+      }
       return payload.message || "Request failed.";
+    },
+
+    async readApiPayload(response) {
+      const contentType = response.headers.get("content-type") || "";
+      if (contentType.includes("application/json")) {
+        return response.json();
+      }
+
+      const rawText = await response.text();
+      return {
+        message: response.ok ? "Unexpected response format." : `HTTP ${response.status}`,
+        rawText: rawText ? rawText.slice(0, 200) : ""
+      };
     }
   }
 }).mount("#app");
