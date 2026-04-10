@@ -57,7 +57,7 @@ jobs:
             rm -f ./app.log
 
       - name: Upload bundle to Alwaysdata
-        uses: appleboy/scp-action@v0.1.7
+        uses: appleboy/scp-action@v1.0.0
         with:
           host: ${{ secrets.ALWAYSDATA_HOST }}
           username: ${{ secrets.ALWAYSDATA_USER }}
