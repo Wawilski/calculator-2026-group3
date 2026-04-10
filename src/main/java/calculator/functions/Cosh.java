@@ -61,6 +61,8 @@ public final class Cosh extends UnaryFunction {
     }
     double angle = (ExpressionParser.isAngleUnitDegree) ? Math.toRadians(value.getValue().doubleValue())
         : value.getValue().doubleValue();
+    System.out.println(angle);
+    System.out.println(Math.cosh(angle));
     return new RealNumber(Math.cosh(angle));
   }
 

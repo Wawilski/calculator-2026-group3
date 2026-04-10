@@ -137,7 +137,10 @@ fct : COS
     | LN   
     | SQRT 
     | LOG  
-    | ABS  
+    | ABS
+    | COSH
+    | TANH
+    | SINH
     ;
            
 COS : 'cos';
