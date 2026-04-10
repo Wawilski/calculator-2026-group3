@@ -54,7 +54,7 @@ jobs:
           target: ${{ secrets.ALWAYSDATA_DEPLOY_PATH }}
           strip_components: 1
 
-      - name: Restart application on Alwaysdata
+      - name: Stop legacy manual Java process
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.ALWAYSDATA_HOST }}
@@ -66,8 +66,7 @@ jobs:
           script: |
             cd "${{ secrets.ALWAYSDATA_DEPLOY_PATH }}"
             chmod +x start-alwaysdata.sh
-            PIDS="$(ps -eo pid=,args= | awk '/[j]ava .* -jar .*app\.jar/ || /[j]ava .* -jar .*target\/.*\.jar/ {print $1}')"
+            PIDS="$(ps -eo pid=,args= | awk '/[j]ava .* -jar .*calculator-cucumber-0\.5\.0\.jar/ || /[j]ava .* -jar .*app\.jar/ {print $1}')"
             if [ -n "$PIDS" ]; then
               kill $PIDS || true
             fi
-            nohup ./start-alwaysdata.sh > app.log 2>&1 &
