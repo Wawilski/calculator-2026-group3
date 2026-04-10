@@ -53,15 +53,19 @@ public class CalculatorApiService {
         return response;
     }
 
-    public TextEvaluationResponse evaluateText(String rawExpression, Integer scale) {
+    public TextEvaluationResponse evaluateText(String rawExpression, Integer scale, Boolean angleUnitDegree) {
         if (rawExpression == null || rawExpression.isBlank()) {
             throw new IllegalArgumentException("Expression text must not be blank.");
         }
 
         String normalizedExpression = normalizeExpression(rawExpression);
         int previousScale = RealNumber.getScale();
+        boolean previousAngleUnit = ExpressionParser.isAngleUnitDegree;
         if (scale != null) {
             RealNumber.setScale(scale);
+        }
+        if (angleUnitDegree != null) {
+            ExpressionParser.isAngleUnitDegree = angleUnitDegree;
         }
         try {
             Expression expression = expressionParser.parse(normalizedExpression);
@@ -73,11 +77,14 @@ public class CalculatorApiService {
             response.setPrefix(calculator.format(expression, Notation.PREFIX));
             response.setPostfix(calculator.format(expression, Notation.POSTFIX));
             return response;
-        } catch (RuntimeException exception) {
+        } catch (RuntimeException _) {
             throw new IllegalArgumentException("Invalid expression syntax.");
         } finally {
             if (scale != null) {
                 RealNumber.setScale(previousScale);
+            }
+            if (angleUnitDegree != null) {
+                ExpressionParser.isAngleUnitDegree = previousAngleUnit;
             }
         }
     }

@@ -46,7 +46,6 @@
             <button type="button" class="science" @click="appendScientificToken('^')">x^y</button>
             <button type="button" class="science" @click="appendScientificToken('abs(')">|x|</button>
             <button type="button" class="science" @click="appendScientificToken('pi')">pi</button>
-            <button type="button" class="science" @click="appendScientificToken('deg(')">Deg</button>
           </section>
         </aside>
 
@@ -63,6 +62,15 @@
                 max="16"
                 step="1"
                 aria-label="Real numbers precision scale"
+              />
+            </label>
+            <label class="scale-inline" for="angle-unit-degree">
+              Degrees
+              <input
+                id="angle-unit-degree"
+                v-model="angleUnitDegree"
+                type="checkbox"
+                aria-label="Use degree angle unit"
               />
             </label>
           </div>
@@ -94,13 +102,13 @@
           <button type="button" @click="appendToken('2')">2</button>
           <button type="button" @click="appendToken('3')">3</button>
           <button type="button" class="op" @click="appendToken('-')">-</button>
-
-          <button type="button" class="ghost" @click="appendToken('-')">+/-</button>
+          
+          <button type="button" class="ghost" @click="evaluateExpression">=</button>
           <button type="button" @click="appendToken('0')">0</button>
           <button type="button" @click="appendToken('.')">.</button>
           <button type="button" class="op" @click="appendToken('+')">+</button>
 
-          <button type="button" class="ghost" @click="evaluateExpression">=</button>
+          
         </section>
 
         <section class="output" aria-live="polite">

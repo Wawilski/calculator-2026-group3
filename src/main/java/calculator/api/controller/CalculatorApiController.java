@@ -40,6 +40,6 @@ public class CalculatorApiController {
     // REST endpoint used by the GUI to evaluate a textual expression.
     @PostMapping("/evaluate-text")
     public TextEvaluationResponse evaluateText(@Valid @RequestBody TextEvaluationRequest request) {
-        return calculatorApiService.evaluateText(request.getExpression(), request.getScale());
+        return calculatorApiService.evaluateText(request.getExpression(), request.getScale(), request.getAngleUnitDegree());
     }
 }

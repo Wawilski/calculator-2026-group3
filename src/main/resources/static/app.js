@@ -12,6 +12,7 @@ createApp({
       resultPrefix: "",
       resultPostfix: "",
       realScale: 16,
+      angleUnitDegree: false,
       isLoading: false
     };
   },
@@ -133,7 +134,8 @@ createApp({
           },
           body: JSON.stringify({
             expression: this.normalizeExpression(expression),
-            scale: this.realScale
+            scale: this.realScale,
+            angleUnitDegree: this.angleUnitDegree
           })
         });
 

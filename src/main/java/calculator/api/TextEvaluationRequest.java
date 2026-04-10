@@ -17,11 +17,14 @@ public class TextEvaluationRequest {
     @Max(value = 16, message = "scale must be between 0 and 16")
     private Integer scale;
 
+    private Boolean angleUnitDegree;
+
     public TextEvaluationRequest() {
     }
 
-    public TextEvaluationRequest(String expression, Integer scale) {
+    public TextEvaluationRequest(String expression, Integer scale, Boolean angleUnitDegree) {
         this.expression = expression;
         this.scale = scale;
+        this.angleUnitDegree = angleUnitDegree;
     }
 }
