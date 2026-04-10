@@ -143,6 +143,9 @@ fct : COS
 COS : 'cos';
 SIN : 'sin';
 TAN : 'tan';
+COSH : 'cosh';
+SINH : 'sinh';
+TANH : 'tanh';
 ACOS : 'acos' ;
 ASIN : 'asin' ;
 ATAN : 'atan' ;
