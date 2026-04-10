@@ -95,7 +95,7 @@ class TestDivides {
       op = new Divides(params);
       Evaluator e = new Evaluator();
       ArithmeticException exception = assertThrows(ArithmeticException.class, () -> op.accept(e));
-      assertEquals("Division by zero is not allowed.", exception.getMessage());
+      assertEquals("Division by zero is not allowed for integer numbers", exception.getMessage());
 
     } catch (IllegalConstruction e) {
       fail();

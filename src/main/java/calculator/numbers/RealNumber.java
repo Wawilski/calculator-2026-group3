@@ -277,7 +277,7 @@ public class RealNumber implements BaseNumber {
 
   @Override
   public String toString() {
-    String s = (!isSpecial()) ? value.toString() : specialValue.toString();
+    String s = (!isSpecial()) ? value.stripTrailingZeros().toString() : specialValue.toString();
     return s;
   }
 

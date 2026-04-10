@@ -225,10 +225,10 @@ public class ComplexNumber implements BaseNumber {
       s = "NaN";
     } else {
       String realPart = (this.real.equals(new BigDecimal(0).setScale(RealNumber.getScale(), RoundingMode.CEILING))) ? ""
-          : this.real.toString();
+          : this.real.stripTrailingZeros().toString();
       String imPart = (this.imaginary.equals(new BigDecimal(0).setScale(RealNumber.getScale(), RoundingMode.CEILING)))
           ? ""
-          : this.imaginary.toString() + "i";
+          : this.imaginary.stripTrailingZeros().toString() + "i";
       String sign = (realPart == "" || imPart == "") ? "" : " + ";
 
       s = realPart + sign + imPart;

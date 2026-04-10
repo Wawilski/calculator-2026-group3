@@ -14,7 +14,11 @@ permissions:
 jobs:
   complete-pipeline:
     name: Build, Test, Quality and Release
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest,macos-latest]
+
+    runs-on: ${{ matrix.os }}
 
     steps:
       - name: Checkout repository
@@ -38,6 +42,7 @@ jobs:
 
       - name: Generate JaCoCo Badge
         id: jacoco
+        if: matrix.os == 'ubuntu-latest'
         uses: cicirello/jacoco-badge-generator@v2
         with:
           generate-coverage-badge: true
@@ -66,7 +71,7 @@ jobs:
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: full-reports-pack
+          name: full-reports-pack-${{ matrix.os }}
           path: |
             target/site/jacoco/
             target/reports/apidocs/

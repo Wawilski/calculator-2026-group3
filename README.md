@@ -1,6 +1,8 @@
 [![](https://img.shields.io/github/v/release/Wawilski/calculator-2026-group3?label=Latest%20Release)](https://github.com/Wawilski/calculator-2026-group3/releases/latest)
 
-Code quality: ![Maven Build](https://github.com/Wawilski/calculator-2026-group3/actions/workflows/maven.yml/badge.svg)
+
+Code quality: ![Maven Build](https://github.com/Wawilski/calculator-2026-group3/actions/workflows/maven.yml/badge.svg) 
+[![CodeQL security analysis for Java](https://github.com/Wawilski/calculator-2026-group3/actions/workflows/codeql.yml/badge.svg)](https://github.com/Wawilski/calculator-2026-group3/actions/workflows/codeql.yml)
 
 Test coverage: ![Coverage](.github/badges/jacoco.svg)
 ![Branches](.github/badges/branches.svg)
@@ -33,7 +35,7 @@ The BDD scenarios are specified as .feature files in the src\test\resources dire
 mvn clean install
 ```
 This ensures that all required project dependencies (e.g. for Java, JUnit, Cucumber, and Maven) will be downloaded and installed locally.
-*  Assuming you have a sufficiently recent version of Maven installed (the required versions are specified as properties in the POM file), you can compile the source code using 
+*  Then you can compile the source code using 
 ```bash
 mvn compile
 ```
@@ -48,6 +50,13 @@ mvn exec:java
 mvn test
 ```
 *  Note that the tests are also executed when you do a "mvn install". It is possible to skip those tests by providing an extra parameter. For details of more advanced uses of Maven, please refer to its official documentation https://maven.apache.org/guides/.
+
+### Command Line Interface (CLI)
+
+* To run the CLI use the following command
+```bash
+mvn exec:java -Dexec.args="--cli"
+```
 
 ### Web-Based GUI
 

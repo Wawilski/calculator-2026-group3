@@ -1,8 +1,9 @@
 grammar calculator;
 
-equation : postfix EOF #PostFix
-         | infix EOF #InFix
-         | prefix EOF #PreFix;
+equation : postfix EOF #PostFixEquation
+         | infix   EOF #InFixEquation
+         | prefix  EOF #PreFixEquation
+         ;
 
 // Infix Calculator
 

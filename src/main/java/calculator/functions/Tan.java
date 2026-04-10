@@ -3,6 +3,7 @@ package calculator.functions;
 import java.util.List;
 
 import calculator.Expression;
+import calculator.ExpressionParser;
 import calculator.IllegalConstruction;
 import calculator.numbers.BaseNumber;
 import calculator.numbers.ComplexNumber;
@@ -35,7 +36,11 @@ public final class Tan extends UnaryFunction {
 
   @Override
   public BaseNumber function(IntegerNumber value) {
-    return new RealNumber(Math.tan(value.getValue()));
+    double angle = (ExpressionParser.isAngleUnitDegree) ? Math.toRadians(value.getValue()) : value.getValue();
+    if (Math.abs(angle % Math.PI - Math.PI / 2) < 1E-6 || Math.abs(angle % Math.PI + Math.PI / 2) < 1E-6) {
+      return new RealNumber(SpecialNumber.NaN);
+    }
+    return new RealNumber(Math.tan(angle));
   }
 
   @Override
@@ -53,10 +58,16 @@ public final class Tan extends UnaryFunction {
    */
   @Override
   public BaseNumber function(RealNumber value) {
+
     if (value.isSpecial()) {
       return new RealNumber(SpecialNumber.NaN);
     }
-    return new RealNumber(Math.tan(value.getValue().doubleValue()));
+    double angle = (ExpressionParser.isAngleUnitDegree) ? Math.toRadians(value.getValue().doubleValue())
+        : value.getValue().doubleValue();
+    if (Math.abs(angle % Math.PI - Math.PI / 2) < 1E-6 || Math.abs(angle % Math.PI + Math.PI / 2) < 1E-6) {
+      return new RealNumber(SpecialNumber.NaN);
+    }
+    return new RealNumber(Math.tan(angle));
   }
 
   @Override

@@ -23,37 +23,38 @@ import calculator.numbers.RealNumber;
 import calculator.functions.*;
 
 /**
- * EquationListener
+ * ParserVisitor
  */
 
 public class ParserVisitor extends calculatorBaseVisitor<Expression> {
+
   /**
    * visits the grammar rule equation : postfix EOF
-   * 
+   *
    * @return Expression resulting from the equation
    */
   @Override
-  public Expression visitPostFix(PostFixContext ctx) {
+  public Expression visitPostFixEquation(PostFixEquationContext ctx) {
     return visit(ctx.postfix());
   }
 
   /**
    * visits the grammar rule equation : infix EOF
-   * 
+   *
    * @return Expression resulting from the equation
    */
   @Override
-  public Expression visitInFix(InFixContext ctx) {
+  public Expression visitInFixEquation(InFixEquationContext ctx) {
     return visit(ctx.infix());
   }
 
   /**
    * visits the grammar rule equation : prefix EOF
-   * 
+   *
    * @return Expression resulting from the equation
    */
   @Override
-  public Expression visitPreFix(PreFixContext ctx) {
+  public Expression visitPreFixEquation(PreFixEquationContext ctx) {
     return visit(ctx.prefix());
   }
 

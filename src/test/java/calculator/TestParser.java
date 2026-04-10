@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
-
 import org.junit.jupiter.api.*;
 
 import calculator.numbers.ComplexNumber;
