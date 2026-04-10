@@ -42,6 +42,15 @@ body {
   animation: rise 0.55s ease-out;
 }
 
+.deploy-flag {
+  margin: 0 0 0.65rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #355f7d;
+  font-weight: 700;
+}
+
 .with-drawer {
   overflow: visible;
 }
