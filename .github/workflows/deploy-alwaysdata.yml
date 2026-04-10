@@ -42,6 +42,21 @@ jobs:
           cp start-alwaysdata.sh deploy/start-alwaysdata.sh
           chmod +x deploy/start-alwaysdata.sh
 
+      - name: Free space on Alwaysdata before upload
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.ALWAYSDATA_HOST }}
+          username: ${{ secrets.ALWAYSDATA_USER }}
+          key: ${{ secrets.ALWAYSDATA_SSH_KEY }}
+          password: ${{ secrets.ALWAYSDATA_SSH_PASSWORD }}
+          port: ${{ secrets.ALWAYSDATA_SSH_PORT != '' && secrets.ALWAYSDATA_SSH_PORT || '22' }}
+          script_stop: true
+          script: |
+            cd "${{ secrets.ALWAYSDATA_DEPLOY_PATH }}"
+            rm -f ./*.tar.gz ./app.jar
+            rm -rf ./target
+            rm -f ./app.log
+
       - name: Upload bundle to Alwaysdata
         uses: appleboy/scp-action@v0.1.7
         with:
@@ -54,7 +69,7 @@ jobs:
           target: ${{ secrets.ALWAYSDATA_DEPLOY_PATH }}
           strip_components: 1
 
-      - name: Sync runtime jar paths and restart app
+      - name: Restart app
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.ALWAYSDATA_HOST }}
@@ -66,13 +81,6 @@ jobs:
           script: |
             cd "${{ secrets.ALWAYSDATA_DEPLOY_PATH }}"
             chmod +x start-alwaysdata.sh
-            mkdir -p target
-            LEGACY_JAR="$(find target -maxdepth 1 -type f -name '*.jar' | head -n 1 || true)"
-            if [ -n "${LEGACY_JAR:-}" ]; then
-              cp app.jar "$LEGACY_JAR"
-            else
-              cp app.jar target/calculator-cucumber-0.5.0.jar
-            fi
             PIDS="$(ps -eo pid=,args= | awk '/[j]ava .* -jar .*calculator-cucumber-0\.5\.0\.jar/ || /[j]ava .* -jar .*app\.jar/ {print $1}')"
             if [ -n "$PIDS" ]; then
               kill $PIDS || true
