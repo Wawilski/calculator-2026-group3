@@ -51,7 +51,7 @@ createApp({
         return;
       }
 
-      const allowedTokens = ["+", "-", "*", "/", "(", ")", "."];
+      const allowedTokens = ["+", "-", "*", "/", "(", ")", ".", ","];
 
       if (/^\d$/.test(event.key) || allowedTokens.includes(event.key)) {
         event.preventDefault();

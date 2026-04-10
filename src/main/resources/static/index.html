@@ -103,10 +103,13 @@
           <button type="button" @click="appendToken('3')">3</button>
           <button type="button" class="op" @click="appendToken('-')">-</button>
           
-          <button type="button" class="ghost" @click="evaluateExpression">=</button>
+          
           <button type="button" @click="appendToken('0')">0</button>
           <button type="button" @click="appendToken('.')">.</button>
+          <button type="button" @click="appendToken(',')">,</button>
           <button type="button" class="op" @click="appendToken('+')">+</button>
+
+          <button type="button" class="ghost" @click="evaluateExpression">=</button>
 
           
         </section>
