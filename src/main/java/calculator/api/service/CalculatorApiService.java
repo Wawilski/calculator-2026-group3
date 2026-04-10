@@ -1,6 +1,10 @@
 package calculator.api.service;
 
 
+import java.util.Objects;
+
+import org.springframework.stereotype.Service;
+
 import calculator.Calculator;
 import calculator.Expression;
 import calculator.ExpressionParser;
@@ -11,9 +15,7 @@ import calculator.api.ExpressionRequest;
 import calculator.api.TextEvaluationResponse;
 import calculator.numbers.BaseNumber;
 import calculator.numbers.IntegerNumber;
-import org.springframework.stereotype.Service;
-
-import java.util.Objects;
+import calculator.numbers.RealNumber;
 
 /**
  * @author oussama hakik
@@ -51,12 +53,20 @@ public class CalculatorApiService {
         return response;
     }
 
-    public TextEvaluationResponse evaluateText(String rawExpression) {
+    public TextEvaluationResponse evaluateText(String rawExpression, Integer scale, Boolean angleUnitDegree) {
         if (rawExpression == null || rawExpression.isBlank()) {
             throw new IllegalArgumentException("Expression text must not be blank.");
         }
 
         String normalizedExpression = normalizeExpression(rawExpression);
+        int previousScale = RealNumber.getScale();
+        boolean previousAngleUnit = ExpressionParser.isAngleUnitDegree;
+        if (scale != null) {
+            RealNumber.setScale(scale);
+        }
+        if (angleUnitDegree != null) {
+            ExpressionParser.isAngleUnitDegree = angleUnitDegree;
+        }
         try {
             Expression expression = expressionParser.parse(normalizedExpression);
             BaseNumber evaluated = calculator.eval(expression);
@@ -65,9 +75,17 @@ public class CalculatorApiService {
             response.setInfix(calculator.format(expression, Notation.INFIX));
             response.setPretty(calculator.prettyFormat(expression));
             response.setPrefix(calculator.format(expression, Notation.PREFIX));
+            response.setPostfix(calculator.format(expression, Notation.POSTFIX));
             return response;
-        } catch (RuntimeException exception) {
+        } catch (RuntimeException _) {
             throw new IllegalArgumentException("Invalid expression syntax.");
+        } finally {
+            if (scale != null) {
+                RealNumber.setScale(previousScale);
+            }
+            if (angleUnitDegree != null) {
+                ExpressionParser.isAngleUnitDegree = previousAngleUnit;
+            }
         }
     }
 
