@@ -42,7 +42,7 @@ jobs:
           chmod +x deploy/start-alwaysdata.sh
 
       - name: Free space on Alwaysdata before upload
-        uses: appleboy/ssh-action@v1.2.0
+        uses: appleboy/ssh-action@v1.2.5
         with:
           host: ${{ secrets.ALWAYSDATA_HOST }}
           username: ${{ secrets.ALWAYSDATA_USER }}
