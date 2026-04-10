@@ -47,6 +47,15 @@ public class FunctionCreator {
         case "sqrt":
           function = new Sqrt(args);
           break;
+        case "cosh":
+          function = new Cosh(args);
+          break;
+        case "sinh":
+          function = new Sinh(args);
+          break;
+        case "tanh":
+          function = new Tanh(args);
+          break;
         default:
           throw new IllegalConstruction();
       }

@@ -114,6 +114,9 @@ public class Main {
       e = parser.parse("(3)(0.5)*2*(7-1)*4");
       c.print(e);
       c.eval(e);
+      e = parser.parse("cosh(2)");
+      c.print(e);
+      c.eval(e);
 
       List<Expression> params8 = new ArrayList<>();
       Collections.addAll(params8, new RationalNumber(1, 2), new IntegerNumber(1));
