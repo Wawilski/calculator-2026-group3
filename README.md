@@ -66,6 +66,10 @@ mvn spring-boot:run
 ```
 * The web GUI should now run locally on the local port [8080](http://127.0.0.1:8080/)
 
+### Online Application
+
+* You can access to this project web application following this [link](https://hakik.alwaysdata.net/) 
+
 ### Test coverage and JavaDoc reporting
 
 *  In addition to testing the code, "mvn test" will also generate a test coverage report (in HTML format) using JaCoCo. This test coverage is generated in target/site/jacoco.

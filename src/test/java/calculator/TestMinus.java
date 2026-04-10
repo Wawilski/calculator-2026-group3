@@ -94,7 +94,6 @@ class TestMinus {
       Evaluator v = new Evaluator();
       e.accept(v);
       RealNumber result = (RealNumber) v.getResult();
-      System.out.println(result.getSpecialValue());
       assertEquals(SpecialNumber.PositiveInfinity, result.getSpecialValue());
     } catch (IllegalConstruction _) {
       fail();

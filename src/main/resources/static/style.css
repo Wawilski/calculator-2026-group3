@@ -102,6 +102,11 @@ body {
   border-radius: 10px;
 }
 
+.science-rand {
+  font-size: 0.74rem;
+  padding: 0.55rem 0.2rem;
+}
+
 .card-header h1 {
   margin: 0.1rem 0;
   font-size: clamp(1.6rem, 3vw, 2.2rem);
@@ -125,10 +130,32 @@ body {
   margin-top: 1rem;
 }
 
+.display-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  margin-bottom: 0.35rem;
+}
+
 .display-label {
-  margin: 0 0 0.35rem;
+  margin: 0;
   font-size: 0.9rem;
   color: var(--muted);
+}
+
+.scale-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.scale-inline input {
+  width: 72px;
+  padding: 0.35rem 0.45rem;
+  border-radius: 9px;
 }
 
 label {
@@ -204,6 +231,11 @@ button:active {
   color: var(--muted);
 }
 
+.notation {
+  font-family: "Courier New", Courier, monospace;
+  color: #2e3443;
+}
+
 @keyframes rise {
   from {
     opacity: 0;
@@ -218,6 +250,11 @@ button:active {
 @media (max-width: 620px) {
   .calculator-card {
     padding: 1rem;
+  }
+
+  .display-heading {
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .science-toggle {

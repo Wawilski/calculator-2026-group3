@@ -1,11 +1,8 @@
 package calculator.functions;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import calculator.Divides;
 import calculator.Expression;
 import calculator.IllegalConstruction;
 import calculator.numbers.BaseNumber;

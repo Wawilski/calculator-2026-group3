@@ -137,12 +137,18 @@ fct : COS
     | LN   
     | SQRT 
     | LOG  
-    | ABS  
+    | ABS
+    | COSH
+    | TANH
+    | SINH
     ;
            
 COS : 'cos';
 SIN : 'sin';
 TAN : 'tan';
+COSH : 'cosh';
+SINH : 'sinh';
+TANH : 'tanh';
 ACOS : 'acos' ;
 ASIN : 'asin' ;
 ATAN : 'atan' ;
