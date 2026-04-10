@@ -69,20 +69,16 @@ jobs:
           target: ${{ secrets.ALWAYSDATA_DEPLOY_PATH }}
           strip_components: 1
 
-      - name: Restart app
-        uses: appleboy/ssh-action@v1.2.0
-        with:
-          host: ${{ secrets.ALWAYSDATA_HOST }}
-          username: ${{ secrets.ALWAYSDATA_USER }}
-          key: ${{ secrets.ALWAYSDATA_SSH_KEY }}
-          password: ${{ secrets.ALWAYSDATA_SSH_PASSWORD }}
-          port: ${{ secrets.ALWAYSDATA_SSH_PORT != '' && secrets.ALWAYSDATA_SSH_PORT || '22' }}
-          script_stop: true
-          script: |
-            cd "${{ secrets.ALWAYSDATA_DEPLOY_PATH }}"
-            chmod +x start-alwaysdata.sh
-            PIDS="$(ps -eo pid=,args= | awk '/[j]ava .* -jar .*calculator-cucumber-0\.5\.0\.jar/ || /[j]ava .* -jar .*app\.jar/ {print $1}')"
-            if [ -n "$PIDS" ]; then
-              kill $PIDS || true
-            fi
-            nohup ./start-alwaysdata.sh > app.log 2>&1 &
+      - name: Restart site via Alwaysdata API
+        env:
+          ALWAYSDATA_API_KEY: ${{ secrets.ALWAYSDATA_API_KEY }}
+          ALWAYSDATA_ACCOUNT: ${{ secrets.ALWAYSDATA_ACCOUNT }}
+          ALWAYSDATA_SITE_ID: ${{ secrets.ALWAYSDATA_SITE_ID }}
+        run: |
+          curl --fail --show-error --silent \
+            -X POST \
+            -H "alwaysdata-synchronous: yes" \
+            --basic \
+            --user "${ALWAYSDATA_API_KEY} account=${ALWAYSDATA_ACCOUNT}:" \
+            "https://api.alwaysdata.com/v1/site/${ALWAYSDATA_SITE_ID}/restart/" \
+            >/dev/null
