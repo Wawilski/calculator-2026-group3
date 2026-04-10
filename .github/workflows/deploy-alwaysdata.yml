@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - master
-      - fix/alwaysdata-deployment
 
 concurrency:
   group: alwaysdata-production
