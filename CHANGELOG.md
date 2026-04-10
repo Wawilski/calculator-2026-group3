@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.1] - 2026-04-10
+### Added
+- Automatic Application Deployment on [calculator-cucumber-group3](https://hakik.alwaysdata.net/) 
+- Hyperbolic Trigonometric functions
+- Prefix, Postfix and degree units changes on GUI
+
+
 ## [1.2.0] - 2026-04-09
 ### Added
 - Command Line Interface(CLI) [Feature #9](https://github.com/Wawilski/calculator-2026-group3/issues/9)
