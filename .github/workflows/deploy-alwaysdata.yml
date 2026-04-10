@@ -48,6 +48,7 @@ jobs:
           host: ${{ secrets.ALWAYSDATA_HOST }}
           username: ${{ secrets.ALWAYSDATA_USER }}
           key: ${{ secrets.ALWAYSDATA_SSH_KEY }}
+          password: ${{ secrets.ALWAYSDATA_SSH_PASSWORD }}
           port: ${{ secrets.ALWAYSDATA_SSH_PORT != '' && secrets.ALWAYSDATA_SSH_PORT || '22' }}
           source: "deploy/*"
           target: ${{ secrets.ALWAYSDATA_DEPLOY_PATH }}
@@ -59,6 +60,7 @@ jobs:
           host: ${{ secrets.ALWAYSDATA_HOST }}
           username: ${{ secrets.ALWAYSDATA_USER }}
           key: ${{ secrets.ALWAYSDATA_SSH_KEY }}
+          password: ${{ secrets.ALWAYSDATA_SSH_PASSWORD }}
           port: ${{ secrets.ALWAYSDATA_SSH_PORT != '' && secrets.ALWAYSDATA_SSH_PORT || '22' }}
           script_stop: true
           script: |
