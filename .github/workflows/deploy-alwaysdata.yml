@@ -66,5 +66,8 @@ jobs:
           script: |
             cd "${{ secrets.ALWAYSDATA_DEPLOY_PATH }}"
             chmod +x start-alwaysdata.sh
-            pkill -f 'java -jar app.jar' || true
+            PIDS="$(ps -eo pid=,args= | awk '/[j]ava .* -jar app\.jar/ {print $1}')"
+            if [ -n "$PIDS" ]; then
+              kill $PIDS || true
+            fi
             nohup ./start-alwaysdata.sh > app.log 2>&1 &
