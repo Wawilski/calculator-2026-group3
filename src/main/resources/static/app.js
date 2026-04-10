@@ -8,6 +8,10 @@ createApp({
       hintMessage: "Ready.",
       result: "",
       resultPretty: "",
+      resultInfix: "",
+      resultPrefix: "",
+      resultPostfix: "",
+      realScale: 16,
       isLoading: false
     };
   },
@@ -36,6 +40,12 @@ createApp({
     },
 
     handleKeydown(event) {
+      const target = event.target;
+      if (target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.tagName === "SELECT")
+        && !target.readOnly) {
+        return;
+      }
+
       if (event.ctrlKey || event.altKey || event.metaKey) {
         return;
       }
@@ -70,7 +80,19 @@ createApp({
       this.expression = "";
       this.result = "";
       this.resultPretty = "";
+      this.resultInfix = "";
+      this.resultPrefix = "";
+      this.resultPostfix = "";
       this.hintMessage = "Expression cleared.";
+    },
+
+    sanitizeScale() {
+      let parsedScale = Number.parseInt(this.realScale, 10);
+      if (Number.isNaN(parsedScale)) {
+        parsedScale = 16;
+      }
+      parsedScale = Math.max(0, Math.min(16, parsedScale));
+      this.realScale = parsedScale;
     },
 
     backspace() {
@@ -88,9 +110,14 @@ createApp({
       }
 
       const expression = this.expression.trim();
+      this.sanitizeScale();
+
       if (!expression) {
         this.result = "";
         this.resultPretty = "";
+        this.resultInfix = "";
+        this.resultPrefix = "";
+        this.resultPostfix = "";
         this.hintMessage = "Enter an expression first.";
         return;
       }
@@ -104,23 +131,35 @@ createApp({
           headers: {
             "Content-Type": "application/json"
           },
-          body: JSON.stringify({ expression: this.normalizeExpression(expression) })
+          body: JSON.stringify({
+            expression: this.normalizeExpression(expression),
+            scale: this.realScale
+          })
         });
 
         const payload = await response.json();
         if (!response.ok) {
           this.result = "";
           this.resultPretty = "";
+          this.resultInfix = "";
+          this.resultPrefix = "";
+          this.resultPostfix = "";
           this.hintMessage = this.formatApiError(payload);
           return;
         }
 
         this.result = payload.result ?? "";
         this.resultPretty = payload.pretty ?? "";
+        this.resultInfix = payload.infix ?? "";
+        this.resultPrefix = payload.prefix ?? "";
+        this.resultPostfix = payload.postfix ?? "";
         this.hintMessage = "Calculation done.";
       } catch (_) {
         this.result = "";
         this.resultPretty = "";
+        this.resultInfix = "";
+        this.resultPrefix = "";
+        this.resultPostfix = "";
         this.hintMessage = "Unable to reach the API.";
       } finally {
         this.isLoading = false;

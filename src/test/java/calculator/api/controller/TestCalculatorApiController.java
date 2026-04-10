@@ -1,20 +1,19 @@
 package calculator.api.controller;
 
-import calculator.api.ApiApplication;
+import static org.hamcrest.Matchers.hasItem;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.startsWith;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import calculator.api.ApiApplication;
 
 @SpringBootTest(classes = ApiApplication.class, properties = {
     "calculator.api.max-expression-depth=4",
@@ -188,7 +187,25 @@ class TestCalculatorApiController {
         .andExpect(jsonPath("$.result").value("35"))
         .andExpect(jsonPath("$.infix").exists())
         .andExpect(jsonPath("$.pretty").exists())
-        .andExpect(jsonPath("$.prefix").exists());
+        .andExpect(jsonPath("$.prefix").exists())
+        .andExpect(jsonPath("$.postfix").exists());
+  }
+
+  @Test
+  void testEvaluateTextEndpointRejectsOutOfRangeScale() throws Exception {
+    String payload = """
+        {
+          "expression": "(3+4)*5",
+          "scale": 22
+        }
+        """;
+
+    mockMvc.perform(post("/api/evaluate-text")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(payload))
+        .andExpect(status().isBadRequest())
+        .andExpect(jsonPath("$.code").value("VALIDATION_ERROR"))
+        .andExpect(jsonPath("$.details", hasItem("scale: scale must be between 0 and 16")));
   }
 
   @Test
