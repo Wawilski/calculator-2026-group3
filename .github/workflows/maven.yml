@@ -65,7 +65,7 @@ jobs:
         echo "branch coverage = ${{ steps.jacoco.outputs.branches }}"
 
     - name: Create PR for coverage badge update
-      if: ${{ matrix.os == 'ubuntu-latest' && github.event_name == 'push' && github.actor != 'github-actions[bot]' }}
+      if: ${{ matrix.os == 'ubuntu-latest' && github.event_name == 'push' && github.actor != 'github-actions[bot]' && github.ref == 'ref/heads/dev'}}
       uses: peter-evans/create-pull-request@v7
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
